@@ -19,7 +19,7 @@ o.clipboard = "unnamed,unnamedplus"
 o.timeoutlen = 300
 o.updatetime = 300
 o.inccommand = "split"
-o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal"
+o.sessionoptions = "globals,resize,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal"
 o.undofile = true
 wo.number = true
 wo.relativenumber = true
@@ -210,5 +210,6 @@ cmd([[
         set background=dark
 				lua require("indent_guides").setup({ even_colors = { fg = "#5d4d7a", bg = "#5d4d7a" }, odd_colors = { fg = "#cdcdcd", bg = "#cdcdcd" }, indent_guide_size = 1 })
     endif
+    lua require("config/bufferline").setup()
 	endfunction
 ]])

@@ -6,21 +6,54 @@ return require("packer").startup({
 		use({ "wbthomason/packer.nvim" })
 
 		--helper libs and deps
+		use({ "nvim-lua/plenary.nvim" })
+		use({ "tami5/sqlite.lua" })
 		use({ "stevearc/dressing.nvim" })
+		use({ "nvim-lua/popup.nvim" })
+		use({ "Olical/aniseed" })
 		use({
 			"rcarriga/nvim-notify",
 			event = "VimEnter",
 			config = function()
-				vim.notify = require("notify")
+				require("config/notify").setup()
 			end,
 		})
-		use({ "nvim-lua/popup.nvim" })
-		use({ "nvim-lua/plenary.nvim" })
-		use({ "tami5/sqlite.lua" })
-		use({ "Olical/aniseed" })
-
-		--keymappings
-		use({ "LionC/nest.nvim" })
+		use({
+			"beauwilliams/focus.nvim",
+			config = function()
+				require("focus").setup({
+					excluded_filetypes = { "floaterm", "aerial" },
+					width = 130,
+					minwidth = 90,
+					bufnew = false,
+				})
+			end,
+		})
+		use({
+			"kwkarlwang/bufresize.nvim",
+			config = function()
+				local opts = { noremap = true, silent = true }
+				require("bufresize").setup({
+					register = {
+						keys = {
+							{ "n", "<leader>w<", "30<C-w><", opts },
+							{ "n", "<leader>w>", "30<C-w>>", opts },
+							{ "n", "<leader>w+", "10<C-w>+", opts },
+							{ "n", "<leader>w-", "10<C-w>-", opts },
+							{ "n", "<leader>w_", "<C-w>_", opts },
+							{ "n", "<leader>w=", "<C-w>=", opts },
+							{ "n", "<leader>w|", "<C-w>|", opts },
+							{ "n", "<leader>wo", "<C-w>|<C-w>_", opts },
+						},
+						trigger_events = { "BufWinEnter", "WinEnter" },
+					},
+					resize = {
+						keys = {},
+						trigger_events = { "VimResized" },
+					},
+				})
+			end,
+		})
 
 		--icons
 		use({
@@ -184,6 +217,7 @@ return require("packer").startup({
 		-- use({ "adisen99/codeschool.nvim" })
 		-- use({ "joehannes-ux/lush-jsx.nvim" })
 		use({ "olimorris/onedarkpro.nvim" })
+		use({ "pineapplegiant/spaceduck" })
 		-- use({ "Iron-E/nvim-highlite" })
 		-- use({ "navarasu/onedark.nvim" })
 		use({ "NLKNguyen/papercolor-theme" })
@@ -193,7 +227,7 @@ return require("packer").startup({
 		use({ "kyoz/purify" })
 		use({ "tanvirtin/monokai.nvim" })
 		use({ "catppuccin/nvim", as = "catppuccin" })
-		-- use({ "joehannes-ux/kat.nvim" })
+		use({ "joehannes-ux/kat.nvim" })
 		use({ "sainnhe/edge" })
 		use({ "rafamadriz/neon" })
 		-- use({
@@ -217,6 +251,10 @@ return require("packer").startup({
 			run = "make",
 		})
 		use({
+			"nvim-telescope/telescope-arecibo.nvim",
+			-- rocks = { "openssl", "lua-http-parser" }, -- openssl not available for lua >5.3
+		})
+		use({
 			"nvim-telescope/telescope.nvim",
 			requires = {
 				"nvim-lua/popup.nvim",
@@ -227,7 +265,7 @@ return require("packer").startup({
 				"nvim-telescope/telescope-frecency.nvim",
 				"nvim-telescope/telescope-symbols.nvim",
 				"nvim-telescope/telescope-github.nvim",
-				"nvim-telescope/telescope-media-files.nvim",
+				"joehannes-os/telescope-media-files.nvim",
 				"tom-anders/telescope-vim-bookmarks.nvim",
 				"sudormrfbin/cheatsheet.nvim",
 				"AckslD/nvim-neoclip.lua",
@@ -248,10 +286,6 @@ return require("packer").startup({
 			end,
 		})
 
-		-- use {
-		--     'nvim-telescope/telescope-arecibo.nvim',
-		--     rocks = {"openssl", "lua-http-parser"}
-		-- }
 		-- use { 'nvim-telescope/telescope-packer.nvim ' }
 		-- use({ "nvim-telescope/telescope-snippets.nvim" })
 
@@ -355,20 +389,15 @@ return require("packer").startup({
 		-- use {'lukas-reineke/indent-blankline.nvim' }
 		-- use {'Yggdroot/indentLine' }
 		-- use({
-		-- 	"beauwilliams/focus.nvim",
-		-- 	config = function()
-		-- 		require("focus").setup({
-		-- 			excluded_filetypes = { "toggleterm", "floaterm", "AERIAL", "aerial" },
-		-- 			excluded_buftypes = { "nofile", "prompt", "popup", "help", "floaterm", "aerial", "AERIAL" },
-		-- 			width = 120,
-		-- 			minwidth = 80,
-		-- 			signcolumn = false,
-		-- 		}) end,
-		-- })
-		-- use({
 		-- 	"luukvbaal/stabilize.nvim",
 		-- 	config = function()
 		-- 		require("stabilize").setup({
+		-- 			force = false, -- stabilize window even when current cursor position will be hidden behind new window
+		-- 			forcemark = "z", -- set context mark to register on force event which can be jumped to with '<forcemark>
+		-- 			ignore = { -- do not manage windows matching these file/buftypes
+		-- 				filetype = { "help", "list", "Trouble" },
+		-- 				buftype = { "terminal", "quickfix", "loclist" },
+		-- 			},
 		-- 			nested = "QuickFixCmdPost,DiagnosticChanged *",
 		-- 		})
 		-- 	end,
@@ -445,8 +474,8 @@ return require("packer").startup({
 			"abecodes/tabout.nvim",
 			config = function()
 				require("tabout").setup({
-					tabkey = ">>", -- key to trigger tabout, set to an empty string to disable
-					backwards_tabkey = "<<", -- key to trigger backwards tabout, set to an empty string to disable
+					tabkey = ";l", -- key to trigger tabout, set to an empty string to disable
+					backwards_tabkey = ";h", -- key to trigger backwards tabout, set to an empty string to disable
 					act_as_tab = false, -- shift content if tab out is not possible
 					act_as_shift_tab = false, -- reverse shift content if tab out is not possible (if your keyboard/terminal supports <S-Tab>)
 					enable_backwards = true, -- well ...
@@ -458,6 +487,7 @@ return require("packer").startup({
 						{ open = "(", close = ")" },
 						{ open = "[", close = "]" },
 						{ open = "{", close = "}" },
+						{ open = "<", close = ">" },
 					},
 					ignore_beginning = true, --[[ if the cursor is at the beginning of a filled element it will rather tab out than shift the content ]]
 					exclude = {}, -- tabout will ignore these filetypes
@@ -543,10 +573,10 @@ return require("packer").startup({
 			config = function()
 				require("twilight").setup({
 					dimming = {
-						alpha = 0.5, -- amount of dimming
+						alpha = 0.73, -- amount of dimming
 						inactive = true, -- when true, other windows will be fully dimmed (unless they contain the same buffer)
 					},
-					context = 7, -- amount of lines we will try to show around the current line
+					context = 21, -- amount of lines we will try to show around the current line
 					treesitter = true, -- use treesitter when available for the filetype
 					-- treesitter is used to automatically expand the visible text,
 					-- but you can further control the types of nodes that should always be fully expanded
@@ -874,7 +904,7 @@ return require("packer").startup({
 			"folke/todo-comments.nvim",
 			requires = "nvim-lua/plenary.nvim",
 			config = function()
-				require("todo-comments").setup()
+				require("todo-comments").setup({})
 			end,
 		})
 		use({
@@ -943,7 +973,25 @@ return require("packer").startup({
 
 		-- bufutilities
 		use({ "smitajit/bufutils.vim" })
-		use({ "arithran/vim-delete-hidden-buffers" })
+		-- use({ "arithran/vim-delete-hidden-buffers" })
+		use({
+			"kazhala/close-buffers.nvim",
+			requires = { "akinsho/nvim-bufferline.lua" },
+			config = function()
+				require("close_buffers").setup({
+					file_glob_ignore = { "src/**/*" },
+					preserve_window_layout = { "this", "nameless" },
+					next_buffer_cmd = function(windows)
+						require("bufferline").cycle(1)
+						local bufnr = vim.api.nvim_get_current_buf()
+
+						for _, window in ipairs(windows) do
+							vim.api.nvim_win_set_buf(window, bufnr)
+						end
+					end,
+				})
+			end,
+		})
 
 		-- timetracking
 		-- use {'git-time-metric/gtm-vim-plugin'}
@@ -1113,7 +1161,9 @@ return require("packer").startup({
 						},
 						-- You can use lua's arbitrary key notation to map special characters
 						-- move to end of WORD and enter insert mode after that char
-						[";;"] = "<cmd>stopinsert<cr><cmd>w!<cr><cmd>startinsert<cr><cmd>normal E<cr><cmd>startinsert<cr>",
+						[";;"] = "<cmd>stopinsert<cr><cmd>w!<cr><cmd>normal E<cr><cmd>startinsert<cr>",
+						[";l"] = "<cmd>stopinsert<cr><cmd>normal f)a<cr>",
+						[";h"] = "<cmd>stopinsert<cr><cmd>normal F(a<cr>",
 						["<Esc>"] = "<cmd>stopinsert<cr>",
 						-- Use `<cmd>` to map commands. Be carful to terminate the command with `<cr>`.
 						-- ff = "<cmd>echo 'commands work too'<cr>",
@@ -1124,6 +1174,10 @@ return require("packer").startup({
 				})
 			end,
 		})
+
+		--keymappings
+		use({ "LionC/nest.nvim" })
+
 		use({
 			"folke/which-key.nvim",
 			config = function()

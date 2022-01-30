@@ -1,9 +1,10 @@
 ---@diagnostic disable:undefined-global
+local nest = require("nest")
 local preview = require("goto-preview")
 -- local calltree = require("litee.calltree")
-local nest = require("nest")
 
 nest.applyKeymaps({
+	{ "<Del>", '<cmd>lua require("notify").dismiss()<cr>' },
 	{ "<Esc><Esc>", "<cmd>nohl<CR>" },
 	{ "<CR><CR>", "<Cmd>BResizeZoom<CR>" },
 	{ "<A-h>", "<C-w>7<" },
@@ -20,7 +21,7 @@ nest.applyKeymaps({
 			{ "q", "<Cmd>cprev<CR>" },
 			{ "t", "<Cmd>FloatermPrev<CR>" },
 			{ "w", "<Cmd>tabprevious<CR>" },
-			{ ".", "<C-o>" },
+			{ ".", "<C-O>" },
 			{ "M", "<Cmd>BookmarkPrev<CR>" },
 		},
 	},
@@ -33,7 +34,7 @@ nest.applyKeymaps({
 			{ "q", "<Cmd>cnext<CR>" },
 			{ "t", "<Cmd>FloatermNext<CR>" },
 			{ "w", "<Cmd>tabnext<CR>" },
-			{ ".", "<C-i>" },
+			{ ".", "<C-I>" },
 			{ "m", "<Cmd>BookmarkNext<CR>" },
 		},
 	},
@@ -45,19 +46,19 @@ nest.applyKeymaps({
 			{ "*", "g*<cmd>lua require('hlslens').start()<CR>" },
 			{ "#", "g#<cmd>lua require('hlslens').start()<CR>" },
 			{ "$", "<Cmd>Telescope treesitter<CR>" },
+			{ "a", "<cmd>Lspsaga codeAction<CR>" },
 			{ "d", "<Cmd>lua vim.lsp.buf.definition()<CR>" },
 			{ "D", "<Cmd>lua vim.lsp.buf.declaration()<CR>" },
-			-- { "i", "<cmd>lua vim.lsp.buf.implementation()<CR>" },
+			{ "i", "<cmd>lua vim.lsp.buf.implementation()<CR>" },
 			{ "I*", "<cmd>TSLspImportAll<CR>" },
 			{ "I.", "<cmd>TSLspImportCurrent<CR>" },
-			{ "j", "<C-i>" },
-			{ "k", "<C-o>" },
+			{ "j", "<C-I>" },
+			{ "k", "<C-O>" },
 			{ "l", "<Cmd>Trouble lsp_references<CR>" },
 			{ "o", "<cmd>Lspsaga show_line_diagnostics<cr>" },
 			{ "O", "<cmd>TSLspOrganize<cr>" },
 			{ "r", "<cmd>Lspsaga rename<cr>" },
 			{ "R", "<cmd>TSLspRenameFile<CR>" },
-			{ "x", "<cmd>CodeActionMenu<CR>" },
 		},
 	},
 	{ "K", "<cmd>Lspsaga hover_doc<cr>" },
@@ -91,10 +92,20 @@ nest.applyKeymaps({
 					{ "m", "<Cmd>SaveBookmarks<CR>" },
 				},
 			},
-			{ "b", {
-				{ "q", ":bp|bd #<CR>" },
-				{ "p", "<Cmd>BufferLinePick<CR>" },
-			} },
+			{
+				"b",
+				{
+					{ "q", ":bp|bd #<CR>" },
+					{ "p", "<Cmd>BufferLinePick<CR>" },
+					{
+						"d",
+						{
+							{ "*", "lua require('close_buffers').delete({type = 'nameless'})<CR>" },
+							{ ".", "lua require('close_buffers').delete({type = 'this'})<CR>" },
+						},
+					},
+				},
+			},
 			{ "D", "<Cmd>DogeGenerate jsdoc<CR>" },
 			{
 				"e",
@@ -323,8 +334,10 @@ nest.applyKeymaps({
 	{
 		mode = "i",
 		{
+			{ "<f20>", "<C-o>" },
 			{ "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>" },
 			{ "<C-K>", "<cmd>Lspsaga hover_doc<cr>" },
+			{ "<C-Del>", '<cmd>lua require("notify").dismiss()<cr>' },
 		},
 	},
 })
