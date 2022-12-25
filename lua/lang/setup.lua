@@ -1,6 +1,5 @@
 ---@diagnostic disable:undefined-global
 local root_pattern = require("lspconfig.util").root_pattern
-local lsp_format = require("lsp-format")
 local on_attach = require("lang/attach")
 local capabilities = require("lang/capabilities")
 
@@ -8,7 +7,7 @@ local setup = {}
 local sumneko_root_path = vim.fn.stdpath("data") .. "/lsp_servers/sumneko_lua/extension/server/bin"
 local sumneko_binary = sumneko_root_path .. "/lua-language-server"
 
-function setup.diagnosticls()
+function setup.diagnostic()
   local opts = {
     capabilities = capabilities,
     on_attach = on_attach.minimal,
@@ -78,7 +77,7 @@ function setup.eslint()
   return opts
 end
 
-function setup.jsonls()
+function setup.json()
   local opts = {
     capabilities = capabilities,
     on_attach = on_attach.generic,
@@ -125,21 +124,40 @@ function setup.jsonls()
   return opts
 end
 
-function setup.tsserver()
+function setup.typescript()
   local opts = {
     capabilities = capabilities,
     handlers = {
       ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" }),
       ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" }),
     },
-    on_attach = on_attach.tsserver,
-    settings = { format = { enable = true } }
+    on_attach = on_attach.typescript,
+    settings = {
+      format = { enable = true },
+      filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+    }
   }
 
   return opts
 end
 
-function setup.pyright()
+function setup.clojure()
+  local opts = {
+    capabilities = capabilities,
+    handlers = {
+      ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" }),
+      ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" }),
+    },
+    on_attach = on_attach.clojure,
+    settings = {
+      format = { enable = true },
+    }
+  }
+
+  return opts
+end
+
+function setup.python()
   local opts = {
     capabilities = capabilities,
     handlers = {
@@ -164,48 +182,49 @@ function setup.pyright()
   return opts
 end
 
-function setup.sumneko_lua()
-  local opts = require("lua-dev").setup({
-    library = { vimruntime = true, types = true, plugins = true },
-    lspconfig = {
-      capabilities = capabilities,
-      on_attach = function(client, bufnr)
-        on_attach.lua(client, bufnr)
-        lsp_format.on_attach(client, bufnr)
-      end,
-      cmd = { sumneko_binary, "-E", sumneko_root_path .. "/main.lua" },
-      settings = {
-        format = { enable = true }, -- this will enable formatting
-        Lua = {
-          runtime = {
-            -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-            version = "LuaJIT",
-            -- Setup your lua path
-            path = vim.split(package.path, ";"),
-          },
-          diagnostics = {
-            -- Get the language server to recognize the `vim` global
-            globals = { "vim" },
-          },
-          workspace = {
-            -- Make the server aware of Neovim runtime files
-            library = {
-              [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-              [vim.fn.expand("$VIMRUNTIME/lua/config")] = true,
-              [vim.fn.expand("$VIMRUNTIME/lua/lang")] = true,
-              [vim.fn.expand("$VIMRUNTIME/lua/statusline")] = true,
-              [vim.fn.expand("$VIMRUNTIME/lua/utils")] = true,
-            },
+function setup.lua()
+  local opts = {
+    -- require("neodev").setup({
+    -- library = { vimruntime = true, types = true, plugins = true },
+    -- lspconfig = {
+    capabilities = capabilities,
+    on_attach = function(client, bufnr)
+      on_attach.lua(client, bufnr)
+      require("lsp-format").on_attach(client)
+    end,
+    cmd = { sumneko_binary, "-E", sumneko_root_path .. "/main.lua" },
+    settings = {
+      format = { enable = true }, -- this will enable formatting
+      Lua = {
+        runtime = {
+          -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+          version = "LuaJIT",
+          -- Setup your lua path
+          path = vim.split(package.path, ";"),
+        },
+        diagnostics = {
+          -- Get the language server to recognize the `vim` global
+          globals = { "vim" },
+        },
+        workspace = {
+          checkThirdParty = false,
+          -- Make the server aware of Neovim runtime files
+          library = {
+            [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+            [vim.fn.expand("$VIMRUNTIME/lua/config")] = true,
+            [vim.fn.expand("$VIMRUNTIME/lua/lang")] = true,
+            [vim.fn.expand("$VIMRUNTIME/lua/statusline")] = true,
+            [vim.fn.expand("$VIMRUNTIME/lua/utils")] = true,
           },
         },
       },
     },
-  })
+  }
 
   return opts
 end
 
-function setup.cssls()
+function setup.css()
   local opts = {
     capabilities = capabilities,
     on_attach = on_attach.minimal,
@@ -237,7 +256,7 @@ function setup.cssls()
   return opts
 end
 
-function setup.cssmodules_ls()
+function setup.cssmodules()
   local opts = {
     capabilities = capabilities,
     on_attach = on_attach.minimal,
@@ -253,7 +272,7 @@ end
 
 function setup.efm()
   local efmls = require("efmls-configs")
-  local fs = require("efmls-configs.fs")
+  local efm_fs = require("efmls-configs.fs")
   local root_path = vim.api.nvim_call_function("getcwd", {})
 
   local eslint_cfg_path   = table.foreach({
@@ -263,7 +282,7 @@ function setup.efm()
     ".eslintrc.yml",
     ".eslintrc.json",
   }, function(_, value)
-    return exists(root_path .. "/" .. value) and root_path .. "/" .. value or nil
+    return my.fs.exists(root_path .. "/" .. value) and root_path .. "/" .. value or nil
   end) or root_path .. "/package.json"
   local prettier_cfg_path = table.foreach({
     ".prettierrc",
@@ -277,33 +296,34 @@ function setup.efm()
     ".prettierrc.config.cjs",
     ".prettierrc.toml",
   }, function(_, value)
-    return exists(root_path .. "/" .. value) and root_path .. "/" .. value or nil
+    return my.fs.exists(root_path .. "/" .. value) and root_path .. "/" .. value or nil
   end) or root_path .. "/package.json"
-
-
-  local stylelint = require("efmls-configs.linters.stylelint")
-  local eslint = require("efmls-configs.linters.eslint_d")
-  eslint.lintCommand = eslint.lintCommand .. " --rule 'prettier/prettier: off'"
+  local stylelint         = require("efmls-configs.linters.stylelint")
+  local eslint            = require("efmls-configs.linters.eslint_d")
+  -- eslint.lintCommand      = eslint.lintCommand .. " --rule 'prettier/prettier: off'"
   -- local luacheck = require("efmls-configs.linters.luacheck")
-  local prettier = {
+  local prettier_default  = require 'efmls-configs.formatters.prettier'
+  local prettier          = {
     formatCommand = string.format('%s --stdin --stdin-filepath ${INPUT}' ..
       ' --eslint-config-path ' .. eslint_cfg_path .. ' --config ' .. prettier_cfg_path,
-      fs.executable('prettier-eslint', fs.Scope.NODE)),
+      efm_fs.executable('prettier-eslint', efm_fs.Scope.NODE)),
     formatStdin = true,
   }
+  -- local clj_kondo         = require 'efmls-configs.linters.clj_kondo'
+  local clj_kondo         = require 'plugins/config/clj_kondo'
+  local joker             = require 'efmls-configs.formatters.joker'
 
   local handlers = {
     ["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-      virutal_text = false,
+      virutal_text = true,
       underline = true,
       signs = true,
       update_in_insert = false,
     })
   }
 
-
   efmls.init({
-    on_attach = lsp_format.on_attach,
+    on_attach = on_attach.minimal,
     handlers = handlers,
     init_options = {
       documentFormatting = true,
@@ -313,6 +333,11 @@ function setup.efm()
   efmls.setup({
     css = {
       linter = stylelint,
+      formatter = prettier_default,
+    },
+    scss = {
+      linter = stylelint,
+      formatter = prettier_default,
     },
     javascript = {
       linter = eslint,
@@ -329,14 +354,18 @@ function setup.efm()
     typescriptreact = {
       linter = eslint,
       formatter = prettier,
-    }
+    },
+    -- clojure = {
+    --   linter = clj_kondo,
+    --   formatter = joker,
+    -- },
   })
 end
 
 function setup.generic()
   local opts = {
     capabilities = capabilities,
-    on_attach = on_attach.generic,
+    on_attach = on_attach.minimal,
     settings = {
       format = { enable = false }, -- this will enable formatting
       -- root_dir = root_pattern("tsconfig.json", ".eslintrc.json", "package.json", ".git"),
@@ -347,7 +376,7 @@ function setup.generic()
   return opts
 end
 
-function setup.null_ls()
+function setup.null()
   local ls = require("null-ls")
 
   ls.setup({
