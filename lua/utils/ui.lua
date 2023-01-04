@@ -45,4 +45,39 @@ function M.qftf(info)
   return ret
 end
 
+function M.tint()
+  local ok, tint = pcall(require, "tint")
+  local bufferline = require("plugins.bufferline")
+  local lines = require("heirline")
+  local heirline = require("plugins.heirline")
+
+  if (ok) then
+    tint.refresh()
+    lines.reset_highlights()
+    heirline.load_colors()
+    bufferline.setup()
+    heirline.setup(false)
+    tint.refresh()
+  end
+end
+
+function M.updateHighlights()
+  local mode_color = my.color.my.vimode[vim.fn.mode()]
+
+  for defColor, gitSignsHl in pairs({ [my.color.my.green] = "GitSignsAdd", [my.color.my.orange] = "GitSignsChange",
+    [my.color.my.red] = "GitSignsDelete" }) do
+    my.color.fn.highlight_blend_bg(gitSignsHl, 90, defColor)
+    my.color.fn.highlight_blend_bg(gitSignsHl .. "Nr", 73, defColor)
+    my.color.fn.highlight_blend_bg(gitSignsHl .. "Ln", 50, defColor)
+    my.color.fn.highlight_blend_bg("CursorLine", 50, mode_color)
+    my.color.fn.highlight_blend_bg("CursorColumn", 50, mode_color)
+    my.color.fn.highlight_blend_bg("Visual", 21, mode_color)
+    my.color.fn.highlight_blend_bg("TSCurrentScope", 12, mode_color)
+    my.color.fn.highlight_blend_bg("TreesitterContext", 50, mode_color)
+    vim.api.nvim_set_hl(0, "TreesitterContextBottom",
+      { underline = true, underdouble = true, fg = my.color.my.magenta, sp = my.color.my.magenta })
+    vim.api.nvim_set_hl(0, "ScrollbarHandle", { bg = mode_color })
+  end
+end
+
 return M
