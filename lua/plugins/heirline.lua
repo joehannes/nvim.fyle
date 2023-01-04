@@ -3,7 +3,7 @@ local utils = require("heirline.utils")
 -- local constructors = require("heirline.constructors")
 
 local function vimode_color()
-  return my.color.my.vimode[vim.fn.mode()] or my.color.my.vimode["n"]
+  return my.color.my.vimode[vim.fn.mode() or "n"] or my.color.my.vimode["n"]
 end
 
 local function setup_colors()

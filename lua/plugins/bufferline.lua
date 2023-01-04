@@ -1,179 +1,179 @@
 ---@diagnostic disable: undefined-global
 vim.opt.termguicolors = true
 
-local config = {}
+local M = {}
 
-function config.setup()
-  -- local gps = require("nvim-gps")
+function M.setup()
+  local highlights = function()
+    local function vimodeColor()
+      return my.color.my.vimode[vim.fn.mode()]
+    end
 
-  local function vimodeColor()
-    return my.color.my.vimode[vim.fn.mode()]
-  end
+    local function secondaryVimodeColor()
+      return my.color.fn.background_blend(vimodeColor(), 70)
+    end
 
-  local function secondaryVimodeColor()
-    return my.color.fn.background_blend(vimodeColor(), 70)
-  end
+    local function tertiaryVimodeColor()
+      return my.color.fn.background_blend(vimodeColor(), 21)
+    end
 
-  local function tertiaryVimodeColor()
-    return my.color.fn.background_blend(vimodeColor(), 21)
-  end
-
-  local highlights = {
-    background = { bg = tertiaryVimodeColor() },
-    -- tab = { bg = vimodeColor() },
-    -- tab_selected = { fg = vimodeColor(), bg = groups.selectionBG() },
-    tab_close = { fg = my.color.my.dark, bg = vimodeColor(), bold = true },
-    -- info = { fg = vimodeColor(), bg = groups.selectionBG() },
-    fill = { bg = my.color.my.magenta },
-    buffer = { fg = my.color.my.light, bg = secondaryVimodeColor() },
-    buffer_visible = { fg = my.color.my.light, bg = secondaryVimodeColor() },
-    buffer_selected = { fg = my.color.my.light, bg = vimodeColor(), bold = true },
-    tab_selected = { fg = my.color.my.light, bg = vimodeColor(), bold = true },
-    diagnostic = {
-      fg = my.color.my.red,
-      bg = tertiaryVimodeColor()
-    },
-    -- diagnostic_visible = {
-    -- 	fg = vimodeColor(),
-    -- 	bg = ucolors.blendColors(groups.selectionBG(), groups.mainBG(), 0.8),
-    -- },
-    -- diagnostic = { fg = my.color.my.red, bold = true },
-    diagnostic_visible = { fg = my.color.my.red, bg = secondaryVimodeColor(), bold = true },
-    diagnostic_selected = { fg = my.color.my.red, bg = vimodeColor(), bold = true, italic = true },
-    info = {
-      fg = my.color.util.darken(my.color.my.blue, 66),
-      bg = tertiaryVimodeColor()
-    },
-    info_visible = {
-      fg = my.color.util.darken(my.color.my.blue, 66),
-      bg = secondaryVimodeColor()
-    },
-    info_selected = {
-      fg = my.color.util.darken(my.color.my.blue, 66),
-      bg = vimodeColor()
-    },
-    hint = {
-      fg = my.color.util.darken(my.color.my.yellow, 66),
-      bg = tertiaryVimodeColor()
-    },
-    hint_visible = {
-      fg = my.color.util.darken(my.color.my.yellow, 66),
-      bg = secondaryVimodeColor()
-    },
-    hint_selected = {
-      fg = my.color.util.darken(my.color.my.yellow, 66),
-      bg = vimodeColor()
-    },
-    warning = {
-      fg = my.color.util.darken(my.color.my.orange, 66),
-      bg = tertiaryVimodeColor()
-    },
-    warning_visible = {
-      fg = my.color.util.darken(my.color.my.orange, 66),
-      bg = secondaryVimodeColor()
-    },
-    warning_selected = {
-      fg = my.color.util.darken(my.color.my.orange, 66),
-      bg = vimodeColor()
-    },
-    error = {
-      fg = my.color.util.darken(my.color.my.red, 66),
-      bg = tertiaryVimodeColor()
-    },
-    error_visible = {
-      fg = my.color.util.darken(my.color.my.red, 66),
-      bg = secondaryVimodeColor()
-    },
-    error_selected = {
-      fg = my.color.util.darken(my.color.my.red, 66),
-      bg = vimodeColor()
-    },
-    info_diagnostic = {
-      fg = my.color.my.blue,
-      bg = tertiaryVimodeColor()
-    },
-    info_diagnostic_visible = {
-      fg = my.color.util.darken(my.color.my.blue, 21),
-      bg = secondaryVimodeColor()
-    },
-    info_diagnostic_selected = {
-      fg = my.color.util.darken(my.color.my.blue, 33),
-      bg = vimodeColor()
-    },
-    hint_diagnostic = {
-      fg = my.color.my.yellow,
-      bg = tertiaryVimodeColor()
-    },
-    hint_diagnostic_visible = {
-      fg = my.color.util.darken(my.color.my.yellow, 21),
-      bg = secondaryVimodeColor()
-    },
-    hint_diagnostic_selected = {
-      fg = my.color.util.darken(my.color.my.yellow, 33),
-      bg = vimodeColor()
-    },
-    warning_diagnostic = {
-      fg = my.color.my.orange,
-      bg = tertiaryVimodeColor()
-    },
-    warning_diagnostic_visible = {
-      fg = my.color.util.darken(my.color.my.orange, 21),
-      bg = secondaryVimodeColor()
-    },
-    warning_diagnostic_selected = {
-      fg = my.color.util.darken(my.color.my.orange, 33),
-      bg = vimodeColor()
-    },
-    error_diagnostic = {
-      fg = my.color.my.red,
-      bg = tertiaryVimodeColor()
-    },
-    error_diagnostic_visible = {
-      fg = my.color.util.darken(my.color.my.red, 21),
-      bg = secondaryVimodeColor()
-    },
-    error_diagnostic_selected = {
-      fg = my.color.util.darken(my.color.my.red, 33),
-      bg = vimodeColor()
-    },
-    -- hint_selected = { fg = my.color.my.orange, bg = my.color.my.aqua, gui = "bold,italic" },
-    -- warning_selected = { fg = my.color.my.red, bg = my.color.my.aqua, gui = "bold,italic" },
-    -- error_visible = { fg = "#550000", bg = "#F634B1", gui = "bold,italic" },
-    -- error_selected = { fg = my.color.my.red, bg = my.color.my.aqua, gui = "bold,italic" },
-    -- warning = { fg = my.color.my.red, gui = "bold,italic" },
-    -- error = { fg = my.color.my.red, gui = "bold,italic" },
-    -- hint_diagnostic_selected = { fg = my.color.my.green, bg = my.color.my.aqua, gui = "bold,italic" },
-    -- info_diagnostic_selected = { fg = my.color.my.green, bg = my.color.my.aqua, gui = "bold,italic" },
-    -- warning_diagnostic_selected = { fg = my.color.my.orange, bg = my.color.my.aqua, gui = "bold,italic" },
-    -- error_diagnostic_selected = { fg = my.color.my.red, bg = my.color.my.aqua, gui = "bold,italic" },
-    close_button = { fg = my.color.my[vim.fn.mode()], bg = tertiaryVimodeColor() },
-    -- close_button_visible = {
-    -- 	fg = vimodeColor(),
-    -- 	bg = ucolors.blendColors(groups.selectionBG(), groups.mainBG(), 0.8),
-    -- 	bold = true,
-    -- },
-    close_button_visible = { fg = my.color.my[vim.fn.mode()], bg = secondaryVimodeColor(), bold = true },
-    close_button_selected = { fg = my.color.my[vim.fn.mode()], bg = vimodeColor(), bold = true },
-    modified = { fg = my.color.my.red, bg = tertiaryVimodeColor() },
-    modified_visible = { fg = my.color.my.red, bg = secondaryVimodeColor() },
-    modified_selected = { fg = my.color.my.red, bg = vimodeColor() },
-    -- duplicate_selected = { fg = my.color.my.light, bg = my.color.my.aqua },
-    -- duplicate_visible = {
-    -- 	fg = vimodeColor(),
-    -- 	bg = ucolors.blendColors(groups.selectionBG(), groups.mainBG(), 0.8),
-    -- },
-    -- duplicate = { fg = vimodeColor(), bg = groups.highlightBG() },
-    separator = { fg = my.color.my.magenta, bg = tertiaryVimodeColor() },
-    separator_selected = { fg = my.color.my.magenta, bg = vimodeColor() },
-    separator_visible = {
-      fg = my.color.my.magenta,
-      bg = secondaryVimodeColor()
+    return {
+      background = { bg = tertiaryVimodeColor() },
+      -- tab = { bg = vimodeColor() },
+      -- tab_selected = { fg = vimodeColor(), bg = groups.selectionBG() },
+      tab_close = { fg = my.color.my.dark, bg = vimodeColor(), bold = true },
+      -- info = { fg = vimodeColor(), bg = groups.selectionBG() },
+      fill = { bg = my.color.my.magenta },
+      buffer = { fg = my.color.my.light, bg = secondaryVimodeColor() },
+      buffer_visible = { fg = my.color.my.light, bg = secondaryVimodeColor() },
+      buffer_selected = { fg = my.color.my.light, bg = vimodeColor(), bold = true },
+      tab_selected = { fg = my.color.my.light, bg = vimodeColor(), bold = true },
+      diagnostic = {
+        fg = my.color.my.red,
+        bg = tertiaryVimodeColor()
+      },
+      -- diagnostic_visible = {
+      -- 	fg = vimodeColor(),
       -- 	bg = ucolors.blendColors(groups.selectionBG(), groups.mainBG(), 0.8),
-    },
-    -- indicator_selected = { fg = vimodeColor(), bg = my.color.my.aqua },
-    -- pick_selected = { fg = vimodeColor(), bg = my.color.my.aqua },
-    -- background = { fg = "#FFFFFF", bg = groups.mainBG() },
-  }
+      -- },
+      -- diagnostic = { fg = my.color.my.red, bold = true },
+      diagnostic_visible = { fg = my.color.my.red, bg = secondaryVimodeColor(), bold = true },
+      diagnostic_selected = { fg = my.color.my.red, bg = vimodeColor(), bold = true, italic = true },
+      info = {
+        fg = my.color.util.darken(my.color.my.blue, 66),
+        bg = tertiaryVimodeColor()
+      },
+      info_visible = {
+        fg = my.color.util.darken(my.color.my.blue, 66),
+        bg = secondaryVimodeColor()
+      },
+      info_selected = {
+        fg = my.color.util.darken(my.color.my.blue, 66),
+        bg = vimodeColor()
+      },
+      hint = {
+        fg = my.color.util.darken(my.color.my.yellow, 66),
+        bg = tertiaryVimodeColor()
+      },
+      hint_visible = {
+        fg = my.color.util.darken(my.color.my.yellow, 66),
+        bg = secondaryVimodeColor()
+      },
+      hint_selected = {
+        fg = my.color.util.darken(my.color.my.yellow, 66),
+        bg = vimodeColor()
+      },
+      warning = {
+        fg = my.color.util.darken(my.color.my.orange, 66),
+        bg = tertiaryVimodeColor()
+      },
+      warning_visible = {
+        fg = my.color.util.darken(my.color.my.orange, 66),
+        bg = secondaryVimodeColor()
+      },
+      warning_selected = {
+        fg = my.color.util.darken(my.color.my.orange, 66),
+        bg = vimodeColor()
+      },
+      error = {
+        fg = my.color.util.darken(my.color.my.red, 66),
+        bg = tertiaryVimodeColor()
+      },
+      error_visible = {
+        fg = my.color.util.darken(my.color.my.red, 66),
+        bg = secondaryVimodeColor()
+      },
+      error_selected = {
+        fg = my.color.util.darken(my.color.my.red, 66),
+        bg = vimodeColor()
+      },
+      info_diagnostic = {
+        fg = my.color.my.blue,
+        bg = tertiaryVimodeColor()
+      },
+      info_diagnostic_visible = {
+        fg = my.color.util.darken(my.color.my.blue, 21),
+        bg = secondaryVimodeColor()
+      },
+      info_diagnostic_selected = {
+        fg = my.color.util.darken(my.color.my.blue, 33),
+        bg = vimodeColor()
+      },
+      hint_diagnostic = {
+        fg = my.color.my.yellow,
+        bg = tertiaryVimodeColor()
+      },
+      hint_diagnostic_visible = {
+        fg = my.color.util.darken(my.color.my.yellow, 21),
+        bg = secondaryVimodeColor()
+      },
+      hint_diagnostic_selected = {
+        fg = my.color.util.darken(my.color.my.yellow, 33),
+        bg = vimodeColor()
+      },
+      warning_diagnostic = {
+        fg = my.color.my.orange,
+        bg = tertiaryVimodeColor()
+      },
+      warning_diagnostic_visible = {
+        fg = my.color.util.darken(my.color.my.orange, 21),
+        bg = secondaryVimodeColor()
+      },
+      warning_diagnostic_selected = {
+        fg = my.color.util.darken(my.color.my.orange, 33),
+        bg = vimodeColor()
+      },
+      error_diagnostic = {
+        fg = my.color.my.red,
+        bg = tertiaryVimodeColor()
+      },
+      error_diagnostic_visible = {
+        fg = my.color.util.darken(my.color.my.red, 21),
+        bg = secondaryVimodeColor()
+      },
+      error_diagnostic_selected = {
+        fg = my.color.util.darken(my.color.my.red, 33),
+        bg = vimodeColor()
+      },
+      -- hint_selected = { fg = my.color.my.orange, bg = my.color.my.aqua, gui = "bold,italic" },
+      -- warning_selected = { fg = my.color.my.red, bg = my.color.my.aqua, gui = "bold,italic" },
+      -- error_visible = { fg = "#550000", bg = "#F634B1", gui = "bold,italic" },
+      -- error_selected = { fg = my.color.my.red, bg = my.color.my.aqua, gui = "bold,italic" },
+      -- warning = { fg = my.color.my.red, gui = "bold,italic" },
+      -- error = { fg = my.color.my.red, gui = "bold,italic" },
+      -- hint_diagnostic_selected = { fg = my.color.my.green, bg = my.color.my.aqua, gui = "bold,italic" },
+      -- info_diagnostic_selected = { fg = my.color.my.green, bg = my.color.my.aqua, gui = "bold,italic" },
+      -- warning_diagnostic_selected = { fg = my.color.my.orange, bg = my.color.my.aqua, gui = "bold,italic" },
+      -- error_diagnostic_selected = { fg = my.color.my.red, bg = my.color.my.aqua, gui = "bold,italic" },
+      close_button = { fg = my.color.my[vim.fn.mode()], bg = tertiaryVimodeColor() },
+      -- close_button_visible = {
+      -- 	fg = vimodeColor(),
+      -- 	bg = ucolors.blendColors(groups.selectionBG(), groups.mainBG(), 0.8),
+      -- 	bold = true,
+      -- },
+      close_button_visible = { fg = my.color.my[vim.fn.mode()], bg = secondaryVimodeColor(), bold = true },
+      close_button_selected = { fg = my.color.my[vim.fn.mode()], bg = vimodeColor(), bold = true },
+      modified = { fg = my.color.my.red, bg = tertiaryVimodeColor() },
+      modified_visible = { fg = my.color.my.red, bg = secondaryVimodeColor() },
+      modified_selected = { fg = my.color.my.red, bg = vimodeColor() },
+      -- duplicate_selected = { fg = my.color.my.light, bg = my.color.my.aqua },
+      -- duplicate_visible = {
+      -- 	fg = vimodeColor(),
+      -- 	bg = ucolors.blendColors(groups.selectionBG(), groups.mainBG(), 0.8),
+      -- },
+      -- duplicate = { fg = vimodeColor(), bg = groups.highlightBG() },
+      separator = { fg = my.color.my.magenta, bg = tertiaryVimodeColor() },
+      separator_selected = { fg = my.color.my.magenta, bg = vimodeColor() },
+      separator_visible = {
+        fg = my.color.my.magenta,
+        bg = secondaryVimodeColor()
+        -- 	bg = ucolors.blendColors(groups.selectionBG(), groups.mainBG(), 0.8),
+      },
+      -- indicator_selected = { fg = vimodeColor(), bg = my.color.my.aqua },
+      -- pick_selected = { fg = vimodeColor(), bg = my.color.my.aqua },
+      -- background = { fg = "#FFFFFF", bg = groups.mainBG() },
+    }
+  end
 
   local opts = {
     highlights = highlights,
@@ -445,4 +445,4 @@ function config.setup()
   require("bufferline").setup(opts)
 end
 
-return config
+return M
