@@ -16,6 +16,19 @@ require("packer").startup(
         require("colortils").setup()
       end,
     }
+    use({
+      "uga-rosa/ccc.nvim",
+      config = function()
+        local ccc = require "ccc"
+        ccc.setup({
+          save_on_quit = true,
+          inputs = {
+            ccc.input.rgb,
+            ccc.input.hsl,
+          }
+        })
+      end,
+    })
     use { 'junegunn/fzf', run = function()
       vim.fn['fzf#install']()
     end
@@ -29,10 +42,13 @@ require("packer").startup(
       "ellisonleao/glow.nvim",
       config = function()
         require("glow").setup({
-          pager = true,
+          width = 120,
+          width_ratio = 1,
+          height_ratio = 1,
         })
       end
     })
+    use({ "mzlogin/vim-markdown-toc" })
 
     use({
       "kyazdani42/nvim-web-devicons",
@@ -73,6 +89,32 @@ require("packer").startup(
           },
         })
       end,
+    })
+    use({
+      "levouh/tint.nvim",
+      config = function()
+        local tint = require("tint")
+        local transforms = require("tint.transforms")
+        tint.setup({
+          tint = -45, -- Darken colors, use a positive value to brighten
+          saturation = 0.6, -- Saturation to preserve
+          transforms = {
+            -- transforms.saturate(0.5),
+            transforms.tint_with_threshold(-100, "#000000", 100)
+          }, -- Showing default behavior, but value here can be predefined set of transforms
+          tint_background_colors = true, -- Tint background portions of highlight groups
+          highlight_ignore_patterns = { "WinSeparator", "StatusLine", "StatusLineNC", "WinBar",
+            "WinBarNC", "HeirLine" },
+          window_ignore_function = function(winid)
+            local bufid = vim.api.nvim_win_get_buf(winid)
+            local buftype = vim.api.nvim_buf_get_option(bufid, "buftype")
+            local floating = vim.api.nvim_win_get_config(winid).relative ~= ""
+
+            -- Do not tint `terminal` or floating windows, tint everything else
+            return buftype == "terminal" or floating
+          end
+        })
+      end
     })
 
     -- use({
@@ -136,6 +178,12 @@ require("packer").startup(
       end,
     })
     use({ "nvim-treesitter/nvim-treesitter-textobjects" })
+    use {
+      "chrisgrieser/nvim-various-textobjs",
+      config = function()
+        require("various-textobjs").setup({ useDefaultKeymaps = true })
+      end,
+    }
     use({ "RRethy/nvim-treesitter-textsubjects" })
     use({
       "nvim-treesitter/nvim-treesitter-context",
@@ -506,8 +554,8 @@ require("packer").startup(
       config = function()
         require('colorful-winsep').setup({
           highlight = {
-            guibg = my.color.my.magenta,
-            guifg = my.color.my.aqua,
+            bg = my.color.my.magenta,
+            fg = my.color.my.aqua,
           }
         })
       end
@@ -524,16 +572,29 @@ require("packer").startup(
       "themercorp/themer.lua",
       config = function()
         require("themer").setup({
+          transparent = false,
+          dim_inactive = true,
+          enable_installer = true,
           styles = {
             comment = {},
             ["function"] = { style = "italic" },
-            functionbuiltin = { style = "italic,bold" },
+            functionBuiltIn = { style = "italic,bold" },
             operator = { style = "bold" },
             variable = { style = "italic" },
             variableBuiltIn = { style = "italic,bold" },
             parameter = { style = "italic" },
             conditional = { style = "bold" },
+            include = { style = "bold" },
+            keyword = { style = "bold" },
+            keywordBuiltIn = { style = "bold" },
           },
+          remaps = {
+            highlights = {
+              globals = {
+                ["cursorlinenr"] = { underline = false }
+              }
+            }
+          }
         })
       end,
     })
@@ -650,8 +711,10 @@ require("packer").startup(
         "nvim-telescope/telescope-arecibo.nvim",
         "nvim-telescope/telescope-ui-select.nvim",
         "nvim-telescope/telescope-dap.nvim",
+        -- "nvim-telescope/telescope-media-files.nvim",
         "~/.local/git/joehannes-os/telescope-media-files.nvim",
         -- "tom-anders/telescope-vim-bookmarks.nvim",
+        "debugloop/telescope-undo.nvim",
         "sudormrfbin/cheatsheet.nvim",
         "AckslD/nvim-neoclip.lua",
         "rmagatti/auto-session",
@@ -750,40 +813,111 @@ require("packer").startup(
         })
       end,
     })
-    -- use({
-    --   'JASONews/glow-hover',
-    --   config = function()
-    --     require 'glow-hover'.setup {
-    --       max_width = 70,
-    --       padding = 2,
-    --       border = 'shadow',
-    --       glow_path = 'glow'
-    --     }
-    --   end
-    -- })
     use({
-      "rmagatti/goto-preview",
+      'JASONews/glow-hover',
       config = function()
-        require("goto-preview").setup({
-          width = 90, -- Width of the floating window
-          height = 21, -- Height of the floating window
-          border = { "↖", "─", "┐", "│", "┘", "─", "└", "│" }, -- Border characters of the floating window
-          default_mappings = true, -- Bind default mappings
-          debug = false, -- Print debug information
-          opacity = 10, -- 0-100 opacity level of the floating window where 100 is fully transparent.
-          resizing_mappings = true, -- Binds arrow keys to resizing the floating window.
-          post_open_hook = nil, -- A function taking two arguments, a buffer and a window to be ran as a hook.
-          references = { -- Configure the telescope UI for slowing the references cycling window.
-            telescope = require("telescope.themes").get_dropdown({ hide_preview = false }),
+        require 'glow-hover'.setup {
+          max_width = 70,
+          padding = 2,
+          border = 'shadow',
+          glow_path = 'glow'
+        }
+      end
+    })
+    use({
+      "dnlhc/glance.nvim",
+      config = function()
+        local glance = require('glance')
+        local actions = glance.actions
+
+        glance.setup({
+          height = 18, -- Height of the window
+          zindex = 45,
+          preview_win_opts = { -- Configure preview window options
+            cursorline = true,
+            number = true,
+            wrap = true,
           },
-          -- These two configs can also be passed down to the goto-preview definition and implementation calls for one off "peak" functionality.
-          focus_on_open = true, -- Focus the floating window when opening it.
-          dismiss_on_move = false, -- Dismiss the floating window when moving the cursor.
-          force_close = true, -- passed into vim.api.nvim_win_close's second argument. See :h nvim_win_close
-          bufhidden = "wipe", -- the bufhidden option to set on the floating window. See :h bufhidden
+          border = {
+            enable = true, -- Show window borders. Only horizontal borders allowed
+            top_char = '=',
+            bottom_char = '=',
+          },
+          list = {
+            position = 'right', -- Position of the list window 'left'|'right'
+            width = 0.33, -- 33% width relative to the active window, min 0.1, max 0.5
+          },
+          theme = { -- This feature might not work properly in nvim-0.7.2
+            enable = true, -- Will generate colors for the plugin based on your current colorscheme
+            mode = 'auto', -- 'brighten'|'darken'|'auto', 'auto' will set mode based on the brightness of your colorscheme
+          },
+          mappings = {
+            list = {
+              ['j'] = actions.next, -- Bring the cursor to the next item in the list
+              ['k'] = actions.previous, -- Bring the cursor to the previous item in the list
+              ['<Down>'] = actions.next,
+              ['<Up>'] = actions.previous,
+              ['<Tab>'] = actions.next_location, -- Bring the cursor to the next location skipping groups in the list
+              ['<S-Tab>'] = actions.previous_location, -- Bring the cursor to the previous location skipping groups in the list
+              ['<C-u>'] = actions.preview_scroll_win(5),
+              ['<C-d>'] = actions.preview_scroll_win(-5),
+              ['v'] = actions.jump_vsplit,
+              ['s'] = actions.jump_split,
+              ['t'] = actions.jump_tab,
+              ['o'] = actions.jump,
+              ['<leader>l'] = actions.enter_win('preview'), -- Focus preview window
+              ['<CR>'] = actions.enter_win('preview'), -- Focus preview window
+              ['q'] = actions.close,
+              ['Q'] = actions.close,
+              ['<Esc>'] = actions.close,
+              -- ['<Esc>'] = false -- disable a mapping
+            },
+            preview = {
+              ['Q'] = actions.close,
+              ['<Tab>'] = actions.next_location,
+              ['<S-Tab>'] = actions.previous_location,
+              ['<leader>l'] = actions.enter_win('list'), -- Focus list window
+            },
+          },
+          hooks = {},
+          folds = {
+            fold_closed = '',
+            fold_open = '',
+            folded = true, -- Automatically fold list on startup
+          },
+          indent_lines = {
+            enable = true,
+            icon = '│',
+          },
+          winbar = {
+            enable = false, -- Available strating from nvim-0.8+
+          },
         })
       end,
     })
+    -- use({
+    --   "rmagatti/goto-preview",
+    --   config = function()
+    --     require("goto-preview").setup({
+    --       width = 90, -- Width of the floating window
+    --       height = 21, -- Height of the floating window
+    --       border = { "↖", "─", "┐", "│", "┘", "─", "└", "│" }, -- Border characters of the floating window
+    --       default_mappings = true, -- Bind default mappings
+    --       debug = false, -- Print debug information
+    --       opacity = 10, -- 0-100 opacity level of the floating window where 100 is fully transparent.
+    --       resizing_mappings = true, -- Binds arrow keys to resizing the floating window.
+    --       post_open_hook = nil, -- A function taking two arguments, a buffer and a window to be ran as a hook.
+    --       references = { -- Configure the telescope UI for slowing the references cycling window.
+    --         telescope = require("telescope.themes").get_dropdown({ hide_preview = false }),
+    --       },
+    --       -- These two configs can also be passed down to the goto-preview definition and implementation calls for one off "peak" functionality.
+    --       focus_on_open = true, -- Focus the floating window when opening it.
+    --       dismiss_on_move = false, -- Dismiss the floating window when moving the cursor.
+    --       force_close = true, -- passed into vim.api.nvim_win_close's second argument. See :h nvim_win_close
+    --       bufhidden = "wipe", -- the bufhidden option to set on the floating window. See :h bufhidden
+    --     })
+    --   end,
+    -- })
     use({
       "lukas-reineke/lsp-format.nvim",
       config = function()
@@ -1277,8 +1411,6 @@ require("packer").startup(
       -- tag = "*"
     })
 
-    use({ "plasticboy/vim-markdown" })
-
     -- Documentation/Help/Bookmarks ...
     use({
       'mrjones2014/dash.nvim',
@@ -1470,12 +1602,12 @@ require("packer").startup(
     })
 
     -- Embed in browser
-    use({
-      "glacambre/firenvim",
-      run = function()
-        vim.fn["firenvim#install"](0)
-      end,
-    })
+    -- use({
+    --   "glacambre/firenvim",
+    --   run = function()
+    --     vim.fn["firenvim#install"](0)
+    --   end,
+    -- })
     -- use({
     --   "subnut/nvim-ghost.nvim",
     --   run = function()
@@ -1521,6 +1653,161 @@ require("packer").startup(
       end,
     })
 
+    -- Note taking and Co.
+    --use({
+    --  "renerocksai/telekasten.nvim",
+    --  requires = {
+    --    "renerocksai/calendar-vim",
+    --    "nvim-telescope/telescope-symbols.nvim",
+    --    "nvim-telescope/telescope-media-files.nvim",
+    --  },
+    --  config = function()
+    --    local home = vim.fn.expand("~/zettelkasten")
+
+    --    require('telekasten').setup({
+    --      home = home,
+
+    --      -- if true, telekasten will be enabled when opening a note within the configured home
+    --      take_over_my_home = true,
+
+    --      -- auto-set telekasten filetype: if false, the telekasten filetype will not be used
+    --      --                               and thus the telekasten syntax will not be loaded either
+    --      auto_set_filetype = true,
+
+    --      -- dir names for special notes (absolute path or subdir name)
+    --      dailies   = home .. '/' .. 'daily',
+    --      weeklies  = home .. '/' .. 'weekly',
+    --      templates = home .. '/' .. 'templates',
+
+    --      -- image (sub)dir for pasting
+    --      -- dir name (absolute path or subdir name)
+    --      -- or nil if pasted images shouldn't go into a special subdir
+    --      image_subdir = "img",
+
+    --      -- markdown file extension
+    --      extension = ".md",
+
+    --      -- Generate note filenames. One of:
+    --      -- "title" (default) - Use title if supplied, uuid otherwise
+    --      -- "uuid" - Use uuid
+    --      -- "uuid-title" - Prefix title by uuid
+    --      -- "title-uuid" - Suffix title with uuid
+    --      new_note_filename = "title",
+    --      -- file uuid type ("rand" or input for os.date()")
+    --      uuid_type = "%Y%m%d%H%M",
+    --      -- UUID separator
+    --      uuid_sep = "-",
+
+    --      -- following a link to a non-existing note will create it
+    --      follow_creates_nonexisting = true,
+    --      dailies_create_nonexisting = true,
+    --      weeklies_create_nonexisting = true,
+
+    --      -- skip telescope prompt for goto_today and goto_thisweek
+    --      journal_auto_open = false,
+
+    --      -- template for new notes (new_note, follow_link)
+    --      -- set to `nil` or do not specify if you do not want a template
+    --      template_new_note = home .. '/' .. 'templates/new_note.md',
+
+    --      -- template for newly created daily notes (goto_today)
+    --      -- set to `nil` or do not specify if you do not want a template
+    --      template_new_daily = home .. '/' .. 'templates/daily.md',
+
+    --      -- template for newly created weekly notes (goto_thisweek)
+    --      -- set to `nil` or do not specify if you do not want a template
+    --      template_new_weekly = home .. '/' .. 'templates/weekly.md',
+
+    --      -- image link style
+    --      -- wiki:     ![[image name]]
+    --      -- markdown: ![](image_subdir/xxxxx.png)
+    --      image_link_style = "markdown",
+
+    --      -- default sort option: 'filename', 'modified'
+    --      sort = "filename",
+
+    --      -- integrate with calendar-vim
+    --      plug_into_calendar = true,
+    --      calendar_opts = {
+    --        -- calendar week display mode: 1 .. 'WK01', 2 .. 'WK 1', 3 .. 'KW01', 4 .. 'KW 1', 5 .. '1'
+    --        weeknm = 4,
+    --        -- use monday as first day of week: 1 .. true, 0 .. false
+    --        calendar_monday = 1,
+    --        -- calendar mark: where to put mark for marked days: 'left', 'right', 'left-fit'
+    --        calendar_mark = 'left-fit',
+    --      },
+
+    --      -- telescope actions behavior
+    --      close_after_yanking = false,
+    --      insert_after_inserting = true,
+
+    --      -- tag notation: '#tag', ':tag:', 'yaml-bare'
+    --      tag_notation = "#tag",
+
+    --      -- command palette theme: dropdown (window) or ivy (bottom panel)
+    --      command_palette_theme = "ivy",
+
+    --      -- tag list theme:
+    --      -- get_cursor: small tag list at cursor; ivy and dropdown like above
+    --      show_tags_theme = "ivy",
+
+    --      -- when linking to a note in subdir/, create a [[subdir/title]] link
+    --      -- instead of a [[title only]] link
+    --      subdirs_in_links = true,
+
+    --      -- template_handling
+    --      -- What to do when creating a new note via `new_note()` or `follow_link()`
+    --      -- to a non-existing note
+    --      -- - prefer_new_note: use `new_note` template
+    --      -- - smart: if day or week is detected in title, use daily / weekly templates (default)
+    --      -- - always_ask: always ask before creating a note
+    --      template_handling = "smart",
+
+    --      -- path handling:
+    --      --   this applies to:
+    --      --     - new_note()
+    --      --     - new_templated_note()
+    --      --     - follow_link() to non-existing note
+    --      --
+    --      --   it does NOT apply to:
+    --      --     - goto_today()
+    --      --     - goto_thisweek()
+    --      --
+    --      --   Valid options:
+    --      --     - smart: put daily-looking notes in daily, weekly-looking ones in weekly,
+    --      --              all other ones in home, except for notes/with/subdirs/in/title.
+    --      --              (default)
+    --      --
+    --      --     - prefer_home: put all notes in home except for goto_today(), goto_thisweek()
+    --      --                    except for notes with subdirs/in/title.
+    --      --
+    --      --     - same_as_current: put all new notes in the dir of the current note if
+    --      --                        present or else in home
+    --      --                        except for notes/with/subdirs/in/title.
+    --      new_note_location = "smart",
+
+    --      -- should all links be updated when a file is renamed
+    --      rename_update_links = true,
+
+    --      vaults = {
+    --        vault2 = {
+    --          -- alternate configuration for vault2 here. Missing values are defaulted to
+    --          -- default values from telekasten.
+    --          -- e.g.
+    --          -- home = "/home/user/vaults/personal",
+    --        },
+    --      },
+
+    --      -- how to preview media files
+    --      -- "telescope-media-files" if you have telescope-media-files.nvim installed
+    --      -- "catimg-previewer" if you have catimg installed
+    --      media_previewer = "telescope-media-files",
+
+    --      -- A customizable fallback handler for urls.
+    --      follow_url_fallback = nil,
+    --    })
+    --  end
+    --})
 
     -- tmux
     -- use({ "roxma/vim-tmux-clipboard" })
@@ -1781,32 +2068,6 @@ require("packer").startup(
       end,
     })
 
-    -- use({
-    --   "levouh/tint.nvim",
-    --   config = function()
-    --     local tint = require("tint")
-    --     local transforms = require("tint.transforms")
-    --     tint.setup({
-    --       tint = -45, -- Darken colors, use a positive value to brighten
-    --       saturation = 0.6, -- Saturation to preserve
-    --       transforms = {
-    --         -- transforms.saturate(0.5),
-    --         transforms.tint_with_threshold(-100, "#000000", 100)
-    --       }, -- Showing default behavior, but value here can be predefined set of transforms
-    --       tint_background_colors = true, -- Tint background portions of highlight groups
-    --       highlight_ignore_patterns = { "WinSeparator", "StatusLine", "StatusLineNC", "WinBar",
-    --         "WinBarNC", "HeirLine" },
-    --       window_ignore_function = function(winid)
-    --         local bufid = vim.api.nvim_win_get_buf(winid)
-    --         local buftype = vim.api.nvim_buf_get_option(bufid, "buftype")
-    --         local floating = vim.api.nvim_win_get_config(winid).relative ~= ""
-
-    --         -- Do not tint `terminal` or floating windows, tint everything else
-    --         return buftype == "terminal" or floating
-    --       end
-    --     })
-    --   end
-    -- })
     if packer_bootstrap then
       require("packer").sync()
     end
