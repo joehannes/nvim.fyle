@@ -61,6 +61,13 @@ function config.setup()
       --     ["show_http_headers"] = false,
       --     ["show_domain_icons"] = false
       -- },
+      undo = {
+        side_by_side = true,
+        layout_strategy = "vertical",
+        layout_config = {
+          preview_height = 0.8,
+        },
+      },
       ["ui-select"] = {
         require("telescope.themes").get_dropdown {}
       },
@@ -149,6 +156,38 @@ function config.setup()
         path = vim.fn.stdpath("data") .. "/databases/telescope_history.sqlite3",
         limit = 100,
       },
+      preview = {
+        mime_hook = function(filepath, bufnr, opts)
+          local is_image = function(filepath)
+            local image_extensions = { "png", "jpg", "jpeg", "gif" } -- Supported image formats
+            local split_path = vim.split(filepath:lower(), ".", { plain = true })
+            local extension = split_path[#split_path]
+            return vim.tbl_contains(image_extensions, extension)
+          end
+          if is_image(filepath) then
+            local term = vim.api.nvim_open_term(bufnr, {})
+            local function send_output(_, data, _)
+              for _, d in ipairs(data) do
+                vim.api.nvim_chan_send(term, d .. "\r\n")
+              end
+            end
+
+            vim.fn.jobstart({
+              "viu",
+              filepath,
+            }, {
+              on_stdout = send_output,
+              stdout_buffered = true,
+            })
+          else
+            require("telescope.previewers.utils").set_preview_message(
+              bufnr,
+              opts.winid,
+              "Binary cannot be previewed"
+            )
+          end
+        end,
+      }
     },
   })
 
@@ -167,6 +206,7 @@ function config.setup()
   telescope.load_extension("media_files")
   telescope.load_extension("frecency")
   telescope.load_extension("ui-select")
+  telescope.load_extension("undo")
 end
 
 return config
