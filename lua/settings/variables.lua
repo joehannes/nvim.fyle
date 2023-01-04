@@ -1,4 +1,8 @@
 local M = {
+  neovide_transparency = 0.9,
+  transparency = 1,
+  neovide_cursor_trail_size = 1,
+  neovide_cursor_vfx_mode = "ripple",
   asyncrun_open = 6,
   asynctasks_profile = 'npm',
   floaterm_height = 0.9,
