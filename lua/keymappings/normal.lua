@@ -7,7 +7,7 @@ local M = {
   { "<C-k>", '<Cmd>call WinMove("k")<CR>', "up win", '<Cmd>call WinMove("j")<CR>' },
   { "<C-j>", '<Cmd>call WinMove("j")<CR>', "down win", '<Cmd>call WinMove("k")<CR>' },
   { "<Esc><Esc>", "<Cmd>nohl<CR>", "remove highlights" },
-  { "<De>", {
+  { "<Del>", {
     { "<Del>", '<Cmd>lua require("notify").dismiss()<cr>', "notifications" },
   }, "+dismiss" },
   { "<CR><CR>", "<Cmd>BResizeZoom<CR>", "toggle max win" },
@@ -115,6 +115,10 @@ local M = {
         "+lsp [symbol] <task>",
       },
       { "a", "<cmd>CodeActionMenu<CR>", "lsp code action menu" },
+      { "C", {
+        { "c", "<Cmd>CccConvert<CR>", "convert color" },
+        { "p", "<Cmd>CccPick<CR>", "pick color" },
+      }, "+pick/convert color" },
       { "d", "<cmd>split<CR><C-w>T<cmd>vsplit<CR><Cmd>lua vim.lsp.buf.definition()<CR>",
         "definition in new tab(curFile & definitionFile)" },
       { "D", "<Cmd>lua vim.lsp.buf.definition()<CR>", "definition in place" },
@@ -129,6 +133,12 @@ local M = {
         "<CMD>lua require('neoscroll').scroll(-vim.api.nvim_win_get_height(0) + 7, true, 250, 'sine')<CR>",
         "scroll up: almost full page", "gn" },
       { "o", "<plug>(GrepperOperator)", "grep && pop qf" },
+      { "p", {
+        { "d", "<Cmd>Glance definitions<CR>", "peek definitions" },
+        { "i", "<Cmd>Glance implementations<CR>", "peek implementations" },
+        { "r", "<Cmd>Glance references<CR>", "peek references" },
+        { "t", "<Cmd>Glance type_definitions<CR>", "peek type_definitions" },
+      }, "+Peek LSP" },
       { "r", "<cmd>split<CR><C-w>T<cmd>vsplit<CR><cmd>Telescope lsp_references<CR>",
         "reference in new tab(curFile & referenceFile)" },
       { "R", "<cmd>Telescope lsp_references<CR>", "reference in place" },
@@ -315,6 +325,7 @@ local M = {
             },
           },
           { "s", "<Cmd>SearchSession<CR>", "sessions" },
+          { "u", "<Cmd>Telescope undo<CR>", "undo tree" },
           { "w", "<Cmd>Telescope grep_string<CR>", "grep string" },
           { "y", "<Cmd>Telescope neoclip<CR>", "clipboard" },
           { "z", "<Cmd>Telescope current_buffer_fuzzy_find<CR>", "buffer fuzzyfinder" },
