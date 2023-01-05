@@ -6,40 +6,47 @@ require("utils")
 vim.api.nvim_set_var("mapleader", " ")
 vim.api.nvim_set_var("maplocalleader", ";")
 
-local packer_install_path = vim.fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
-
--- Auto install packer.nvim if not exists
-if vim.fn.empty(vim.fn.glob(packer_install_path)) > 0 then
-  _G.packer_bootstrap = vim.fn.system({
-    "git",
-    "clone",
-    "--depth",
-    "1",
-    "https://github.com/wbthomason/packer.nvim",
-    packer_install_path,
-  })
-  vim.cmd [[packadd packer.nvim]]
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({ "git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git", lazypath })
+  vim.fn.system({ "git", "-C", lazypath, "checkout", "tags/stable" }) -- last stable release
 end
+vim.opt.rtp:prepend(lazypath)
 
-local packer = require("packer")
-local packer_util = require("packer.util")
-
-packer.reset()
-
-packer.init({
-  compile_path = packer_util.join_paths(vim.fn.stdpath("config"), "lua", "packer_compiled.lua"),
-  compile_on_sync = true,
-  git = {
-    clone_timeout = false,
+require("lazy").setup({
+  spec = {
+    { "folke/LazyVim", import = "lazyvim.plugins" },
+    { import = "plugins" },
   },
-  display = {
-    open_fn = packer_util.float,
+  defaults = { lazy = true },
+  install = { colorscheme = { "tokyonight", "habamax" } },
+  checker = { enabled = true },
+  diff = {
+    cmd = "diffview.nvim",
   },
-  max_jobs = 7,
-  opt_default = false,
+  performance = {
+    cache = {
+      enabled = true,
+    },
+    rtp = {
+      disabled_plugins = {
+        "gzip",
+        "matchit",
+        "matchparen",
+        "netrwPlugin",
+        "tarPlugin",
+        "tohtml",
+        "tutor",
+        "zipPlugin",
+      },
+    },
+  },
+  ui = {
+    custom_keys = {
+    },
+  },
+  debug = true,
 })
-
-require("packer_compiled")
 
 require("settings")
 require("plugins")
