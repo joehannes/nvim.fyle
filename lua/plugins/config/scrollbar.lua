@@ -1,6 +1,6 @@
-local config = {}
+local M = {}
 
-function config.setup()
+function M.setup()
   require("scrollbar").setup({
     show = true,
     handle = {
@@ -50,7 +50,7 @@ function config.setup()
       search = true, -- Requires hlslens to be loaded
     },
   })
-  require("scrollbar.handlers.search").setup()
+  -- require("scrollbar.handlers.search").setup()
 end
 
-return config
+return M

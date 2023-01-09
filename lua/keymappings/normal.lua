@@ -20,8 +20,7 @@ local M = {
   {
     "[",
     {
-      { "b", "<Cmd>BufferLineCyclePrev<CR>", "buf to left" },
-      { "B", "<Cmd>bprevious<CR>", "prev buf" },
+      { "b", "<Cmd>bprevious<CR>", "buf to left" },
       { "d", "<cmd>lua vim.diagnostic.goto_prev()<CR>", "diag" },
       { "e", "<Plug>(ultest-prev-fail)", "failed test" },
       { "h", "<cmd>Gitsigns prev_hunk<CR>", "hunk" },
@@ -51,15 +50,14 @@ local M = {
         "+marks|bookmarks",
       },
       { "q", "<cmd>silent cprevious<CR>", "quickfix => prev next", "<Cmd>silent cnext<CR>" },
-      { "t", "<Cmd>FloatermPrev<CR>", "float-term" },
+      { "t", "<Cmd>lua require('terminal.mappings').cycle_prev()<CR>", "prev term" },
       { "w", "<Cmd>tabprevious<CR>", "tab/winLayout" },
     },
   },
   {
     "]",
     {
-      { "b", "<Cmd>BufferLineCycleNext<CR>", "buf to right" },
-      { "B", "<Cmd>bnext<CR>", "next buf" },
+      { "b", "<Cmd>bnext<CR>", "next buf" },
       { "d", "<cmd>lua vim.diagnostic.goto_next()<CR>", "diag" },
       { "e", "<Plug>(ultest-next-fail)", "failed test" },
       { "h", "<cmd>Gitsigns next_hunk<CR>", "hunk" },
@@ -89,7 +87,7 @@ local M = {
         "+marks|bookmarks",
       },
       { "q", "<cmd>silent cnext<CR>", "quickfix => next item", "<cmd>silent cprevious<CR>" },
-      { "t", "<Cmd>FloatermNext<CR>", "float-term" },
+      { "t", "<Cmd>lua require('terminal.mappings').cycle_next()<CR>", "next term" },
       { "w", "<Cmd>tabnext<CR>", "tab/winLayout" },
     },
   },
@@ -222,7 +220,7 @@ local M = {
         "b",
         {
           { "q", ":bp|bd #<CR>", "quit current buffer" },
-          { "p", "<cmd>BufferLinePick<CR>", "pick buffer in tabline" },
+          { "p", "<cmd>lua my.ui.tablinePickBuffer()<CR>", "pick buffer in tabline" },
           {
             "d",
             {
@@ -478,7 +476,7 @@ local M = {
       {
         "q",
         {
-          { "q", "<cmd>FloatermKill<CR>:wqa!<CR>", "killTerm & saveAll! & quit!" },
+          { "q", "<CMD>wa!<CR><CMD>qa!<CR>", "saveAll! & quitAll!" },
         }, "+quit"
       },
       {
@@ -522,8 +520,24 @@ local M = {
           },
           { "m", "<Plug>(Marks-toggle)", "mark" },
           { "o", "<Cmd>SymbolsOutline<CR>", "outline" },
-          { "t", "<Cmd>FloatermToggle<CR>", "terminal" },
-          { "T", "<Cmd>FloatermNew<CR>", "add new terminal" },
+          { "t",
+            [[<Cmd>lua require("terminal.mappings").toggle()<CR>]],
+            "terminal" },
+          { "1t",
+            [[<Cmd>1TermOpen!<CR>]],
+            "1st term" },
+          { "2t",
+            [[<Cmd>2TermOpen!<CR>]],
+            "2st term" },
+          { "3t",
+            [[<Cmd>3TermOpen!<CR>]],
+            "3st term" },
+          { "4t",
+            [[<Cmd>4TermOpen!<CR>]],
+            "4st term" },
+          { "5t",
+            [[<Cmd>5TermOpen!<CR>]],
+            "5st term" },
           { "u", "<cmd>lua require('undotree').open()<CR><cmd>normal  w=<CR>", "undo tree" },
           { "R", "<Cmd>ProjectRoot<CR>", "CWD" },
           { "Z", "<Cmd>ZenMode<CR>", "zen mode" },

@@ -2,7 +2,7 @@ vim.go.foldexpr = "nvim_treesitter#foldexpr()"
 
 local M = {}
 
-function M.setup()
+function M.ts_setup()
   -- local ts_parsers = require "nvim-treesitter.parsers"
   -- local ft_to_parser = ts_parsers.filetype_to_parsername
   -- ft_to_parser["typescriptreact"] = "tsx"
@@ -128,6 +128,43 @@ function M.setup()
       },
     },
   })
+end
+
+function M.ts_refactor_setup()
+  require("nvim-treesitter.configs").setup({
+    rainbow = {
+      enable = true,
+      extended_mode = false,
+    },
+    autotag = {
+      enable = true,
+      highlight = {
+        enable = true,
+        highlight_delay = 200,
+        highlight_method = "block",
+        highlight_group = "TSRefactorHighlight",
+      },
+    },
+    refactor = {
+      highlight_definitions = {
+        enable = true,
+        -- Set to false if you have an `updatetime` of ~100.
+        clear_on_cursor_move = true,
+      },
+      highlight_current_scope = { enable = true },
+      navigation = {
+        enable = true,
+        keymaps = {
+          goto_previous_usage = "<leader>#",
+          goto_next_usage = "<leader>*",
+        },
+      },
+    },
+  })
+end
+
+function M.ts_vto_setup()
+  require("various-textobjs").setup({ useDefaultKeymaps = true })
 end
 
 return M

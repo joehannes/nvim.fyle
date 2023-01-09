@@ -13,8 +13,6 @@ function M.setup()
 		override_lens = nil,
 	})
 
-	require("scrollbar.handlers.search").setup()
-
 	vim.cmd([[
     hi default link HlSearchNear IncSearch
     hi default link HlSearchLens WildMenu

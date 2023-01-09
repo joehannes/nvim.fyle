@@ -78,7 +78,7 @@ function config.setup()
         ["show_domain_icons"] = false,
       },
       frecency = {
-        db_root = vim.fn.stdpath("data") .. "/databases/",
+        db_root = vim.fn.stdpath("data") .. "/databases",
         show_scores = false,
         show_unindexed = true,
         ignore_patterns = { "*.git/*", "*/tmp/*" },
@@ -193,7 +193,7 @@ function config.setup()
 
   -- telescope.load_extension("fzf")
   telescope.load_extension("gh")
-  telescope.load_extension("dap")
+  -- telescope.load_extension("dap")
   telescope.load_extension("node_modules")
   telescope.load_extension("session-lens")
   -- telescope.load_extension("vim_bookmarks")

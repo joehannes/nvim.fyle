@@ -14,15 +14,15 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
+  root = vim.fn.stdpath("data") .. "/lazy",
   spec = {
-    { "folke/LazyVim", import = "lazyvim.plugins" },
-    { import = "plugins" },
+    import = "plugins",
   },
-  defaults = { lazy = true },
+  defaults = { lazy = false, version = "*" },
   install = { colorscheme = { "tokyonight", "habamax" } },
-  checker = { enabled = true },
+  checker = { enabled = false },
   diff = {
-    cmd = "diffview.nvim",
+    cmd = "git",
   },
   performance = {
     cache = {
@@ -30,26 +30,20 @@ require("lazy").setup({
     },
     rtp = {
       disabled_plugins = {
-        "gzip",
-        "matchit",
-        "matchparen",
-        "netrwPlugin",
-        "tarPlugin",
-        "tohtml",
-        "tutor",
-        "zipPlugin",
       },
     },
+  },
+  git = {
+    timeout = 500,
   },
   ui = {
     custom_keys = {
     },
   },
-  debug = true,
+  debug = false,
 })
 
 require("settings")
-require("plugins")
 require("lang")
 require("keymappings")
 require("colorschemes")

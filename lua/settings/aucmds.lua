@@ -1,10 +1,10 @@
 --@diagnostic disable: undefined-global
 local M = {
   MyBootAugroup = {
-    -- ["VimEnter"] = {
-    --   pattern = "*",
-    --   callback = my.fn.onAfterBoot,
-    -- }
+    ["VimEnter"] = {
+      pattern = "*",
+      callback = my.fn.onAfterBoot,
+    }
   },
   MyHighlightAugroup = {
     ["TextYankPost"] = {

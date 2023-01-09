@@ -1,5 +1,5 @@
 local config = {}
-local cb = require("diffview.config").diffview_callback
+local cb = function(str) require("diffview.config").diffview_callback(str) end
 
 function config.setup()
   require("diffview").setup({

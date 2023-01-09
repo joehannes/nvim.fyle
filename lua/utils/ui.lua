@@ -47,15 +47,15 @@ end
 
 function M.tint()
   local ok, tint = pcall(require, "tint")
-  local bufferline = require("plugins.bufferline")
+  -- local bufferline = require("plugins.config.bufferline")
   local lines = require("heirline")
-  local heirline = require("plugins.heirline")
+  local heirline = require("plugins.config.heirline")
 
   if (ok) then
     tint.refresh()
     lines.reset_highlights()
     heirline.load_colors()
-    bufferline.setup()
+    -- bufferline.setup()
     heirline.setup(false)
     tint.refresh()
   end
@@ -78,6 +78,21 @@ function M.updateHighlights()
       { underline = true, underdouble = true, fg = my.color.my.magenta, sp = my.color.my.magenta })
     vim.api.nvim_set_hl(0, "ScrollbarHandle", { bg = mode_color })
   end
+end
+
+function M.tablinePickBuffer()
+  local tabline = require("heirline").tabline
+  local buflist = tabline._buflist[1]
+  buflist._picker_labels = {}
+  buflist._show_picker = true
+  vim.cmd.redrawtabline()
+  local char = vim.fn.getcharstr()
+  local bufnr = buflist._picker_labels[char]
+  if bufnr then
+    vim.api.nvim_win_set_buf(0, bufnr)
+  end
+  buflist._show_picker = false
+  vim.cmd.redrawtabline()
 end
 
 return M

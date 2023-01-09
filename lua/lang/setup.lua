@@ -217,6 +217,9 @@ function setup.lua()
             [vim.fn.expand("$VIMRUNTIME/lua/utils")] = true,
           },
         },
+        completion = {
+          callSnippet = "Replace"
+        },
       },
     },
   }

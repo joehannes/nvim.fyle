@@ -1,7 +1,7 @@
 local M = {}
 
 function M.onAfterBoot()
-  M.applyWinSeparatorNCHighlight()
+  vim.schedule(my.ui.tint)
 end
 
 function M.onColorscheme()

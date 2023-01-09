@@ -19,7 +19,7 @@ local M = [[
   set ruler
   set number relativenumber
   set guifont=FiraCode\ Nerd\ Font\ Mono
-  set showtabline=1
+  set showtabline=2
   set laststatus=3
   set directory=/tmp
   set nobackup

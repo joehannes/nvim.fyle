@@ -3,13 +3,6 @@
 local config = {}
 
 vim.cmd([[
-    packadd nvim-bqf
-    packadd fzf
-    packadd nvim-treesitter
-    packadd vim-grepper
-]])
-
-vim.cmd([[
     hi BqfPreviewBorder guifg=#50a14f ctermfg=71
     hi link BqfPreviewRange Search
 ]])

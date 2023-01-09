@@ -1,4 +1,5 @@
 local M = {
+  qs_highlight_on_keys = { 'f', 'F', 't', 'T' },
   neovide_transparency = 0.9,
   transparency = 1,
   neovide_cursor_trail_size = 1,
