@@ -25,8 +25,11 @@ return {
   },
   { "tversteeg/registers.nvim" },
   {
-    "anuvyklack/pretty-fold.nvim",
-    config = function() require("pretty-fold").setup() end,
+    "kevinhwang91/nvim-ufo",
+    dependencies = 'kevinhwang91/promise-async',
+    config = function()
+      require("plugins.config.ufo").setup()
+    end
   },
   {
     "gelguy/wilder.nvim",
