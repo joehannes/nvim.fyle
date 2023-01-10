@@ -24,9 +24,10 @@ return {
     config = function() require("plugins.config.auto_session").setup() end,
   },
   { "tversteeg/registers.nvim" },
+  { "kevinhwang91/promise-async" },
   {
     "kevinhwang91/nvim-ufo",
-    dependencies = 'kevinhwang91/promise-async',
+    dependencies = "kevinhwang91/promise-async",
     config = function()
       require("plugins.config.ufo").setup()
     end

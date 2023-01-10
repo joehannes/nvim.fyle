@@ -51,5 +51,4 @@ function M.setup()
   })
 end
 
-require
-M
+return M

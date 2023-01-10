@@ -1,7 +1,7 @@
 local M = {}
 
 function M.onAfterBoot()
-  vim.schedule(my.ui.tint)
+  vim.schedule(function() vim.defer_fn(my.ui.tint, 1000) end)
 end
 
 function M.onColorscheme()
