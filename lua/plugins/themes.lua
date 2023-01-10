@@ -80,5 +80,30 @@ return {
       })
       auto_dark_mode.init()
     end
-  }
+  },
+  {
+    "cpea2506/one_monokai.nvim",
+    config = function()
+      require("one_monokai").setup({
+        transparent = true,
+        colors = {
+          green = my.color.my.green,
+          blue = my.color.my.aqua,
+          roman = my.color.my.magenta,
+          lmao = my.color.util.darken(my.color.util.desaturate(my.color.my.purple, 50),
+            vim.opt.background:get() == "light" and 0 or 90),
+          pink = my.color.util.desaturate(my.color.my.magenta, 50)
+        },
+        themes = function(colors)
+          return {
+            Normal = { bg = colors.lmao },
+            Comment = { fg = colors.pink, italic = true },
+            ErrorMsg = { fg = "black", bg = my.color.my.red, standout = true },
+            NormalFloat = { link = my.color.my.lmao },
+          }
+        end,
+      })
+    end
+  },
+  { "YorickPeterse/vim-paper" }
 }
