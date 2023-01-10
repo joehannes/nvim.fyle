@@ -14,6 +14,12 @@ return {
     config = function() require("plugins.config.notify").setup() end,
   },
   {
+    "luukvbaal/statuscol.nvim",
+    config = function()
+      require("plugins.config.statuscol").setup()
+    end,
+  },
+  {
     "rmagatti/auto-session",
     config = function() require("plugins.config.auto_session").setup() end,
   },
