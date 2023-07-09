@@ -15,6 +15,8 @@ local my_servers = {
   python = "pyright",
   tailwind = "tailwindcss",
   clojure = "clojure_lsp",
+  sourcekit = "sourcekit",
+  rust = "rust_analyzer"
 }
 
 --Some Diagnostic Icons
@@ -41,7 +43,7 @@ for server, name in pairs(my_servers) do
   elseif server == "typescript" then
     require("typescript").setup({
       disable_commands = false, -- prevent the plugin from creating Vim commands
-      debug = false, -- enable debug logging for commands
+      debug = false,            -- enable debug logging for commands
       server = cfg[server](),
     })
   elseif server == "efm" then

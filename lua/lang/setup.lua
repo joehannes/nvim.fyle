@@ -157,6 +157,22 @@ function setup.clojure()
   return opts
 end
 
+function setup.rust_analyzer()
+  local opts = {
+    capabilities = capabilities,
+    handlers = {
+      ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" }),
+      ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" }),
+    },
+    on_attach = on_attach.generic,
+    settings = {
+      format = { enable = true },
+    }
+  }
+
+  return opts
+end
+
 function setup.python()
   local opts = {
     capabilities = capabilities,
@@ -274,33 +290,33 @@ function setup.cssmodules()
 end
 
 function setup.efm()
-  local efmls = require("efmls-configs")
-  local efm_fs = require("efmls-configs.fs")
-  local root_path = vim.api.nvim_call_function("getcwd", {})
+  local efmls             = require("efmls-configs")
+  local efm_fs            = require("efmls-configs.fs")
+  local root_path         = vim.api.nvim_call_function("getcwd", {})
 
   local eslint_cfg_path   = table.foreach({
-    ".eslintrc.js",
-    ".eslintrc.cjs",
-    ".eslintrc.yaml",
-    ".eslintrc.yml",
-    ".eslintrc.json",
-  }, function(_, value)
-    return my.fs.exists(root_path .. "/" .. value) and root_path .. "/" .. value or nil
-  end) or root_path .. "/package.json"
+        ".eslintrc.js",
+        ".eslintrc.cjs",
+        ".eslintrc.yaml",
+        ".eslintrc.yml",
+        ".eslintrc.json",
+      }, function(_, value)
+        return my.fs.exists(root_path .. "/" .. value) and root_path .. "/" .. value or nil
+      end) or root_path .. "/package.json"
   local prettier_cfg_path = table.foreach({
-    ".prettierrc",
-    ".prettierrc.json",
-    ".prettierrc.yml",
-    ".prettierrc.yaml",
-    ".prettierrc.json5",
-    ".prettierrc.js",
-    ".prettierrc.cjs",
-    ".prettierrc.config.js",
-    ".prettierrc.config.cjs",
-    ".prettierrc.toml",
-  }, function(_, value)
-    return my.fs.exists(root_path .. "/" .. value) and root_path .. "/" .. value or nil
-  end) or root_path .. "/package.json"
+        ".prettierrc",
+        ".prettierrc.json",
+        ".prettierrc.yml",
+        ".prettierrc.yaml",
+        ".prettierrc.json5",
+        ".prettierrc.js",
+        ".prettierrc.cjs",
+        ".prettierrc.config.js",
+        ".prettierrc.config.cjs",
+        ".prettierrc.toml",
+      }, function(_, value)
+        return my.fs.exists(root_path .. "/" .. value) and root_path .. "/" .. value or nil
+      end) or root_path .. "/package.json"
   local stylelint         = require("efmls-configs.linters.stylelint")
   local eslint            = require("efmls-configs.linters.eslint_d")
   -- eslint.lintCommand      = eslint.lintCommand .. " --rule 'prettier/prettier: off'"
@@ -316,7 +332,7 @@ function setup.efm()
   local clj_kondo         = require 'plugins/config/clj_kondo'
   local joker             = require 'efmls-configs.formatters.joker'
 
-  local handlers = {
+  local handlers          = {
     ["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
       virutal_text = true,
       underline = true,
