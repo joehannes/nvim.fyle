@@ -23,6 +23,8 @@
     "diagnostic-languageserver": "^1.13.0",
     "dockerfile-language-server-nodejs": "^0.4.1",
     "eslint": "^7.32.0",
+    "eslint_d": "^12.2.1",
+    "prettier-eslint": "^15.0.1",
     "typescript": "^4.4.4",
     "typescript-language-server": "^0.6.4",
     "typescript-styled-plugin": "^0.18.1"
