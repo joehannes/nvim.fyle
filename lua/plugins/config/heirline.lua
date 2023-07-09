@@ -138,20 +138,28 @@ FileIcon = {
 local FileName = {
   init = function(self)
     self.lfilename = vim.fn.fnamemodify(self.filename, ":.")
+    self.shortened = false
     if self.lfilename == "" then
       self.lfilename = "[No Name]"
     end
     if not conditions.width_percent_below(#self.lfilename, 0.27) then
       self.lfilename = vim.fn.pathshorten(self.lfilename)
+      self.shortened = true
     end
   end,
-  hl = { fg = "dark", bg = "magenta" },
-  provider = function(self)
-    return self.lfilename
-  end,
-  --provider = function(self)
-  --  return vim.fn.pathshorten(self.lfilename)
-  --end,
+  {
+    hl = { fg = "dark", bg = "magenta" },
+    provider = function(self)
+      return self.lfilename
+    end,
+  },
+  on_click = {
+    name = "heirline_filename_ranger_current",
+    callback = function()
+      require('maximize').toggle()
+      vim.cmd("RangerCurrentFile")
+    end
+  }
 }
 
 local FileFlags = {
@@ -176,7 +184,7 @@ local FileFlags = {
 local FileNameModifer = {
   hl = function()
     if vim.bo.modified then
-      return { fg = "aqua", bold = true, force = true }
+      return { fg = my.color.my.aqua, bold = true, force = true }
     end
   end,
 }
@@ -273,7 +281,7 @@ local LSPActive = {
 }
 
 local Navic = {
-  condition = require("nvim-navic").is_available,
+  condition = function(self) return require("nvim-navic").is_available(vim.api.nvim_get_current_buf()) end,
   static = {
     -- create a type highlight map
     type_hl = {
@@ -366,14 +374,13 @@ local Navic = {
   update = { "CursorMoved", "ModeChanged" }
 }
 
-local Diagnostics = {
+local BufferDiagnostics = {
 
   condition = conditions.has_diagnostics,
   update = { "DiagnosticChanged", "BufEnter" },
   on_click = {
     callback = function()
-      require('diaglist').populate_llist()
-      vim.cmd("LLOpen!")
+      vim.cmd([[TroubleToggle document_diagnostics]])
     end,
     name = "heirline_diagnostics",
   },
@@ -418,13 +425,63 @@ local Diagnostics = {
   },
 }
 
+local Diagnostics = {
+
+  condition = conditions.has_diagnostics,
+  update = { "DiagnosticChanged", "TabEnter" },
+  on_click = {
+    callback = function()
+      vim.cmd([[TroubleToggle workspace_diagnostics]])
+    end,
+    name = "heirline_diagnostics",
+  },
+
+  static = {
+    error_icon = vim.fn.sign_getdefined("DiagnosticSignError").text,
+    warn_icon = vim.fn.sign_getdefined("DiagnosticSignWarn").text,
+    info_icon = vim.fn.sign_getdefined("DiagnosticSignInfo").text,
+    hint_icon = vim.fn.sign_getdefined("DiagnosticSignHint").text,
+  },
+
+  init = function(self)
+    self.errors = #vim.diagnostic.get(nil, { severity = vim.diagnostic.severity.ERROR })
+    self.warnings = #vim.diagnostic.get(nil, { severity = vim.diagnostic.severity.WARN })
+    self.hints = #vim.diagnostic.get(nil, { severity = vim.diagnostic.severity.HINT })
+    self.info = #vim.diagnostic.get(nil, { severity = vim.diagnostic.severity.INFO })
+  end,
+
+  {
+    provider = function(self)
+      return self.errors > 0 and ((self.error_icon or " ") .. self.errors .. " ")
+    end,
+    hl = { fg = my.color.util.darken(my.color.my.red, 33) },
+  },
+  {
+    provider = function(self)
+      return self.warnings > 0 and ((self.warn_icon or " ") .. self.warnings .. " ")
+    end,
+    hl = { fg = my.color.util.darken(my.color.my.orange, 33) },
+  },
+  {
+    provider = function(self)
+      return self.info > 0 and ((self.info_icon or "") .. self.info .. " ")
+    end,
+    hl = { fg = my.color.util.darken(my.color.my.aqua, 33) },
+  },
+  {
+    provider = function(self)
+      return self.hints > 0 and ((self.hint_icon or "") .. self.hints)
+    end,
+    hl = { fg = my.color.util.darken(my.color.my.green, 33) },
+  },
+}
+
 local Git = {
   condition = conditions.is_git_repo,
   init = function(self)
     self.status_dict = vim.b.gitsigns_status_dict
     self.has_changes = self.status_dict.added ~= 0 or self.status_dict.removed ~= 0 or self.status_dict.changed ~= 0
   end,
-
   on_click = {
     callback = function(self, minwid, nclicks, button)
       vim.cmd("Neogit")
@@ -432,9 +489,7 @@ local Git = {
     name = "heirline_git",
     update = false,
   },
-
   hl = { fg = "dark", bg = "magenta" },
-
   Space,
   {
     provider = function(self)
@@ -558,6 +613,7 @@ local WorkDir = {
   hl = { fg = "dark", bold = true },
   on_click = {
     callback = function()
+      require('maximize').toggle()
       vim.cmd('Ranger')
     end,
     name = "heirline_workdir",
@@ -646,13 +702,13 @@ local DefaultStatusline = {
   },
   Space,
   { provider = "%<" },
-  {
-    hl = { bg = "magenta" },
-    SlantLeftRight,
-    FileNameBlock,
-    Space,
-    SlantRightRight,
-  },
+  -- {
+  --   hl = { bg = "magenta" },
+  --   SlantLeftRight,
+  --   FileNameBlock,
+  --   Space,
+  --   SlantRightRight,
+  -- },
   Space,
   {
     condition = conditions.has_diagnostics,
@@ -661,14 +717,14 @@ local DefaultStatusline = {
     { hl = { bg = "vimode", force = true }, SlantRightRight },
     { hl = { fg = "current_fg", bg = "vimode", force = true }, Space }
   },
-  {
-    hl = { bg = "magenta", bold = true },
-    SlantLeftRight,
-    Space,
-    { hl = { fg = "dark", bold = true, force = true }, Navic },
-    Space,
-    SlantRightRight,
-  },
+  -- {
+  --   hl = { bg = "magenta", bold = true },
+  --   SlantLeftRight,
+  --   Space,
+  --   { hl = { fg = "dark", bold = true, force = true }, Navic },
+  --   Space,
+  --   SlantRightRight,
+  -- },
   Space,
   Align,
   -- DAPMessages,
@@ -708,6 +764,7 @@ local DefaultStatusline = {
     Ruler,
   },
   ScrollBar,
+  update = { "VimEnter", "ModeChanged" }
 }
 
 local InactiveStatusline = {
@@ -781,8 +838,8 @@ local StatusLines = {
     end,
   },
 
+  update = { "DirChanged", "VimEnter", "ColorScheme", "ModeChanged", "WinNew" },
   fallthrough = false,
-
   GitStatusline,
   SpecialStatusline,
   TerminalStatusline,
@@ -919,6 +976,7 @@ local TablineCloseButton = {
       name = "heirline_tabline_close_buffer_callback",
     },
   },
+  { provider = " " },
 }
 
 local TablinePicker = {
@@ -947,20 +1005,27 @@ local TablinePicker = {
 }
 
 -- The final touch!
-local TablineBufferBlock = utils.surround({ "", "" }, function(self)
-  if self.is_active then
-    return my.color.my.vimode[vim.fn.mode()]
-  elseif self.is_visible then
-    return my.color.util.desaturate(
-      my.color.my.vimode[vim.fn.mode()],
-      50
-    )
-  else
-    return my.color.util[vim.opt.background:get() == "light" and "darken" or "lighten"](my.color.util.desaturate(my.color
-      .int_to_hex(utils.get_highlight("TabLine")
-        .bg), 73), 73)
-  end
-end, { TablineFileNameBlock, TablinePicker, TablineCloseButton })
+local TablineBufferBlock = utils.surround(
+  { "", "" },
+  function(self)
+    if self.is_active then
+      return my.color.my.vimode[vim.fn.mode()]
+    elseif self.is_visible then
+      return my.color.util.desaturate(
+        my.color.my.vimode[vim.fn.mode()],
+        50
+      )
+    else
+      return my.color.util[vim.opt.background:get() == "light" and "darken" or "lighten"](my.color.util.desaturate(my
+        .color
+        .int_to_hex(utils.get_highlight("TabLine")
+          .bg), 73), 73)
+    end
+  end, {
+  TablineFileNameBlock,
+  TablinePicker,
+  TablineCloseButton
+})
 
 -- and here we go
 local Tabpage = {
@@ -1023,12 +1088,19 @@ local TabLineOffset = {
 
 local BufferLine = utils.make_buflist(
   TablineBufferBlock,
-  { provider = "  ", hl = { fg = "gray" } }, -- left truncation, optional (defaults to "<")
-  { provider = "  ", hl = { fg = "gray" } }-- right trunctation, also optional (defaults to ...... yep, ">")
+  { provider = "  ", hl = { fg = "gray" } }, -- left truncation, optional (defaults to "<")
+  { provider = "  ", hl = { fg = "gray" } },
+  -- right trunctation, also optional (defaults to ...... yep, ">")
+  function(self)
+    return vim.tbl_filter(function(bufnr)
+      return vim.api.nvim_buf_get_name(bufnr):find(vim.fn.getcwd(), 0, true)
+    end, vim.api.nvim_list_bufs())
+  end
 -- by the way, open a lot of buffers and try clicking them ;)
 )
 
-local TabLine = { TabLineOffset, BufferLine, TabPages, hl = { bg = my.color.my.magenta } }
+local TabLine = { TabLineOffset, BufferLine, TabPages, hl = { bg = my.color.my.magenta },
+  update = { "DirChanged", "BufLeave", "BufEnter", "ModeChanged", "BufModifiedSet", "TabEnter", "OptionSet", "WinNew" } }
 
 local WinBar = {
   hl = function()
@@ -1051,7 +1123,7 @@ local WinBar = {
   {
     -- flexible = 1,
     condition = function()
-      if require('nvim-navic').is_available() then
+      if require('nvim-navic').is_available(vim.api.nvim_get_current_buf()) then
         local data = require('nvim-navic').get_data()
         local data_len = 0
 
@@ -1083,13 +1155,13 @@ local WinBar = {
     condition = conditions.has_diagnostics,
     hl = function(self)
       if (not conditions.is_active()) then
-        return { fg = "light", bg = nil, force = true }
+        return { fg = "light", bg = "vimode", force = true }
       end
 
-      return { bg = nil, force = true }
+      return { bg = "vimode", force = true }
     end,
     Space,
-    Diagnostics,
+    BufferDiagnostics,
     Space,
     update = { "CursorMoved", "ModeChanged" }
   },
@@ -1110,7 +1182,6 @@ local WinBars = {
   fallthrough = false,
   {
     condition = function()
-      vim.api.nvim_get_current_buf()
       return (not conditions.buffer_matches({
         filetype = { "lua", "clojure", "clojurescript", "clj", "cljs", "ts", "tsx", "typescript", "typescriptreact", "js",
           "jsx", "javascript", "javascriptreact", "html", "css", "json", "md", "sass", "less", "yml", "yaml" },
@@ -1125,25 +1196,24 @@ local WinBars = {
       -- vim.opt_local.winbar = nil
     end,
   },
-  WinBar
+  WinBar,
+  update = { "ModeChanged", "VimEnter", "ColorScheme", "WinNew", "OptionSet" }
 }
 
 local M = {}
 
 function M.update()
-  require("heirline").reset_highlights()
-  require("heirline").load_colors(setup_colors())
+  -- require("heirline").tabline:broadcast(function(self)
+  --   self._win_ttl = nil
+  -- end)
   require("heirline").statusline:broadcast(function(self)
     self._win_stl = nil
   end)
-  require("heirline").winbar:broadcast(function(self)
-    self._win_cache = nil
-  end)
+  require("heirline.utils").on_colorscheme(setup_colors())
   vim.api.nvim_set_hl(0, "StatusLine",
     { bg = my.color.my.vimode[vim.fn.mode() or "n"] }
   )
   vim.api.nvim_set_hl(0, "ScrollbarHandle", { bg = my.color.my.vimode[vim.fn.mode() or "n"] })
-
 end
 
 function M.aucmds()
@@ -1178,7 +1248,13 @@ function M.setup(my_aucmds)
   vim.api.nvim_set_hl(0, "TabLine", { bg = my.color.my.magenta })
   vim.api.nvim_set_hl(0, "TabLineSel", { bg = my.color.my.magenta })
   vim.api.nvim_set_hl(0, "TabLineFill", { bg = my.color.my.magenta })
-  require("heirline").setup(StatusLines, WinBars, TabLine)
+  vim.api.nvim_set_hl(0, "StatusLine", { bg = my.color.my.vimode[vim.fn.mode()] })
+  vim.api.nvim_set_hl(0, "WinBar", { bg = my.color.my.vimode[vim.fn.mode()] })
+  require("heirline").setup({
+    statusline = StatusLines,
+    winbar = WinBars,
+    -- tabline = TabLine,
+  })
 
   if my_aucmds == true then
     vim.cmd([[au FileType * if index(['wipe', 'delete'], &bufhidden) >= 0 | set nobuflisted | endif]])

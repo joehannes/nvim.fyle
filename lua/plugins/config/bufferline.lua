@@ -241,7 +241,7 @@ function M.setup()
         end
       end,
       --offsets = {{filetype = "NvimTree", text = "File Explorer" | function , text_align = "left" | "center" | "right"}},
-      show_buffer_icons = false, --true | false, -- disable filetype icons for buffers
+      show_buffer_icons = true, --true | false, -- disable filetype icons for buffers
       show_buffer_close_icons = true, --true | false,
       show_close_icon = true, --true | false,
       show_tab_indicators = true, --true | false,
@@ -250,7 +250,7 @@ function M.setup()
       -- [focused and unfocused]. eg: { '|', '|' }
       separator_style = "slant", -- "slant"| "thick" | "thin" | { 'any', 'any' },
       enforce_regular_tabs = false, --| true,
-      always_show_bufferline = false, --| false,
+      always_show_bufferline = true, --| false,
       sort_by = function(buffer_a, buffer_b)
         local mod_a = ((vim.loop.fs_stat(buffer_a.path) or {}).atime or {}).sec or 0
         local mod_b = ((vim.loop.fs_stat(buffer_b.path) or {}).atime or {}).sec or 0
@@ -258,48 +258,48 @@ function M.setup()
       end,
       --'id' | 'extension' | 'relative_directory' | 'directory' | 'tabs' |
       custom_areas = {
-        left = function()
-          -- local result = {}
-
-          -- 	if gps.is_available() then
-          -- 		table.insert(result, { text = gps.get_location() .. " ", fg = my.color.my.orange, bg = "black" })
-          -- 		table.insert(result, { text = "   ", fg = "black", bg = vimodeColor() })
-          -- 	end
-
-          -- 	return result
-          local result = {}
-          local seve = vim.diagnostic.severity
-          local error = #vim.diagnostic.get(nil, { severity = seve.ERROR })
-          local warning = #vim.diagnostic.get(nil, { severity = seve.WARN })
-          local info = #vim.diagnostic.get(nil, { severity = seve.INFO })
-          local hint = #vim.diagnostic.get(nil, { severity = seve.HINT })
-          -- if gps.is_available() then
-          -- 	table.insert(
-          -- 		result,
-          -- 		{ text = "   " .. gps.get_location() .. " ", fg = my.color.my.orange, bg = my.color.my.aqua }
-          -- 	)
-          -- 	table.insert(result, { text = "   ", fg = my.color.my.aqua, bg = vimodeColor() })
-          -- end
-          if error ~= 0 then
-            table.insert(result, { text = "  " .. error, fg = my.color.my.red, bold = true })
-          end
-
-          if warning ~= 0 then
-            table.insert(result, { text = "  " .. warning, fg = my.color.my.orange, bold = true })
-          end
-
-          if hint ~= 0 then
-            table.insert(result, { text = "  " .. hint, fg = my.color.my.green, bold = true })
-          end
-
-          if info ~= 0 then
-            table.insert(result, { text = "  " .. info, fg = my.color.my.blue, bold = true })
-          end
-
-          return result
-        end,
-        -- right = function()
-        -- end,
+        --   left = function()
+        --     -- local result = {}
+        --
+        --     -- 	if gps.is_available() then
+        --     -- 		table.insert(result, { text = gps.get_location() .. " ", fg = my.color.my.orange, bg = "black" })
+        --     -- 		table.insert(result, { text = "   ", fg = "black", bg = vimodeColor() })
+        --     -- 	end
+        --
+        --     -- 	return result
+        --     local result = {}
+        --     local seve = vim.diagnostic.severity
+        --     local error = #vim.diagnostic.get(nil, { severity = seve.ERROR })
+        --     local warning = #vim.diagnostic.get(nil, { severity = seve.WARN })
+        --     local info = #vim.diagnostic.get(nil, { severity = seve.INFO })
+        --     local hint = #vim.diagnostic.get(nil, { severity = seve.HINT })
+        --     -- if gps.is_available() then
+        --     -- 	table.insert(
+        --     -- 		result,
+        --     -- 		{ text = "   " .. gps.get_location() .. " ", fg = my.color.my.orange, bg = my.color.my.aqua }
+        --     -- 	)
+        --     -- 	table.insert(result, { text = "   ", fg = my.color.my.aqua, bg = vimodeColor() })
+        --     -- end
+        --     if error ~= 0 then
+        --       table.insert(result, { text = "  " .. error, fg = my.color.my.red, bold = true })
+        --     end
+        --
+        --     if warning ~= 0 then
+        --       table.insert(result, { text = "  " .. warning, fg = my.color.my.orange, bold = true })
+        --     end
+        --
+        --     if hint ~= 0 then
+        --       table.insert(result, { text = "  " .. hint, fg = my.color.my.green, bold = true })
+        --     end
+        --
+        --     if info ~= 0 then
+        --       table.insert(result, { text = "  " .. info, fg = my.color.my.blue, bold = true })
+        --     end
+        --
+        --     return result
+        --   end,
+        --   -- right = function()
+        --   -- end,
       },
       -- groups = {
       --   options = {

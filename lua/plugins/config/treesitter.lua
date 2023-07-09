@@ -14,7 +14,7 @@ function M.ts_setup()
     },
     highlight = {
       enable = true, -- false will disable the whole extension
-      disable = {}, -- list of language that will be disabled
+      disable = {},  -- list of language that will be disabled
     },
     incremental_selection = {
       enable = true,
@@ -34,7 +34,7 @@ function M.ts_setup()
     },
     refactor = {
       smart_rename = {
-        enable = false, --true,
+        enable = false,       --true,
         keymaps = {
           smart_rename = nil, --"gR",
         },

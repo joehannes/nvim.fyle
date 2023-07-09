@@ -8,18 +8,35 @@ function config.setup()
 
   telescope.setup({
     -- find_command = {
-    -- 	"rg",
-    -- 	"--no-heading",
-    -- 	"--with-filename",
-    -- 	"--line-number",
-    -- 	"--column",
-    -- 	"--smart-case",
+    --   "rg",
+    --   -- "--no-heading",
+    --   -- "--with-filename",
+    --   "--line-number",
+    --   "--column",
+    --   "--smart-case",
+    --   "--files",
+    --   "--hidden",
+    --   "--glob",
+    --   "!**/.git/*"
     -- },
-    -- use_less = true,
+    use_less = true,
     -- file_previewer = require("telescope.previewers").vim_buffer_cat.new,
-    -- grep_previewer = require("telescope.previewers").vim_buffer_vimgrep.new,
+    -- grep_previewer = require("telescope.previewers").vimgrep.new, -- vim_buffer_vimgrep.new,
     -- qflist_previewer = require("telescope.previewers").vim_buffer_qflist.new,
     pickers = {
+      live_grep = {
+        find_command = {
+          "ag",
+          "--hidden",
+          "--skip-vcs-ignores",
+          "--ignore",
+          ".git",
+          "-S",
+          "-i",
+          "-v",
+          "--sort-files"
+        },
+      },
       spell_suggest = {
         theme = "cursor",
       },
@@ -104,7 +121,7 @@ function config.setup()
       project = {
         base_dirs = {
           { path = "~/.config/nvim" },
-          { path = "~/.local/git", max_depth = 3 },
+          { path = "~/.local/git",  max_depth = 3 },
         },
         hidden_files = true,
       },
@@ -156,6 +173,10 @@ function config.setup()
         path = vim.fn.stdpath("data") .. "/databases/telescope_history.sqlite3",
         limit = 100,
       },
+      initial_mode = "insert",
+      path_display = {
+        truncate = 1,
+      },
       preview = {
         mime_hook = function(filepath, bufnr, opts)
           local is_image = function(filepath)
@@ -195,18 +216,19 @@ function config.setup()
   telescope.load_extension("gh")
   -- telescope.load_extension("dap")
   telescope.load_extension("node_modules")
-  telescope.load_extension("session-lens")
+  -- telescope.load_extension("session-lens")
   -- telescope.load_extension("vim_bookmarks")
   telescope.load_extension("project")
   telescope.load_extension("neoclip")
   telescope.load_extension("smart_history")
   -- telescope.load_extension("aerial")
-  -- require('telescope').load_extension('snippets')
+  -- telescope.load_extension('snippets')
   telescope.load_extension("arecibo")
   telescope.load_extension("media_files")
   telescope.load_extension("frecency")
   telescope.load_extension("ui-select")
   telescope.load_extension("undo")
+  telescope.load_extension("ag")
 end
 
 return config

@@ -75,8 +75,8 @@ function M.setup()
       ["<Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_next_item()
-        elseif vim.fn["vsnip#available"](1) == 1 then
-          feedkey("<Plug>(vsnip-expand-or-jump)", "")
+          -- elseif vim.fn["vsnip#available"](1) == 1 then
+          --   feedkey("<Plug>(vsnip-expand-or-jump)", "")
         elseif has_words_before() then
           cmp.complete()
         else
@@ -86,8 +86,8 @@ function M.setup()
       ["<S-Tab>"] = cmp.mapping(function()
         if cmp.visible() then
           cmp.select_prev_item()
-        elseif vim.fn["vsnip#jumpable"](-1) == 1 then
-          feedkey("<Plug>(vsnip-jump-prev)", "")
+          -- elseif vim.fn["vsnip#jumpable"](-1) == 1 then
+          --   feedkey("<Plug>(vsnip-jump-prev)", "")
         end
       end, { "i", "s" }),
       ["<Down>"] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), { "i" }),
@@ -141,15 +141,16 @@ function M.setup()
     },
     snippet = {
       expand = function(args)
-        vim.fn["vsnip#anonymous"](args.body)
-      end,
+        require 'luasnip'.lsp_expand(args.body)
+      end
     },
     sources = {
       { name = "cmp_tabnine" },
       -- { name = "copilot" },
+      { name = "luasnip" },
       { name = "nvim_lsp" },
       { name = "treesitter" },
-      { name = "vsnip" },
+      -- { name = "vsnip" },
       { name = "path" },
       { name = "npm", keyworld_length = 3 },
       { name = "nvim_lua" },
@@ -203,8 +204,7 @@ function M.setup()
     completion = { autocomplete = {} },
     sources = cmp.config.sources({
       { name = "nvim_lsp_document_symbol" },
-    }, {
-      { name = "buffer", opts = { keyword_pattern = [=[[^[:blank:]].*]=] } },
+      { name = "buffer", option = { keyword_pattern = [=[[^[:blank:]].*]=] } },
     }),
   })
 end
