@@ -1,10 +1,12 @@
 --@diagnostic disable:undefined-global
-vim.cmd('set shell=/bin/zsh')
+vim.cmd('set shell=/opt/homebrew/bin/zsh')
 
 require("utils")
 
 vim.api.nvim_set_var("mapleader", " ")
 vim.api.nvim_set_var("maplocalleader", ";")
+
+require("settings")
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -19,7 +21,7 @@ require("lazy").setup({
     import = "plugins",
   },
   defaults = { lazy = false, version = "*" },
-  install = { colorscheme = { "tokyonight", "habamax" } },
+  install = { colorscheme = { "habamax" } },
   checker = { enabled = false },
   diff = {
     cmd = "git",
@@ -43,7 +45,6 @@ require("lazy").setup({
   debug = false,
 })
 
-require("settings")
 require("lang")
 require("keymappings")
 require("colorschemes")
