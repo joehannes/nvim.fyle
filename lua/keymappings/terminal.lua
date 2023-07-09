@@ -1,14 +1,18 @@
 local M = {
+  { "<C-h>", '<Cmd>call WinMove("h")<CR>', "left win", '<Cmd>call WinMove("l")<CR>' },
+  { "<C-l>", '<Cmd>call WinMove("l")<CR>', "right win", '<Cmd>call WinMove("h")<CR>' },
+  { "<C-k>", '<Cmd>call WinMove("k")<CR>', "up win", '<Cmd>call WinMove("j")<CR>' },
+  { "<C-j>", '<Cmd>call WinMove("j")<CR>', "down win", '<Cmd>call WinMove("k")<CR>' },
   {
     "[",
     {
-      { "t", "<C-\\><C-n>:FloatermPrev<CR>" },
+      { "t", "<C-\\><C-n>:lua require('terminal.mappings').cycle_prev()<CR>" },
     },
   },
   {
     "]",
     {
-      { "t", "<C-\\><C-n>:FloatermNext<CR>" },
+      { "t", "<C-\\><C-n>:lua require('terminal.mappings').cycle_next()<CR>" },
     },
   },
   {
@@ -17,12 +21,7 @@ local M = {
       {
         "t",
         {
-          { "t", "<C-\\><C-n>:lua require('terminal.mappings').toggle()<CR>", "toggle term" },
-          { "1t", "<C-\\><C-n>:1TermOpen!<CR>", "toggle term" },
-          { "2t", "<C-\\><C-n>:2TermOpen!<CR>", "toggle term" },
-          { "3t", "<C-\\><C-n>:3TermOpen!<CR>", "toggle term" },
-          { "4t", "<C-\\><C-n>:4TermOpen!<CR>", "toggle term" },
-          { "5t", "<C-\\><C-n>:5TermOpen!<CR>", "toggle term" },
+          { "t", [[<C-\\><C-n><Cmd>exe v:count1 . "ToggleTerm"<CR>]], "toggle term" },
         },
       },
     },
