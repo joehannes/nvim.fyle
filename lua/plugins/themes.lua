@@ -105,5 +105,117 @@ return {
       })
     end
   },
-  { "YorickPeterse/vim-paper" }
+  { "theniceboy/nvim-deus" },
+  {
+    "shaunsingh/moonlight.nvim",
+    config = function()
+      vim.g.moonlight_italic_comments = true
+      vim.g.moonlight_italic_keywords = true
+      vim.g.moonlight_italic_functions = true
+      vim.g.moonlight_italic_variables = false
+      vim.g.moonlight_contrast = true
+      vim.g.moonlight_borders = false
+      vim.g.moonlight_disable_background = false
+    end,
+  },
+  {
+    "ofirgall/ofirkai.nvim",
+    config = function()
+      require('ofirkai').setup {}
+    end
+  },
+  { "yashguptaz/calvera-dark.nvim",
+    config = function()
+      vim.g.calvera_italic_keywords = true
+      vim.g.calvera_borders = true
+      vim.g.calvera_contrast = true
+      vim.g.calvera_hide_eob = true
+      vim.g.calvera_custom_colors = { contrast = "#0f111a" }
+      vim.g.calvera_borders = false
+      vim.g.calvera_disable_background = false
+      vim.g.transparent_bg = true
+    end },
+  {
+    'marko-cerovac/material.nvim',
+    config = function()
+      require('material').setup({
+
+        contrast = {
+          terminal = true, -- Enable contrast for the built-in terminal
+          sidebars = true, -- Enable contrast for sidebar-like windows ( for example Nvim-Tree )
+          floating_windows = true, -- Enable contrast for floating windows
+          cursor_line = true, -- Enable darker background for the cursor line
+          non_current_windows = true, -- Enable darker background for non-current windows
+          filetypes = {}, -- Specify which filetypes get the contrasted (darker) background
+        },
+
+        styles = { -- Give comments style such as bold, italic, underline etc.
+          comments = { italic = true --[[ italic = true ]] },
+          strings = { --[[ bold = true ]] },
+          keywords = { bold = true --[[ underline = true ]] },
+          functions = { bold = true, italic = true --[[ bold = true, undercurl = true ]] },
+          variables = { italic = true },
+          operators = { bold = true },
+          types = { italic = true },
+        },
+
+        plugins = { -- Uncomment the plugins that you use to highlight them
+          -- Available plugins:
+          "dap",
+          -- "dashboard",
+          "gitsigns",
+          "hop",
+          "indent-blankline",
+          -- "lspsaga",
+          -- "mini",
+          "neogit",
+          "nvim-cmp",
+          "nvim-navic",
+          -- "nvim-tree",
+          "nvim-web-devicons",
+          -- "sneak",
+          "telescope",
+          "trouble",
+          "which-key",
+        },
+
+        disable = {
+          colored_cursor = false, -- Disable the colored cursor
+          borders = false, -- Disable borders between verticaly split windows
+          background = false, -- Prevent the theme from setting the background (NeoVim then uses your terminal background)
+          term_colors = false, -- Prevent the theme from setting terminal colors
+          eob_lines = false -- Hide the end-of-buffer lines
+        },
+
+        high_visibility = {
+          lighter = true, -- Enable higher contrast text for lighter style
+          darker = true -- Enable higher contrast text for darker style
+        },
+
+        lualine_style = "default", -- Lualine style ( can be 'stealth' or 'default' )
+
+        async_loading = true, -- Load parts of the theme asyncronously for faster startup (turned on by default)
+
+        custom_colors = nil, -- If you want to everride the default colors, set this to a function
+
+        custom_highlights = {}, -- Overwrite highlights with your own
+      })
+    end
+  },
+  { "sainnhe/sonokai" },
+  {
+    "NLKNguyen/papercolor-theme",
+    config = function()
+      vim.cmd([[
+        let g:PaperColor_Theme_Options = {
+          \   'theme': {
+          \     'default': {
+          \       'allow_bold': 1,
+          \       'allow_italic': 1
+          \     }
+          \   }
+          \ }
+      ]])
+    end
+  }
 }

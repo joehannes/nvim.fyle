@@ -24,11 +24,11 @@ return {
       })
     end
   },
-  {
-    "rrethy/vim-hexokinase",
-    build = "make hexokinase",
-    config = function()
-      vim.api.nvim_set_var("Hexokinase_highlighters", { "sign_column", "foregroundfull" })
-    end,
-  }
+  -- {
+  --   "rrethy/vim-hexokinase",
+  --   build = "make hexokinase",
+  --   config = function()
+  --     vim.api.nvim_set_var("Hexokinase_highlighters", { "sign_column", "foregroundfull" })
+  --   end,
+  -- }
 }

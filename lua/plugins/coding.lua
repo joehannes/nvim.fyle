@@ -8,10 +8,24 @@ return {
       "nvim-telescope/telescope.nvim"
     }
   },
+  -- {
+  --   'xbase-lab/xbase',
+  --   build = 'make install', -- or "make install && make free_space" (not recommended, longer build time)
+  -- dependencies = {
+  --   "neovim/nvim-lspconfig",
+  --   "nvim-telescope/telescope.nvim", -- optional
+  --   "nvim-lua/plenary.nvim",         -- optional/requirement of telescope.nvim
+  --   "stevearc/dressing.nvim",        -- optional (in case you don't use telescope but something else)
+  --},
+  --    config = function( ]])
+  -- require("config.xbase").setup()
+  -- end
+  -- },
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     config = require("plugins.config.treesitter").ts_setup,
+    branch = "master"
   },
   {
     "nvim-treesitter/nvim-treesitter-refactor",
@@ -41,7 +55,7 @@ return {
   { "JoosepAlviste/nvim-ts-context-commentstring" },
   { "haringsrob/nvim_context_vt" },
   { "machakann/vim-sandwich" },
-  { "andymass/vim-matchup" },
+  -- { "andymass/vim-matchup" },
   { "windwp/nvim-ts-autotag" },
   { "p00f/nvim-ts-rainbow" },
   {
@@ -74,9 +88,9 @@ return {
       })
     end
   },
-  { "puremourning/vimspector" },
+  -- { "puremourning/vimspector" },
   { "kshenoy/vim-signature" },
   { "sheerun/vim-polyglot" },
   { "othree/es.next.syntax.vim" },
-  { "othree/javascript-libraries-syntax.vim" },
+  { "othree/javascript-libraries-syntax.vim" }
 }

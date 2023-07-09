@@ -6,13 +6,13 @@ return {
       require("bufresize").setup({
         register = {
           keys = {
-            { "n", "<leader>w<", "30<C-w><", opts },
-            { "n", "<leader>w>", "30<C-w>>", opts },
-            { "n", "<leader>w+", "10<C-w>+", opts },
-            { "n", "<leader>w-", "10<C-w>-", opts },
-            { "n", "<leader>w_", "<C-w>_", opts },
-            { "n", "<leader>w=", "<C-w>=", opts },
-            { "n", "<leader>w|", "<C-w>|", opts },
+            { "n", "<leader>w<", "30<C-w><",     opts },
+            { "n", "<leader>w>", "30<C-w>>",     opts },
+            { "n", "<leader>w+", "10<C-w>+",     opts },
+            { "n", "<leader>w-", "10<C-w>-",     opts },
+            { "n", "<leader>w_", "<C-w>_",       opts },
+            { "n", "<leader>w=", "<C-w>=",       opts },
+            { "n", "<leader>w|", "<C-w>|",       opts },
             { "n", "<leader>wo", "<C-w>|<C-w>_", opts },
           },
           trigger_events = { "BufWinEnter", "WinEnter" },
@@ -23,6 +23,21 @@ return {
         },
       })
     end,
+  },
+  {
+    'declancm/maximize.nvim',
+    config = function() require('maximize').setup({ default_keymaps = false }) end
+  },
+  {
+    "danilamihailov/beacon.nvim",
+    config = function()
+      vim.api.nvim_set_var("beacon_enable", true)
+      vim.api.nvim_set_var("beacon_size", 80)
+      vim.api.nvim_set_var("beacon_minimal_jump", 2)
+      -- vim.api.nvim_set_var("beacon_ignore_buffers", { "\\w*git*\\w" })
+      vim.api.nvim_set_var("beacon_ignore_filetypes", { 'trouble', 'telescope', 'terminal', 'fzf' })
+      vim.api.nvim_set_hl(0, "Beacon", { bg = my.color.my.vimode[vim.fn.mode()], ctermbg = "magenta" })
+    end
   },
   {
     "simrat39/symbols-outline.nvim",
@@ -44,10 +59,10 @@ return {
     config = function()
       require("twilight").setup({
         dimming = {
-          alpha = 0.73, -- amount of dimming
+          alpha = 0.73,    -- amount of dimming
           inactive = true, -- when true, other windows will be fully dimmed (unless they contain the same buffer)
         },
-        context = 21, -- amount of lines we will try to show around the current line
+        context = 21,      -- amount of lines we will try to show around the current line
         treesitter = true, -- use treesitter when available for the filetype
         -- treesitter is used to automatically expand the visible text,
         -- but you can further control the types of nodes that should always be fully expanded

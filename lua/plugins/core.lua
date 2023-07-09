@@ -2,17 +2,28 @@ return {
   { "Olical/aniseed" },
   { "nvim-lua/plenary.nvim" },
   { "stevearc/dressing.nvim" },
-  { "nvim-lua/popup.nvim" },
   { "MunifTanjim/nui.nvim" },
-  {
-    "ellisonleao/glow.nvim",
-    config = function() require("plugins.config.glow").setup() end,
-  },
   {
     "rcarriga/nvim-notify",
     event = "VimEnter",
     config = function() require("plugins.config.notify").setup() end,
   },
+  { "nvim-lua/popup.nvim" },
+  -- {
+  --   "folke/noice.nvim",
+  --   cond = function() return not vim.g.neovide end,
+  --   config = function()
+  --     require("plugins.config.noice").setup()
+  --   end,
+  --   dependencies = {
+  --     "MunifTanjim/nui.nvim",
+  --     "rcarriga/nvim-notify",
+  --   }
+  -- },
+  -- {
+  --   "ellisonleao/glow.nvim",
+  --   -- config = function() require("plugins.config.glow").setup() end,
+  -- },
   {
     "luukvbaal/statuscol.nvim",
     config = function()
@@ -23,6 +34,18 @@ return {
     "rmagatti/auto-session",
     config = function() require("plugins.config.auto_session").setup() end,
   },
+  -- {
+  --   "rmagatti/session-lens",
+  --   dependencies = { "rmagatti/auto-session", "nvim-telescope/telescope.nvim" },
+  --   config = function()
+  --     require("session-lens").setup({
+  --       path_display = { "shorten" },
+  --       theme_conf = { border = false },
+  --       previewer = false,
+  --     })
+  --     require("telescope").load_extension("session-lens")
+  --   end
+  -- },
   { "tversteeg/registers.nvim" },
   { "kevinhwang91/promise-async" },
   {
@@ -43,14 +66,83 @@ return {
   },
   -- { "unblevable/quick-scope" },
   {
-    'rebelot/terminal.nvim',
-    config = function() require("terminal").setup({
-        layout = { open_cmd = "float", width = 0.9, height = 0.9 },
-        cmd = { vim.o.shell },
-        autoclose = false,
+    "akinsho/toggleterm.nvim",
+    config = function()
+      require("toggleterm").setup({
+        size = function(term)
+          if term.direction == "horizontal" then
+            return 15
+          elseif term.direction == "vertical" then
+            return vim.o.columns * 0.4
+          end
+        end,
+        -- open_mapping = [[<leader>;]],
+        -- on_create = function(t) end, -- function to run when the terminal is first created
+        -- on_open = fun(t: Terminal), -- function to run when the terminal opens
+        -- on_close = fun(t: Terminal), -- function to run when the terminal closes
+        -- on_stdout = fun(t: Terminal, job: number, data: string[], name: string) -- callback for processing output on stdout
+        -- on_stderr = fun(t: Terminal, job: number, data: string[], name: string) -- callback for processing output on stderr
+        -- on_exit = fun(t: Terminal, job: number, exit_code: number, name: string) -- function to run when terminal process exits
+        hide_numbers = true, -- hide the number column in toggleterm buffers
+        shade_filetypes = {},
+        autochdir = true,    -- when neovim changes it current directory the terminal will change it's own when next it's opened
+        highlights = {
+          -- highlights which map to a highlight group name and a table of it's values
+          -- NOTE: this is only a subset of values, any group placed here will be set for the terminal window split
+          Normal = {
+            guibg = my.color.hsl(my.color.my[vim.opt.background:get()]).mix(my.color.hsl(my.color.my.vimode[
+            vim.fn.mode()
+            or "n"]), 21),
+          },
+          NormalFloat = {
+            link = 'Normal'
+          },
+          FloatBorder = {
+            guifg = my.color.my.magenta,
+            guibg = "NONE",
+          },
+        },
+        shade_terminals = true,   -- NOTE: this option takes priority over highlights specified so if you specify Normal highlights you should set this to false
+        shading_factor = -7,      -- the percentage by which to lighten terminal background, default: -30 (gets multiplied by -3 if background is light)
+        start_in_insert = true,
+        insert_mappings = true,   -- whether or not the open mapping applies in insert mode
+        terminal_mappings = true, -- whether or not the open mapping applies in the opened terminals
+        persist_size = true,
+        persist_mode = true,      -- if set to true (default) the previous terminal mode will be remembered
+        direction = 'horizontal', -- | 'horizontal' | 'tab' | 'float',
+        close_on_exit = true,     -- close the terminal window when the process exits
+        shell = vim.o.shell,      -- change the default shell
+        auto_scroll = true,       -- automatically scroll to the bottom on terminal output
+        -- This field is only relevant if direction is set to 'float'
+        float_opts = {
+          -- The border key is *almost* the same as 'nvim_open_win'
+          -- see :h nvim_open_win for details on borders however
+          -- the 'curved' border is a custom border type
+          -- not natively supported but implemented in this plugin.
+          border = 'curved', --'single' | 'double' | 'shadow' | 'curved' | ... other options supported by win open
+          -- like `size`, width and height can be a number or function which is passed the current terminal
+          width = 0.9,
+          height = 0.9,
+          winblend = 3,
+        },
+        winbar = {
+          enabled = false,
+          name_formatter = function(term) --  term: Terminal
+            return term.name
+          end
+        },
       })
-    end,
+    end
   },
+  -- {
+  --   'rebelot/terminal.nvim',
+  --   config = function() require("terminal").setup({
+  --       layout = { open_cmd = "botright new", width = 1, height = 0.37 },
+  --       cmd = { vim.o.shell },
+  --       autoclose = false,
+  --     })
+  --   end,
+  -- },
   { "lokaltog/neoranger" },
   {
     "lukas-reineke/indent-blankline.nvim",

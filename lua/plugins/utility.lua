@@ -3,7 +3,8 @@ return {
   { "wakatime/vim-wakatime" },
   { "chrisbra/unicode.vim" },
   { "kkharji/sqlite.lua" },
-  { 'junegunn/fzf',
+  {
+    'junegunn/fzf',
     build = function()
       vim.fn['fzf#install']()
     end
@@ -25,12 +26,13 @@ return {
       -- "nvim-telescope/telescope-dap.nvim",
       -- "nvim-telescope/telescope-media-files.nvim",
       "joehannes-os/telescope-media-files.nvim",
+      -- "nvim-telescope/telescope-snippets.nvim",
       -- "tom-anders/telescope-vim-bookmarks.nvim",
       "debugloop/telescope-undo.nvim",
       "sudormrfbin/cheatsheet.nvim",
       "AckslD/nvim-neoclip.lua",
-      "rmagatti/auto-session",
-      "rmagatti/session-lens",
+      -- "rmagatti/auto-session",
+      -- "rmagatti/session-lens",
       "Azeirah/nvim-redux",
     },
     config = function()
@@ -39,12 +41,14 @@ return {
 
       config.setup()
       neoclip.setup()
-      require("session-lens").setup({
-        path_display = { "shorten" },
-        theme_conf = { border = false },
-        previewer = false,
-      })
     end,
+  },
+  {
+    "kelly-lin/telescope-ag",
+    dependencies = "nvim-telescope/telescope.nvim",
+    config = function()
+      require("telescope-ag").setup({})
+    end
   },
   {
     "petertriho/nvim-scrollbar",
@@ -62,12 +66,12 @@ return {
     "abecodes/tabout.nvim",
     config = function()
       require("tabout").setup({
-        tabkey = ">>", -- key to trigger tabout, set to an empty string to disable
-        backwards_tabkey = "<<", -- key to trigger backwards tabout, set to an empty string to disable
-        act_as_tab = false, -- shift content if tab out is not possible
+        tabkey = ">>",            -- key to trigger tabout, set to an empty string to disable
+        backwards_tabkey = "<<",  -- key to trigger backwards tabout, set to an empty string to disable
+        act_as_tab = false,       -- shift content if tab out is not possible
         act_as_shift_tab = false, -- reverse shift content if tab out is not possible (if your keyboard/terminal supports <S-Tab>)
-        enable_backwards = true, -- well ...
-        completion = false, -- if the tabkey is used in a completion pum
+        enable_backwards = true,  -- well ...
+        completion = false,       -- if the tabkey is used in a completion pum
         tabouts = {
           { open = "'", close = "'" },
           { open = '"', close = '"' },
@@ -85,25 +89,25 @@ return {
   },
   { "smitajit/bufutils.vim" },
   { "arithran/vim-delete-hidden-buffers" },
-  -- {
-  --   "kazhala/close-buffers.nvim",
-  --   dependencies = { "akinsho/bufferline.nvim" },
-  --   config = function()
-  --     require("close_buffers").setup({
-  --       filetype_ignore = { "qf" },
-  --       file_glob_ignore = { "src/**/*" },
-  --       preserve_window_layout = { "this", "nameless" },
-  --       next_buffer_cmd = function(windows)
-  --         require("bufferline").cycle(1)
-  --         local bufnr = vim.api.nvim_get_current_buf()
-  --
-  --         for _, window in ipairs(windows) do
-  --           vim.api.nvim_win_set_buf(window, bufnr)
-  --         end
-  --       end,
-  --     })
-  --   end,
-  -- },
+  {
+    "kazhala/close-buffers.nvim",
+    dependencies = { "akinsho/bufferline.nvim" },
+    config = function()
+      require("close_buffers").setup({
+        filetype_ignore = { "qf" },
+        file_glob_ignore = { "src/**/*" },
+        preserve_window_layout = { "this", "nameless" },
+        next_buffer_cmd = function(windows)
+          require("bufferline").cycle(1)
+          local bufnr = vim.api.nvim_get_current_buf()
+
+          for _, window in ipairs(windows) do
+            vim.api.nvim_win_set_buf(window, bufnr)
+          end
+        end,
+      })
+    end,
+  },
   {
     "Krafi2/jeskape.nvim",
     config = function()

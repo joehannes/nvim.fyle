@@ -1,5 +1,6 @@
 return {
-  { "chentoast/marks.nvim",
+  {
+    "chentoast/marks.nvim",
     config = function()
       require("marks").setup({
         default_mappings = true,
@@ -61,6 +62,10 @@ return {
   },
   {
     "cbochs/portal.nvim",
+    dependencies = {
+      "cbochs/grapple.nvim",
+      "ThePrimeagen/harpoon"
+    },
     config = function() require("plugins.config.portal").setup() end,
   },
   {
@@ -69,6 +74,18 @@ return {
     config = function()
       -- you can configure Hop the way you like here; see :h hop-config
       require("hop").setup({ keys = "etovxqpdygfblzhckisuran" })
+    end,
+  },
+  {
+    "SmiteshP/nvim-navbuddy",
+    dependencies = {
+      "neovim/nvim-lspconfig",
+      "SmiteshP/nvim-navic",
+      "MunifTanjim/nui.nvim",
+      "nvim-telescope/telescope.nvim"
+    },
+    config = function()
+      require("plugins.config.navbuddy").setup()
     end,
   }
 }

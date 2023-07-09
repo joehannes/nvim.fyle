@@ -4,4 +4,7 @@ return {
   { "eraserhd/parinfer-rust", build = "cargo build --release" },
   { "dmac/vim-cljfmt", build = "go get github.com/cespare/goclj/cljfmt" },
   { "clojure-vim/async-clj-omni" },
+  { "tpope/vim-dispatch" },
+  { "clojure-vim/vim-jack-in" },
+  { "radenling/vim-dispatch-neovim" },
 }

@@ -93,17 +93,17 @@ return {
       -- vim.keymap.set('n', 'gK', require('hover').hover_select, { desc = 'hover.nvim (select)' })
     end
   },
-  {
-    'JASONews/glow-hover',
-    config = function()
-      require 'glow-hover'.setup {
-        max_width = 70,
-        padding = 2,
-        border = 'shadow',
-        glow_path = 'glow'
-      }
-    end
-  },
+  -- {
+  --   'JASONews/glow-hover',
+  --   config = function()
+  --     require 'glow-hover'.setup {
+  --       max_width = 70,
+  --       padding = 2,
+  --       border = 'shadow',
+  --       glow_path = 'glow'
+  --     }
+  --   end
+  -- },
   {
     'mrjones2014/dash.nvim',
     build = 'make install',

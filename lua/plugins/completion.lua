@@ -1,11 +1,18 @@
 return {
+  -- {
+  --   'Exafunction/codeium.vim',
+  --   config = function()
+  --    vim.keymap.set('i', '<M-leader>', function() vim.fn['codeium#Accept']() end)
+  -- end
+  -- },
   {
     "hrsh7th/nvim-cmp",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-vsnip",
-      "hrsh7th/vim-vsnip",
+      "saadparwaiz1/cmp_luasnip",
+      -- "hrsh7th/cmp-vsnip",
+      -- "hrsh7th/vim-vsnip",
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-nvim-lua",
       "octaltree/cmp-look",
@@ -25,9 +32,10 @@ return {
       require("cmp-npm").setup({})
     end,
   },
+  { "saadparwaiz1/cmp_luasnip" },
   { "hrsh7th/cmp-nvim-lsp" },
-  { "hrsh7th/cmp-vsnip" },
-  { "hrsh7th/vim-vsnip" },
+  -- { "hrsh7th/cmp-vsnip" },
+  -- { "hrsh7th/vim-vsnip" },
   { "hrsh7th/cmp-buffer" },
   { "hrsh7th/cmp-nvim-lua" },
   { "octaltree/cmp-look" },
@@ -44,7 +52,9 @@ return {
   {
     "tzachar/cmp-tabnine",
     build = "./install.sh",
-    dependencies = "hrsh7th/nvim-cmp",
+    dependencies = {
+      "hrsh7th/nvim-cmp",
+    },
     config = function()
       local tabnine = require('cmp_tabnine.config')
 
