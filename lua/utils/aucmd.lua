@@ -1,17 +1,42 @@
 local M = {}
 
 function M.onAfterBoot()
-  vim.schedule(function() vim.defer_fn(my.ui.tint, 1000) end)
+  vim.schedule(function()
+    my.ui.updateHighlights()
+    my.ui.tint()
+  end)
 end
 
 function M.onColorscheme()
   my.ui.updateHighlights()
   my.ui.tint()
+  vim.api.nvim_set_var("neovide_background_color", my.color.my.vimode[vim.fn.mode()] .. my.color.fn.transparentizeColor())
 end
 
 function M.onModeChanged()
-  my.ui.updateHighlights()
-  my.ui.tint()
+  local m = vim.fn.mode()
+
+  if (m == "c") then
+    my.ui.updateHighlights()
+    my.ui.tint()
+  end
+
+  vim.schedule(function()
+    if (m == "n") then
+      vim.cmd("startinsert")
+      my.ui.updateHighlights()
+      vim.schedule(function()
+        vim.cmd([[
+          stopinsert
+        ]])
+        my.ui.updateHighlights()
+        my.ui.tint()
+      end)
+    end
+
+    my.ui.updateHighlights()
+    my.ui.tint()
+  end)
 end
 
 function M.toggle_bg_mode(force)

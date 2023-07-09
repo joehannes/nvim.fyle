@@ -53,8 +53,7 @@ function M.tint()
 
   if (ok) then
     tint.refresh()
-    lines.reset_highlights()
-    heirline.load_colors()
+    heirline.update()
     -- bufferline.setup()
     heirline.setup(false)
     tint.refresh()
@@ -72,11 +71,15 @@ function M.updateHighlights()
     my.color.fn.highlight_blend_bg("CursorLine", 50, mode_color)
     my.color.fn.highlight_blend_bg("CursorColumn", 50, mode_color)
     my.color.fn.highlight_blend_bg("Visual", 21, mode_color)
-    my.color.fn.highlight_blend_bg("TSCurrentScope", 12, mode_color)
-    my.color.fn.highlight_blend_bg("TreesitterContext", 50, mode_color)
+    my.color.fn.highlight_blend_bg("TSCurrentScope", 9, mode_color)
+    my.color.fn.highlight_blend_bg("TreesitterContext", 37, mode_color)
     vim.api.nvim_set_hl(0, "TreesitterContextBottom",
       { underline = true, underdouble = true, fg = my.color.my.magenta, sp = my.color.my.magenta })
     vim.api.nvim_set_hl(0, "ScrollbarHandle", { bg = mode_color })
+  end
+
+  if pcall(require, "heirline") then
+    require("plugins.config.heirline").update()
   end
 end
 

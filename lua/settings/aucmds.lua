@@ -10,7 +10,7 @@ local M = {
     ["TextYankPost"] = {
       pattern = "*",
       callback = function()
-        vim.highlight.on_yank { higroup = "IncSearch", hlgroup = "IncSearch", timeout = 500 }
+        vim.highlight.on_yank { higroup = "IncSearch", hlgroup = "IncSearch", timeout = 2000 }
       end,
     },
     ["CursorHold"] = {
@@ -81,11 +81,11 @@ local M = {
     },
   },
   MyTerminalAugroup = {
-    ["TermOpen"] = {
+    ["TermOpen,TermEnter"] = {
       pattern = "*",
       callback = function()
         vim.cmd([[
-          setlocal number norelativenumber
+          setlocal nonumber norelativenumber
           startinsert
         ]])
       end,

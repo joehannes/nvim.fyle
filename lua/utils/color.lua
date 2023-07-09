@@ -81,6 +81,10 @@ function M.fn.highlight_blend_bg(hl_name, strength, color, base_hl)
   end
 end
 
+function M.fn.transparentizeColor()
+  return string.format("%x", math.floor(255 * (vim.g.transparency or 0.8)))
+end
+
 M.util = {
   lighten = function(hexColor, percentage)
     return M.hsl(hexColor).lighten(percentage).hex
