@@ -98,4 +98,90 @@ function M.tablinePickBuffer()
   vim.cmd.redrawtabline()
 end
 
+_G.SIDEBAR = function()
+end
+
+function M.toggleSidebar(fn)
+  if (SIDEBAR ~= nil) then SIDEBAR() end
+  if (type(fn) == "function") then
+    SIDEBAR = fn
+    SIDEBAR()
+  end
+end
+
+_G.TERMINAL_CURRENT = nil
+_G.TERMINAL_LIST = {}
+
+function M.cycleTerminal(direction)
+  if (#TERMINAL_LIST < 2) then return end
+  local terminal_next = nil
+
+  if (direction) then
+    for _, val in pairs(TERMINAL_LIST) do
+      if (val > TERMINAL_CURRENT) then
+        terminal_next = val
+        break
+      end
+    end
+    if (not terminal_next) then terminal_next = TERMINAL_LIST[0] end
+  elseif (not direction) then
+    for _, val in pairs(TERMINAL_LIST) do
+      if (val >= TERMINAL_CURRENT) then
+        break
+      else
+        terminal_next = val
+      end
+    end
+    if (not terminal_next) then terminal_next = TERMINAL_LIST[#TERMINAL_LIST] end
+  end
+
+  vim.cmd(terminal_next .. "ToggleTerm")
+end
+
+function M.addTerminal(nr)
+  local idx = -1
+  local sel_val = nil
+
+  for key, val in pairs(TERMINAL_LIST) do
+    if (nr.id <= val) then
+      idx = key
+      sel_val = val
+      break
+    end
+  end
+
+  if (sel_val == nr.id) then return 0 end
+  if (idx == -1) then
+    idx = #TERMINAL_LIST
+  end
+
+  table.insert(TERMINAL_LIST, idx, nr.id)
+  TERMINAL_CURRENT = nr.id
+  return idx
+end
+
+-- function removeTerminal
+-- a function that takes an integer variable nr
+-- and removes that int from the global list/table TERMINAL_LIST
+function M.removeTerminal(nr)
+  local idx = 0
+
+  for key, val in pairs(TERMINAL_LIST) do
+    if (nr.id == val) then
+      idx = key
+      break
+    end
+
+    table.remove(TERMINAL_LIST, idx)
+  end
+  if (TERMINAL_CURRENT == nr.id) then
+    TERMINAL_CURRENT = nil
+  end
+end
+
+function M.openTerminal(nr)
+  nr = nr or vim.v.count1 or 1
+  vim.cmd(nr .. "ToggleTerm direction='float'")
+end
+
 return M

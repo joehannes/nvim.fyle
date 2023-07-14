@@ -2,6 +2,7 @@ local M = [[
   syntax enable
   filetype plugin indent on
   set shell=/bin/zsh
+  set number relativenumber
   set colorcolumn=80,100,120
   set cursorcolumn
   set termguicolors
@@ -17,7 +18,6 @@ local M = [[
   set wildignore+=**/ios/*
   set wildignore+=**/.git/*
   set ruler
-  set number relativenumber
   set guifont=FiraCode\ Nerd\ Font\ Mono
   set showtabline=2
   set laststatus=3

@@ -85,8 +85,18 @@ local M = {
       pattern = "*",
       callback = function()
         vim.cmd([[
-          setlocal nonumber norelativenumber
+          setlocal nonumber norelativenumber foldcolumn=0 nocursorline
           startinsert
+        ]])
+      end,
+    }
+  },
+  MyListsAugroup = {
+    ["BufEnter,BufWinEnter,FocusGained"] = {
+      pattern = "qf,trouble,help",
+      callback = function()
+        vim.cmd([[
+          setlocal nonumber norelativenumber foldcolumn=0 nocursorcolumn
         ]])
       end,
     }
@@ -104,28 +114,28 @@ local M = {
         vim.cmd("setlocal nocursorline nocursorcolumn")
       end,
     },
-    ["BufEnter,FocusGained,InsertLeave"] = {
+    ["BufEnter,BufWinEnter,InsertLeave,FocusGained"] = {
       pattern = "*",
-      callback = function()
-        vim.cmd("set relativenumber")
+      callback = function(opts)
+        vim.api.nvim_set_option_value("number", true, { buf = opts.buf })
+        vim.api.nvim_set_option_value("relativenumber", true, { buf = opts.buf })
+        -- vim.cmd("setlocal number relativenumber")
       end,
     },
-    ["BufLeave,FocusLost,InsertEnter"] = {
+    ["BufLeave,BufWinLeave,InsertEnter,FocusLost"] = {
       pattern = "*",
-      callback = function()
-        vim.cmd("set norelativenumber")
+      callback = function(opts)
+        vim.api.nvim_set_option_value("number", true, { buf = opts.buf })
+        vim.api.nvim_set_option_value("relativenumber", false, { buf = opts.buf })
       end,
     }
   },
   MyFoldsAugroup = {
-    ["BufWinEnter,BufWritePost"] = {
+    ["BufWinEnter"] = {
       {
         pattern = "*.lua,*.clj,*.cljs,*.ts,*.tsx,*.js,*.jsx,*.json",
         callback = function()
-          vim.cmd([[
-            edit
-            silent! loadview
-          ]])
+          vim.cmd("silent! loadview")
         end,
       },
     },

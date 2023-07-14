@@ -50,9 +50,9 @@ local M = {
         },
         "+marks|bookmarks",
       },
-      { "q", "<cmd>silent cprevious<CR>",                              "quickfix => prev next", "<Cmd>silent cnext<CR>" },
-      { "t", "<Cmd>lua require('terminal.mappings').cycle_prev()<CR>", "prev term" },
-      { "w", "<Cmd>tabprevious<CR>",                                   "tab/winLayout" },
+      { "q", "<cmd>silent cprevious<CR>",               "quickfix => prev next", "<Cmd>silent cnext<CR>" },
+      { "t", "<Cmd>lua my.ui.cycleTerminal(false)<CR>", "prev term",             "<Cmd>lua my.ui.cycleTerminal(true)<CR>", },
+      { "w", "<Cmd>tabprevious<CR>",                    "tab/winLayout" },
     },
   },
   {
@@ -90,8 +90,8 @@ local M = {
       },
       { "q", "<cmd>silent cnext<CR>", "quickfix => next item",
         "<cmd>silent cprevious<CR>" },
-      { "t", "<Cmd>lua require('terminal.mappings').cycle_next()<CR>", "next term" },
-      { "w", "<Cmd>tabnext<CR>",                                       "tab/winLayout" },
+      { "t", "<Cmd>lua my.ui.cycleTerminal(true)<CR>", "next term",    "<Cmd>lua my.ui.cycleTerminal(false)<CR>", },
+      { "w", "<Cmd>tabnext<CR>",                       "tab/winLayout" },
     },
   },
   { "*", "*<cmd>lua require('hlslens').start()<CR>zz", "next occurrence with hl" },
@@ -182,8 +182,9 @@ local M = {
       { "<esc>", "<Cmd>set relativenumber!<CR>", "toggle rel linenrs" },
       { "<CR>",  "<Cmd>ZenMode<CR>",             "toggle zen-mode" },
       { "%", {
-        { "l", ":luafile %<CR>",                       "source current lua-file" },
-        { "i", ":luafile ~/.config/nvim/init.lua<CR>", "source initial lua-file" },
+        { ".", ":luafile %<CR>",                       "source current lua-file" },
+        { "*", ":luafile ~/.config/nvim/init.lua<CR>", "source initial lua-file" },
+        "+source lua file"
       } },
       {
         "<",
@@ -422,42 +423,51 @@ local M = {
         { "<",    "<Cmd>lua require'trouble'.previous({skip_groups = true, jump = true})<CR>", "trouble prev item" },
         { "<CR>", "<Cmd>Trouble<CR>",                                                          "trouble open" },
         { "$", {
-          { "$", "<Cmd>Trouble telescope<CR>",       "trouble telescope" },
-          { "d", "<Cmd>Trouble lsp_definitions<CR>", "trouble defs" },
-          { "r", "<Cmd>Trouble lsp_references<CR>",  "trouble refs" },
+          { "$", "<Cmd>lua my.ui.toggleSidebar(vim.api.nvim_command('TroubleToggle telescope'))<CR>",
+            "trouble telescope" },
+          { "d", "<Cmd>lua my.ui.toggleSidebar(vim.api.nvim_command('TroubleToggle lsp_definitions'))<CR>",
+            "trouble defs" },
+          { "r", "<Cmd>lua my.ui.toggleSidebar(vim.api.nvim_command('TroubleToggle lsp_references'))<CR>",
+            "trouble refs" },
         } },
         {
           ".", {
-          { "<CR>", "<Cmd>Trouble loclist<CR>",              "loclist open" },
+          { "<CR>", "<Cmd>lua my.ui.toggleSidebar(vim.api.nvim_command('TroubleToggle loclist'))<CR>",
+            "loclist open" },
           { "a", {
             { ".",
-              "<Cmd>lua require('gitsigns.actions').setqflist(0, { open = false, use_location_list = true })<CR><Cmd>Trouble loclist<CR>",
+              "<Cmd>lua require('gitsigns.actions').setqflist(0, { open = false, use_location_list = true })<CR><Cmd>lua my.ui.toggleSidebar(vim.api.nvim_command('TroubleToggle loclist'))<CR>",
               "trouble actions local" },
             { "$",
-              "<Cmd>lua require('gitsigns.actions').setqflist('attached', { open = false, use_location_list = true })<CR><cmd>Trouble loclist<CR>",
+              "<Cmd>lua require('gitsigns.actions').setqflist('attached', { open = false, use_location_list = true })<CR><cmd>lua my.ui.toggleSidebar(vim.api.nvim_command('TroubleToggle loclist'))<CR>",
               "trouble actions attached" },
             { "*",
-              "<Cmd>lua require('gitsigns.actions').setqflist('all', { open = false, use_location_list = true })<CR><cmd>Trouble loclist<CR>",
+              "<Cmd>lua require('gitsigns.actions').setqflist('all', { open = false, use_location_list = true })<CR><cmd>lua my.ui.toggleSidebar(vim.api.nvim_command('TroubleToggle loclist'))<CR>",
               "trouble actions workspace" },
           }, "+git alterations" },
-          { "d",    "<Cmd>Trouble document_diagnostics<CR>", "trouble doc diag" },
+          { "d",
+            "<Cmd>lua my.ui.toggleSidebar(vim.api.nvim_command('TroubleToggle document_diagnostics'))<CR>",
+            "trouble doc diag" },
         }, "+LocList"
         },
         {
           "*", {
-          { "<CR>", "<Cmd>Trouble quickfix<CR>",              "trouble quickfix" },
+          { "<CR>", "<Cmd>lua my.ui.toggleSidebar(vim.api.nvim_command('TroubleToggle quickfix'))<CR>",
+            "trouble quickfix" },
           { "a", {
             { ".",
-              "<Cmd>lua require('gitsigns.actions').setqflist(0, { open = false, use_location_list = false })<CR><Cmd>Trouble quickfix<CR>",
+              "<Cmd>lua require('gitsigns.actions').setqflist(0, { open = false, use_location_list = false })<CR><Cmd>lua my.ui.toggleSidebar(vim.api.nvim_command('TroubleToggle quickfix'))<CR>",
               "trouble actions local" },
             { "$",
-              "<Cmd>lua require('gitsigns.actions').setqflist('attached', { open = false, use_location_list = false })<CR><cmd>Trouble quickfix<CR>",
+              "<Cmd>lua require('gitsigns.actions').setqflist('attached', { open = false, use_location_list = false })<CR><cmd>lua my.ui.toggleSidebar(vim.api.nvim_command('TroubleToggle quickfix'))<CR>",
               "trouble actions attached" },
             { "*",
-              "<Cmd>lua require('gitsigns.actions').setqflist('all', { open = false, use_location_list = false })<CR><cmd>Trouble quickfix<CR>",
+              "<Cmd>lua require('gitsigns.actions').setqflist('all', { open = false, use_location_list = false })<CR><cmd>lua my.ui.toggleSidebar(vim.api.nvim_command('TroubleToggle quickfix'))<CR>",
               "trouble actions workspace" },
           }, "+git alterations" },
-          { "d",    "<Cmd>Trouble workspace_diagnostics<CR>", "trouble proj diag" },
+          { "d",
+            "<Cmd>lua my.ui.toggleSidebar(vim.api.nvim_command('TroubleToggle workspace_diagnostics'))<CR>",
+            "trouble proj diag" },
         }, "+QuickFix"
         },
         { "q", "<Cmd>TroubleClose<CR>", "trouble close" },
@@ -481,7 +491,7 @@ local M = {
       {
         "q",
         {
-          { "q", "<Cmd>wqa!<CR>", "saveAll! & quitAll!" },
+          { "q", "<Cmd>wa!<CR><Cmd>qa!<CR>", "saveAll! & quitAll!" },
         }, "+quit"
       },
       {
@@ -515,21 +525,14 @@ local M = {
             "+file browser"
           },
           { "F", "<Cmd>Twilight<CR>",       "focus scope" },
-          {
-            "l",
-            {
-              { "*", "<Cmd>QFToggle!<CR>", "quickfix" },
-              { ".", "<Cmd>LLToggle!<CR>", "loclist" },
-            },
-            "+list"
-          },
           { "m", "<Plug>(Marks-toggle)",    "mark" },
           { "o", "<Cmd>SymbolsOutline<CR>", "outline" },
           { "t",
-            [[<Cmd>exe v:count1 . "ToggleTerm"<CR>]],
+            [[<Cmd>lua my.ui.openTerminal(vim.v.count1)<CR>]],
             "terminal" },
           { "u", "<cmd>lua require('undotree').open()<CR><cmd>normal  w=<CR>", "undo tree" },
           { "R", "<Cmd>ProjectRoot<CR>",                                       "CWD" },
+          { "x", "<Cmd>OverseerToggle<CR>",                                    "toggle task Runner" },
           { "Z", "<Cmd>ZenMode<CR>",                                           "zen mode" },
         },
         "+toggle"
@@ -548,14 +551,11 @@ local M = {
         "x",
         {
           { "<CR>", {
-            { "?",    ":AsyncTaskProfile ",                  "toggle npm/yarn" },
-            { "<CR>", "<Cmd>AsyncTask node -task=start<CR>", "npmR start" },
-            { ";",    "<Cmd>AsyncTask node -task=dev<CR>",   "npmR dev" },
-            { "%",    "<Cmd>AsyncTask node -task=test<CR>",  "npmR test" },
-            { "$",    ":AsyncTask node -task=",              "npmR ?" },
-            { "s",    ":AsyncTask npmS -package=",           "npmS ?" },
-            { "d",    ":AsyncTask npmD -package=",           "npmD ?" },
-          }, "+npm/yarn/xcode build/run" },
+            { "?",    "<Cmd>OverseerRunCmd<CR>", "run arbitrary task" },
+            { "<CR>", "<Cmd>OverseerRun<CR>",    "run manager task" },
+            { "o",    "<Cmd>OverseerOpen<CR>",   "open task Runner" },
+            { "q",    "<Cmd>OverseerClose<CR>",  "close task Runner" },
+          }, "+task runner" },
           { ".", "<Cmd>SnipRun<CR>",   "run snippet" },
           { "d", "<Cmd>SnipClose<CR>", "close snippet" },
         },
