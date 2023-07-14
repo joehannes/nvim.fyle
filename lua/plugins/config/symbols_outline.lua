@@ -11,9 +11,9 @@ function M.setup()
     auto_close = false,
     show_numbers = false,
     show_relative_numbers = false,
-    show_symbol_details = true,
+    show_symbol_details = false,
     preview_bg_highlight = 'Pmenu',
-    autofold_depth = nil,
+    autofold_depth = 2,
     auto_unfold_hover = true,
     fold_markers = { '', '' },
     keymaps = { -- These keymaps can be a string or a table for multiple keys
