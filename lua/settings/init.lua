@@ -20,13 +20,13 @@ vim.opt.listchars:append("eol:↴")
 -- vim.opt.fillchars:append("foldclose:")
 
 for group, group_v in pairs(vim_aucmds) do
-  vim.api.nvim_create_augroup(group, { clear = true })
+  local group_id = vim.api.nvim_create_augroup(group, { clear = true })
   local split = function(s, pattern)
     local result = {}
 
     for v in s:gmatch(pattern) do
       v = v:gsub(",", "")
-      if v ~= nil and #v > 0 and v:match("%a+") ~= fail then
+      if v ~= nil and #v > 0 and v:match("%a+") ~= nil then
         if #result > 0 then
           table.insert(result, v)
         else
@@ -37,17 +37,10 @@ for group, group_v in pairs(vim_aucmds) do
 
     return result
   end
-  local aucmd = function(_group, _ev, pattern, _callback)
-    local events
+  local aucmd = function(_group, events, pattern, _callback)
     local patterns
 
-    if _ev:find(",", 1, true) == fail then
-      events = "" .. _ev
-    else
-      events = split(_ev, "%w+,?")
-    end
-
-    if pattern:find(",", 1, true) == fail then
+    if pattern:find(",", 1, true) == nil then
       patterns = "" .. pattern
     else
       patterns = split(pattern, "[%w.*]*,?")
@@ -59,10 +52,10 @@ for group, group_v in pairs(vim_aucmds) do
   for ev, cmds in pairs(group_v) do
     if not (cmds.pattern ~= nil or cmds.callback ~= nil) then
       for _, cmd in ipairs(cmds) do
-        aucmd(group, ev, cmd.pattern, cmd.callback)
+        aucmd(group_id, ev, cmd.pattern, cmd.callback)
       end
     else
-      aucmd(group, ev, cmds.pattern, cmds.callback)
+      aucmd(group_id, ev, cmds.pattern, cmds.callback)
     end
   end
 end

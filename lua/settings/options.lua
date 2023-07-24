@@ -12,7 +12,7 @@ local M = {
   timeoutlen = 200,
   updatetime = 300,
   inccommand = "split",
-  sessionoptions = "globals,resize,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal",
+  sessionoptions = "blank,globals,resize,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal",
   undofile = true,
   foldenable = true,
   foldlevel = 99,
@@ -27,6 +27,7 @@ local M = {
   softtabstop = indent,
   expandtab = true,
   list = true,
+  virtualedit = all,
 }
 
 return M

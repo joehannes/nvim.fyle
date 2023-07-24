@@ -24,9 +24,24 @@ return {
       })
     end,
   },
+  -- {
+  --   'declancm/maximize.nvim',
+  --   config = function() require('maximize').setup({ default_keymaps = false }) end
+  -- },
   {
-    'declancm/maximize.nvim',
-    config = function() require('maximize').setup({ default_keymaps = false }) end
+    "anuvyklack/windows.nvim",
+    dependencies = {
+      "anuvyklack/middleclass",
+      "anuvyklack/animation.nvim"
+    },
+    config = function()
+      vim.o.winwidth = 12
+      vim.o.winminwidth = 1
+      vim.o.winheight = 20
+      vim.o.winminheight = 1
+      vim.o.equalalways = false
+      require('windows').setup()
+    end
   },
   {
     "danilamihailov/beacon.nvim",

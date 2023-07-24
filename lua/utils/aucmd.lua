@@ -1,10 +1,15 @@
 local M = {}
 
-function M.onAfterBoot()
-  vim.schedule(function()
-    my.ui.updateHighlights()
-    my.ui.tint()
-  end)
+function M.onAfterBoot(opts)
+  vim.api.nvim_set_option_value("winheight", 999, { scope = "global" })
+  vim.api.nvim_set_option_value("winwidth", 999, { scope = "global" })
+  vim.api.nvim_set_option_value("winminheight", 0, { scope = "global" })
+  vim.api.nvim_set_option_value("winminwidth", 0, { scope = "global" })
+  my.ui.updateHighlights()
+  my.ui.tint()
+  vim.cmd([[
+      WindowsEnableAutowidth
+    ]])
 end
 
 function M.onColorscheme()

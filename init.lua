@@ -1,5 +1,7 @@
 --@diagnostic disable:undefined-global
-vim.cmd('set shell=/opt/homebrew/bin/zsh')
+vim.cmd([[
+  set shell=/opt/homebrew/bin/zsh
+]])
 
 require("utils")
 
@@ -49,4 +51,4 @@ require("lang")
 require("keymappings")
 require("colorschemes")
 
-vim.cmd("colo lush_jsx")
+-- vim.cmd("colo lush_jsx")

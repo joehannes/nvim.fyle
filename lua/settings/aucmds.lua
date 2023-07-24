@@ -1,39 +1,67 @@
 --@diagnostic disable: undefined-global
 local M = {
   MyBootAugroup = {
-    ["VimEnter"] = {
+    [{ "VimEnter" }] = {
       pattern = "*",
       callback = my.fn.onAfterBoot,
-    }
+    },
+  },
+  PersistedHooks = {
+    [{ "User" }] = {
+      {
+        pattern = "PersistedLoadPre",
+        callback = function(opts)
+          vim.api.nvim_set_option_value("winbar", nil, { scope = "global" })
+          vim.api.nvim_set_option_value("winminheight", 0, { buf = opts.buf })
+          vim.api.nvim_set_option_value("winminwidth", 1, { buf = opts.buf })
+        end,
+      },
+      {
+        pattern = "PersistedLoadPost",
+        callback = function(opts)
+          vim.api.nvim_set_option_value("winbar", nil, { scope = "global" })
+          vim.api.nvim_set_option_value("winheight", 9999, { scope = "global" })
+          vim.api.nvim_set_option_value("winminheight", 0, { scope = "global" })
+          vim.api.nvim_set_option_value("winminwidth", 1, { scope = "global" })
+        end,
+      },
+      {
+        pattern = "PersistedSavePre",
+        callback = function(opts)
+          vim.api.nvim_set_option_value("winminheight", 0, { buf = opts.buf })
+          vim.api.nvim_set_option_value("winminwidth", 1, { buf = opts.buf })
+        end,
+      }
+    },
   },
   MyHighlightAugroup = {
-    ["TextYankPost"] = {
+    [{ "TextYankPost" }] = {
       pattern = "*",
       callback = function()
         vim.highlight.on_yank { higroup = "IncSearch", hlgroup = "IncSearch", timeout = 2000 }
       end,
     },
-    ["CursorHold"] = {
-      pattern = "*",
-      callback = function()
-        local opts = {
-          focusable = false,
-          close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-          border = 'rounded',
-          source = 'always',
-          prefix = ' ',
-          scope = 'cursor',
-        }
-        vim.diagnostic.open_float(nil, opts)
-      end,
-    }
-    -- ["BufEnter"] = {
+    -- {"CursorHold"} = {
+    --   pattern = "*",
+    --   callback = function()
+    --     local opts = {
+    --       focusable = false,
+    --       close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+    --       border = 'rounded',
+    --       source = 'always',
+    --       prefix = ' ',
+    --       scope = 'cursor',
+    --     }
+    --     vim.diagnostic.open_float(nil, opts)
+    --   end,
+    -- }
+    -- {"BufEnter"} = {
     --   {
     --     pattern = "*",
     --     callback = my.fn.activate_current_win_sep,
     --   },
     -- },
-    -- ["BufLeave"] = {
+    -- {"BufLeave"} = {
     --   {
     --     pattern = "*",
     --     callback = my.fn.clear_current_win_sep,
@@ -41,17 +69,17 @@ local M = {
     -- }
   },
   MyColorAugroup = {
-    ["ModeChanged"] = {
+    [{ "ModeChanged" }] = {
       pattern = "*",
       callback = my.fn.onModeChanged,
     },
-    ["ColorScheme"] = {
+    [{ "ColorScheme" }] = {
       pattern = "*",
       callback = my.fn.onColorscheme,
     }
   },
   MyReadAugroup = {
-    ["BufNewFile,BufRead"] = {
+    [{ "BufNewFile", "BufRead" }] = {
       {
         pattern = "*.md,*.org,*.wiki,*.dict,*.txt",
         callback = function()
@@ -67,13 +95,13 @@ local M = {
     }
   },
   MyWriteAugroup = {
-    ["BufWritePre"] = {
+    [{ "BufWritePre" }] = {
       pattern = "*.clj,*.cljc,*.cljs",
       callback = function()
         -- vim.cmd("CljFmt")
       end
     },
-    ["BufWritePost"] = {
+    [{ "BufWritePost" }] = {
       pattern = "plugins.lua",
       callback = function()
         vim.cmd([[source <afile> | PackerCompile]])
@@ -81,7 +109,7 @@ local M = {
     },
   },
   MyTerminalAugroup = {
-    ["TermOpen,TermEnter"] = {
+    [{ "TermOpen", "TermEnter" }] = {
       pattern = "*",
       callback = function()
         vim.cmd([[
@@ -92,7 +120,7 @@ local M = {
     }
   },
   MyListsAugroup = {
-    ["BufEnter,BufWinEnter,FocusGained"] = {
+    [{ "BufEnter", "BufWinEnter", "FocusGained" }] = {
       pattern = "qf,trouble,help",
       callback = function()
         vim.cmd([[
@@ -102,28 +130,27 @@ local M = {
     }
   },
   MyCursorAugroup = {
-    ["VimEnter,WinEnter,BufWinEnter"] = {
+    [{ "WinEnter", "BufWinEnter" }] = {
       pattern = "*",
       callback = function()
         vim.cmd("setlocal cursorline cursorcolumn")
       end,
     },
-    ["WinLeave"] = {
+    [{ "WinLeave" }] = {
       pattern = "*",
       callback = function()
         vim.cmd("setlocal nocursorline nocursorcolumn")
       end,
     },
-    ["BufEnter,BufWinEnter,InsertLeave,FocusGained"] = {
-      pattern = "*",
+    [{ "BufEnter", "BufWinEnter", "InsertLeave", "FocusGained" }] = {
+      pattern = "*.*",
       callback = function(opts)
         vim.api.nvim_set_option_value("number", true, { buf = opts.buf })
         vim.api.nvim_set_option_value("relativenumber", true, { buf = opts.buf })
-        -- vim.cmd("setlocal number relativenumber")
       end,
     },
-    ["BufLeave,BufWinLeave,InsertEnter,FocusLost"] = {
-      pattern = "*",
+    [{ "BufLeave", "BufWinLeave", "InsertEnter", "FocusLost" }] = {
+      pattern = "*.*",
       callback = function(opts)
         vim.api.nvim_set_option_value("number", true, { buf = opts.buf })
         vim.api.nvim_set_option_value("relativenumber", false, { buf = opts.buf })
@@ -131,7 +158,7 @@ local M = {
     }
   },
   MyFoldsAugroup = {
-    ["BufWinEnter"] = {
+    [{ "BufWinEnter" }] = {
       {
         pattern = "*.lua,*.clj,*.cljs,*.ts,*.tsx,*.js,*.jsx,*.json",
         callback = function()
@@ -139,7 +166,7 @@ local M = {
         end,
       },
     },
-    ["BufWinLeave,BufWritePre"] = {
+    [{ "BufWinLeave", "BufWritePre" }] = {
       {
         pattern = "*.lua,*.clj,*.cljs,*.ts,*.tsx,*.js,*.jsx,*.json",
         callback = function()

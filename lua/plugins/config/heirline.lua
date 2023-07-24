@@ -156,8 +156,10 @@ local FileName = {
   on_click = {
     name = "heirline_filename_ranger_current",
     callback = function()
-      require('maximize').toggle()
-      vim.cmd("RangerCurrentFile")
+      vim.cmd([[
+        WindowsMaximize
+        RangerCurrentFile
+      ]])
     end
   }
 }
@@ -375,7 +377,6 @@ local Navic = {
 }
 
 local BufferDiagnostics = {
-
   condition = conditions.has_diagnostics,
   update = { "DiagnosticChanged", "BufEnter" },
   on_click = {
@@ -426,7 +427,6 @@ local BufferDiagnostics = {
 }
 
 local Diagnostics = {
-
   condition = conditions.has_diagnostics,
   update = { "DiagnosticChanged", "TabEnter" },
   on_click = {
@@ -713,8 +713,8 @@ local DefaultStatusline = {
   {
     condition = conditions.has_diagnostics,
     SlantLeftRight,
-    { hl = { bg = "magenta", force = true }, Space, Diagnostics, Space },
-    { hl = { bg = "vimode", force = true }, SlantRightRight },
+    { hl = { bg = "magenta", force = true },                   Space,          Diagnostics, Space },
+    { hl = { bg = "vimode", force = true },                    SlantRightRight },
     { hl = { fg = "current_fg", bg = "vimode", force = true }, Space }
   },
   -- {
@@ -1022,10 +1022,10 @@ local TablineBufferBlock = utils.surround(
           .bg), 73), 73)
     end
   end, {
-  TablineFileNameBlock,
-  TablinePicker,
-  TablineCloseButton
-})
+    TablineFileNameBlock,
+    TablinePicker,
+    TablineCloseButton
+  })
 
 -- and here we go
 local Tabpage = {
@@ -1099,8 +1099,13 @@ local BufferLine = utils.make_buflist(
 -- by the way, open a lot of buffers and try clicking them ;)
 )
 
-local TabLine = { TabLineOffset, BufferLine, TabPages, hl = { bg = my.color.my.magenta },
-  update = { "DirChanged", "BufLeave", "BufEnter", "ModeChanged", "BufModifiedSet", "TabEnter", "OptionSet", "WinNew" } }
+local TabLine = {
+  TabLineOffset,
+  BufferLine,
+  TabPages,
+  hl = { bg = my.color.my.magenta },
+  update = { "DirChanged", "BufLeave", "BufEnter", "ModeChanged", "BufModifiedSet", "TabEnter", "OptionSet", "WinNew" }
+}
 
 local WinBar = {
   hl = function()
@@ -1183,9 +1188,10 @@ local WinBars = {
   {
     condition = function()
       return (not conditions.buffer_matches({
-        filetype = { "lua", "clojure", "clojurescript", "clj", "cljs", "ts", "tsx", "typescript", "typescriptreact", "js",
-          "jsx", "javascript", "javascriptreact", "html", "css", "json", "md", "sass", "less", "yml", "yaml" },
-      }))
+            filetype = { "lua", "clojure", "clojurescript", "clj", "cljs", "ts", "tsx", "typescript", "typescriptreact",
+              "js",
+              "jsx", "javascript", "javascriptreact", "html", "css", "json", "md", "sass", "less", "yml", "yaml" },
+          }))
           or conditions.buffer_matches({
             buftype = { ".*git.*", "terminal", "nofile", "prompt", "help", "quickfix" },
             filetype = { "wilder", "packer", "neo-tree", "which-key", "Diffview.*", "NeogitStatus", ".*git.*", "^git.*",

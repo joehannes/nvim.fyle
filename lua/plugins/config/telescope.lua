@@ -20,23 +20,29 @@ function config.setup()
     --   "!**/.git/*"
     -- },
     use_less = true,
-    -- file_previewer = require("telescope.previewers").vim_buffer_cat.new,
-    -- grep_previewer = require("telescope.previewers").vimgrep.new, -- vim_buffer_vimgrep.new,
-    -- qflist_previewer = require("telescope.previewers").vim_buffer_qflist.new,
+    file_previewer = require("telescope.previewers").vim_buffer_cat.new,
+    grep_previewer = require("telescope.previewers").vim_buffer_vimgrep.new, --.wimgrep.new,
+    qflist_previewer = require("telescope.previewers").vim_buffer_qflist.new,
     pickers = {
-      live_grep = {
-        find_command = {
-          "ag",
-          "--hidden",
-          "--skip-vcs-ignores",
-          "--ignore",
-          ".git",
-          "-S",
-          "-i",
-          "-v",
-          "--sort-files"
-        },
-      },
+      -- live_grep = {
+      --   -- find_command = {
+      --   --   "ag",
+      --   --   "--hidden",
+      --   --   "--skip-vcs-ignores",
+      --   --   "--ignore",
+      --   --   ".git",
+      --   --   "-S",
+      --   --   "-i",
+      --   --   "-v",
+      --   --   "--sort-files"
+      --   -- },
+      --   find_command = {
+      --     "rg",
+      --     "--hidden",
+      --     "--files",
+      --     "--ignore",
+      --   },
+      -- },
       spell_suggest = {
         theme = "cursor",
       },
@@ -72,12 +78,9 @@ function config.setup()
       },
     },
     extensions = {
-      -- arecibo = {
-      --     ["selected_engine"] = 'google',
-      --     ["url_open_command"] = 'open',
-      --     ["show_http_headers"] = false,
-      --     ["show_domain_icons"] = false
-      -- },
+      persisted = {
+        layout_config = { width = 0.7, height = 0.7 }
+      },
       undo = {
         side_by_side = true,
         layout_strategy = "vertical",
@@ -112,18 +115,22 @@ function config.setup()
         filetypes = { "png", "webp", "jpg", "jpeg", "mp4", "webm", "pdf" },
         find_cmd = "rg",
       },
-      -- fzf = {
-      --   fuzzy = true,
-      --   override_generic_sorter = true,
-      --   override_file_sorter = true,
-      --   case_mode = "smart_case",
-      -- },
+      fzf = {
+        fuzzy = true,
+        override_generic_sorter = true,
+        override_file_sorter = true,
+        case_mode = "smart_case",
+      },
       project = {
         base_dirs = {
           { path = "~/.config/nvim" },
           { path = "~/.local/git",  max_depth = 3 },
         },
         hidden_files = true,
+        on_project_selected = function(prompt_bufnr)
+          -- Do anything you want in here. For example:
+          require("telescope._extensions.project.actions").change_working_directory(prompt_bufnr, false)
+        end
       },
       dash = {
         -- configure path to Dash.app if installed somewhere other than /Applications/Dash.app
@@ -212,7 +219,7 @@ function config.setup()
     },
   })
 
-  -- telescope.load_extension("fzf")
+  telescope.load_extension("fzf")
   telescope.load_extension("gh")
   -- telescope.load_extension("dap")
   telescope.load_extension("node_modules")
@@ -229,6 +236,7 @@ function config.setup()
   telescope.load_extension("ui-select")
   telescope.load_extension("undo")
   telescope.load_extension("ag")
+  telescope.load_extension("persisted")
 end
 
 return config

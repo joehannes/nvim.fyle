@@ -10,13 +10,13 @@ local M = {
   { "<Del>", {
     { "<Del>", '<Cmd>lua require("notify").dismiss()<cr>', "notifications" },
   }, "+dismiss" },
-  { "<CR><CR>", "<Cmd>lua require('maximize').toggle()<CR>", "toggle max win" },
+  { "<CR><CR>", "<Cmd>WindowsMaximize<CR>", "toggle max win" },
   -- { "<A-h>", [[<cmd>lua require("tmux").resize_left()<cr>]] },
   -- { "<A-l>", [[<cmd>lua require("tmux").resize_right()<cr>]] },
   -- { "<A-j>", [[<cmd>lua require("tmux").resize_down()<cr>]] },
   -- { "<A-k>", [[<cmd>lua require("tmux").resize_top()<cr>]] },
-  { "<CR>p",    '<cmd>normal! "0p<CR>',                      "last y-yanked" },
-  { "<CR>P",    '<cmd>normal! "0P<CR>',                      "last y-yanked" },
+  { "<CR>p",    '<cmd>normal! "0p<CR>',     "last y-yanked" },
+  { "<CR>P",    '<cmd>normal! "0P<CR>',     "last y-yanked" },
   {
     "[",
     {
@@ -190,16 +190,16 @@ local M = {
         "<",
         {
           {
-            "s",
-            {
-              { "*", "<Cmd>SessionRestore<CR>", "restore session" },
-              {
-                ".",
-                '<Cmd>lua vim.api.nvim_command("SessionRestore " .. vim.fn.stdpath("data") .. "/sessions/" .. my.git.get_branch():gsub("/","__"))<CR>',
-                "restore git-branch session"
-              },
-            },
-            "+session related"
+            "s", "<Cmd>SessionLoad<CR>", "restore session"
+            -- {
+            --   { "*", "<Cmd>SessionRestore<CR>", "restore session" },
+            --   {
+            --     ".",
+            --     '<Cmd>lua vim.api.nvim_command("SessionRestore " .. vim.fn.stdpath("data") .. "/sessions/" .. my.git.get_branch():gsub("/","__"))<CR>',
+            --     "restore git-branch session"
+            --   },
+            -- },
+            -- "+session related"
           },
         },
         "+read stuff in"
@@ -207,18 +207,18 @@ local M = {
       {
         ">",
         {
-          {
-            "s", "<Cmd>SessionSave<CR>", "save session"
-            -- {
-            --   { "*", "<Cmd>SessionSave<CR>", "save session" },
-            --   -- {
-            --   --   ".",
-            --   --   '<Cmd>lua vim.api.nvim_command("SessionSave " .. vim.fn.stdpath("data") .. "/sessions/" .. my.git.get_branch():gsub("/","__"))<CR>',
-            --   --   "save git-branch session"
-            --   -- },
-            -- },
-            -- "+session related",
-          },
+          -- {
+          "s", "<Cmd>SessionSave<CR>", "save session"
+          -- {
+          --   { "*", "<Cmd>SessionSave<CR>", "save session" },
+          --   -- {
+          --   --   ".",
+          --   --   '<Cmd>lua vim.api.nvim_command("SessionSave " .. vim.fn.stdpath("data") .. "/sessions/" .. my.git.get_branch():gsub("/","__"))<CR>',
+          --   --   "save git-branch session"
+          --   -- },
+          -- },
+          -- "+session related",
+          -- },
         },
         "+write stuff out",
       },
@@ -421,6 +421,7 @@ local M = {
       { "l", {
         { ">",    "<Cmd>lua require'trouble'.next({skip_groups = true, jump = true})<CR>",     "trouble next item" },
         { "<",    "<Cmd>lua require'trouble'.previous({skip_groups = true, jump = true})<CR>", "trouble prev item" },
+        { "?",    "<Cmd>DocsViewToggle<CR>",                                                   "docs view toggle" },
         { "<CR>", "<Cmd>Trouble<CR>",                                                          "trouble open" },
         { "$", {
           { "$", "<Cmd>lua my.ui.toggleSidebar(vim.api.nvim_command('TroubleToggle telescope'))<CR>",
@@ -491,8 +492,9 @@ local M = {
       {
         "q",
         {
+          { "s", "<Cmd>SessionDelete<CR>",   "session delete" },
           { "q", "<Cmd>wa!<CR><Cmd>qa!<CR>", "saveAll! & quitAll!" },
-        }, "+quit"
+        }, "+quit/delete"
       },
       {
         "s",
@@ -504,10 +506,11 @@ local M = {
       {
         "t",
         {
+          { "?", "<Cmd>DocsViewToggle<CR>",             "docs view" },
           {
             "b",
             {
-              { "m", "<Cmd>lua require('maximize').toggle()<CR>", "maximize" },
+              { "m", "<Cmd>WindowsMaximize<CR>", "maximize" },
               -- { "o", "<Cmd>lua require('aerial').focus()<CR>" },
             },
             "+buffer"
@@ -530,8 +533,9 @@ local M = {
           { "t",
             [[<Cmd>lua my.ui.openTerminal(vim.v.count1)<CR>]],
             "terminal" },
-          { "u", "<cmd>lua require('undotree').open()<CR><cmd>normal  w=<CR>", "undo tree" },
           { "R", "<Cmd>ProjectRoot<CR>",                                       "CWD" },
+          { "u", "<cmd>lua require('undotree').open()<CR><cmd>normal  w=<CR>", "undo tree" },
+          { "w", "<Cmd>WindowsToggleAutoWidth<CR>",                            "autowidth" },
           { "x", "<Cmd>OverseerToggle<CR>",                                    "toggle task Runner" },
           { "Z", "<Cmd>ZenMode<CR>",                                           "zen mode" },
         },

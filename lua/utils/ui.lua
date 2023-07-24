@@ -67,7 +67,7 @@ function M.updateHighlights()
     [my.color.my.red] = "GitSignsDelete" }) do
     my.color.fn.highlight_blend_bg(gitSignsHl, 90, defColor)
     my.color.fn.highlight_blend_bg(gitSignsHl .. "Nr", 73, defColor)
-    my.color.fn.highlight_blend_bg(gitSignsHl .. "Ln", 50, defColor)
+    my.color.fn.highlight_blend_bg(gitSignsHl .. "Ln", 37, defColor)
     my.color.fn.highlight_blend_bg("CursorLine", 50, mode_color)
     my.color.fn.highlight_blend_bg("CursorColumn", 50, mode_color)
     my.color.fn.highlight_blend_bg("Visual", 21, mode_color)
