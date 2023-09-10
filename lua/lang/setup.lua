@@ -295,28 +295,28 @@ function setup.efm()
   local root_path         = vim.api.nvim_call_function("getcwd", {})
 
   local eslint_cfg_path   = table.foreach({
-        ".eslintrc.js",
-        ".eslintrc.cjs",
-        ".eslintrc.yaml",
-        ".eslintrc.yml",
-        ".eslintrc.json",
-      }, function(_, value)
-        return my.fs.exists(root_path .. "/" .. value) and root_path .. "/" .. value or nil
-      end) or root_path .. "/package.json"
+    ".eslintrc.js",
+    ".eslintrc.cjs",
+    ".eslintrc.yaml",
+    ".eslintrc.yml",
+    ".eslintrc.json",
+  }, function(_, value)
+    return my.fs.exists(root_path .. "/" .. value) and root_path .. "/" .. value or nil
+  end) or root_path .. "/package.json"
   local prettier_cfg_path = table.foreach({
-        ".prettierrc",
-        ".prettierrc.json",
-        ".prettierrc.yml",
-        ".prettierrc.yaml",
-        ".prettierrc.json5",
-        ".prettierrc.js",
-        ".prettierrc.cjs",
-        ".prettierrc.config.js",
-        ".prettierrc.config.cjs",
-        ".prettierrc.toml",
-      }, function(_, value)
-        return my.fs.exists(root_path .. "/" .. value) and root_path .. "/" .. value or nil
-      end) or root_path .. "/package.json"
+    ".prettierrc",
+    ".prettierrc.json",
+    ".prettierrc.yml",
+    ".prettierrc.yaml",
+    ".prettierrc.json5",
+    ".prettierrc.js",
+    ".prettierrc.cjs",
+    ".prettierrc.config.js",
+    ".prettierrc.config.cjs",
+    ".prettierrc.toml",
+  }, function(_, value)
+    return my.fs.exists(root_path .. "/" .. value) and root_path .. "/" .. value or nil
+  end) or root_path .. "/package.json"
   local stylelint         = require("efmls-configs.linters.stylelint")
   local eslint            = require("efmls-configs.linters.eslint_d")
   -- eslint.lintCommand      = eslint.lintCommand .. " --rule 'prettier/prettier: off'"
@@ -341,15 +341,16 @@ function setup.efm()
     })
   }
 
-  efmls.init({
+  local init_opts         = {
     on_attach = on_attach.minimal,
     handlers = handlers,
     init_options = {
       documentFormatting = true,
+      documentRangeFormatting = true,
     },
-  })
+  }
 
-  efmls.setup({
+  local languages         = {
     css = {
       linter = stylelint,
       formatter = prettier_default,
@@ -378,7 +379,15 @@ function setup.efm()
     --   linter = clj_kondo,
     --   formatter = joker,
     -- },
-  })
+  };
+
+  return vim.tbl_extend('force', init_opts, {
+    filetypes = vim.tbl_keys(languages),
+    settings = {
+      rootMarkers = { '.git/' },
+      languages = languages,
+    },
+  });
 end
 
 function setup.generic()

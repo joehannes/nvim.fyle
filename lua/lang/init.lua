@@ -36,6 +36,7 @@ for server, name in pairs(my_servers) do
       or server == "lua"
       or server == "python"
       or server == "clojure"
+      or server == "efm"
   -- or server == "diagnosticls"
   -- or server == "eslint"
   then
@@ -46,8 +47,6 @@ for server, name in pairs(my_servers) do
       debug = false,            -- enable debug logging for commands
       server = cfg[server](),
     })
-  elseif server == "efm" then
-    cfg[server]()
   else
     lspconfig[name].setup(cfg.generic())
   end

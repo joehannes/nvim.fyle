@@ -1,8 +1,8 @@
 local M = {
   { "<lt>", "<gv" },
   { "<gt>", ">gv" },
-  { "J", ":m '>+1<CR>gv=gv<CR>" },
-  { "K", ":m '<-2<CR>gv=gv<CR>" },
+  { "J",    ":m '>+1<CR>gv=gv<CR>" },
+  { "K",    ":m '<-2<CR>gv=gv<CR>" },
   {
     "g",
     {

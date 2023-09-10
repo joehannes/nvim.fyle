@@ -1,37 +1,46 @@
 --@diagnostic disable: undefined-global
+
 local M = {
   MyBootAugroup = {
     [{ "VimEnter" }] = {
       pattern = "*",
-      callback = my.fn.onAfterBoot,
+      callback = function()
+        my.fn.onAfterBoot()
+        vim.schedule(function()
+          vim.cmd("SessionLoad")
+        end)
+      end
     },
   },
   PersistedHooks = {
     [{ "User" }] = {
       {
         pattern = "PersistedLoadPre",
-        callback = function(opts)
-          vim.api.nvim_set_option_value("winbar", nil, { scope = "global" })
-          vim.api.nvim_set_option_value("winminheight", 0, { buf = opts.buf })
-          vim.api.nvim_set_option_value("winminwidth", 1, { buf = opts.buf })
-        end,
+        callback = function()
+          -- heirline_setup(false)
+        end
+      },
+      {
+        pattern = "PersistedTelescopeLoadPre",
+        callback = function()
+          -- heirline_setup(false)
+        end
       },
       {
         pattern = "PersistedLoadPost",
-        callback = function(opts)
-          vim.api.nvim_set_option_value("winbar", nil, { scope = "global" })
-          vim.api.nvim_set_option_value("winheight", 9999, { scope = "global" })
-          vim.api.nvim_set_option_value("winminheight", 0, { scope = "global" })
-          vim.api.nvim_set_option_value("winminwidth", 1, { scope = "global" })
-        end,
+        callback = function()
+          vim.schedule(function()
+            -- vim.api.nvim_set_option_value('winbar', "", { scope = "global" })
+            -- heirline_setup(true)
+          end)
+        end
       },
       {
-        pattern = "PersistedSavePre",
-        callback = function(opts)
-          vim.api.nvim_set_option_value("winminheight", 0, { buf = opts.buf })
-          vim.api.nvim_set_option_value("winminwidth", 1, { buf = opts.buf })
-        end,
-      }
+        pattern = "PersistedTelescopeLoadPost",
+        callback = function()
+          -- heirline_setup(true)
+        end
+      },
     },
   },
   MyHighlightAugroup = {
@@ -145,15 +154,13 @@ local M = {
     [{ "BufEnter", "BufWinEnter", "InsertLeave", "FocusGained" }] = {
       pattern = "*.*",
       callback = function(opts)
-        vim.api.nvim_set_option_value("number", true, { buf = opts.buf })
-        vim.api.nvim_set_option_value("relativenumber", true, { buf = opts.buf })
+        vim.api.nvim_set_option_value("relativenumber", true, { scope = "local" })
       end,
     },
     [{ "BufLeave", "BufWinLeave", "InsertEnter", "FocusLost" }] = {
       pattern = "*.*",
       callback = function(opts)
-        vim.api.nvim_set_option_value("number", true, { buf = opts.buf })
-        vim.api.nvim_set_option_value("relativenumber", false, { buf = opts.buf })
+        vim.api.nvim_set_option_value("relativenumber", false, { scope = "local" })
       end,
     }
   },
@@ -162,6 +169,7 @@ local M = {
       {
         pattern = "*.lua,*.clj,*.cljs,*.ts,*.tsx,*.js,*.jsx,*.json",
         callback = function()
+          vim.cmd("silent! edit")
           vim.cmd("silent! loadview")
         end,
       },

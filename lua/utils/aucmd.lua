@@ -1,15 +1,11 @@
 local M = {}
 
 function M.onAfterBoot(opts)
-  vim.api.nvim_set_option_value("winheight", 999, { scope = "global" })
-  vim.api.nvim_set_option_value("winwidth", 999, { scope = "global" })
-  vim.api.nvim_set_option_value("winminheight", 0, { scope = "global" })
-  vim.api.nvim_set_option_value("winminwidth", 0, { scope = "global" })
   my.ui.updateHighlights()
   my.ui.tint()
   vim.cmd([[
-      WindowsEnableAutowidth
-    ]])
+    WindowsEnableAutowidth
+  ]])
 end
 
 function M.onColorscheme()
@@ -19,29 +15,8 @@ function M.onColorscheme()
 end
 
 function M.onModeChanged()
-  local m = vim.fn.mode()
-
-  if (m == "c") then
-    my.ui.updateHighlights()
-    my.ui.tint()
-  end
-
-  vim.schedule(function()
-    if (m == "n") then
-      vim.cmd("startinsert")
-      my.ui.updateHighlights()
-      vim.schedule(function()
-        vim.cmd([[
-          stopinsert
-        ]])
-        my.ui.updateHighlights()
-        my.ui.tint()
-      end)
-    end
-
-    my.ui.updateHighlights()
-    my.ui.tint()
-  end)
+  my.ui.updateHighlights()
+  my.ui.tint()
 end
 
 function M.toggle_bg_mode(force)

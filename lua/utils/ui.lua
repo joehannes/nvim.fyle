@@ -78,9 +78,9 @@ function M.updateHighlights()
     vim.api.nvim_set_hl(0, "ScrollbarHandle", { bg = mode_color })
   end
 
-  if pcall(require, "heirline") then
-    require("plugins.config.heirline").update()
-  end
+  -- if pcall(require, "heirline") then
+  --   require("plugins.config.heirline").update()
+  -- end
 end
 
 function M.tablinePickBuffer()

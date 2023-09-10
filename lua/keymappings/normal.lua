@@ -398,13 +398,14 @@ local M = {
       {
         "j",
         {
-          { "/", "<Cmd>HopPattern<CR>",                                      "pattern" },
-          { "1", "<Cmd>HopChar1<CR>",                                        "1 char" },
-          { "2", "<Cmd>HopChar2<CR>",                                        "2 chars" },
-          { "j", "<Cmd>lua require('hop-extensions').hint_references()<CR>", "references" },
-          { "l", "<Cmd>HopLine<CR>",                                         "line" },
-          { "t", "<Cmd>lua require('hop-extensions').hint_scopes()<CR>",     "scopes" },
-          { "w", "<Cmd>HopWord<CR>",                                         "word" },
+          { "/", "<Cmd>HopPattern<CR>",                                         "pattern" },
+          { "$", "<Cmd>lua require('hop-extensions').lsp.hint_symbols()<CR>",   "symbols" },
+          { "1", "<Cmd>HopChar1<CR>",                                           "1 char" },
+          { "2", "<Cmd>HopChar2<CR>",                                           "2 chars" },
+          { "j", "<Cmd>lua require('hop-extensions').ts.hint_references()<CR>", "references" },
+          { "l", "<Cmd>HopLine<CR>",                                            "line" },
+          { "t", "<Cmd>lua require('hop-extensions').ts.hint_scopes()<CR>",     "scopes" },
+          { "w", "<Cmd>HopWord<CR>",                                            "word" },
         },
         "+jump"
       },
@@ -523,7 +524,7 @@ local M = {
             "f",
             {
               { ".", "<Cmd>RangerCurrentFile<CR>", "cwd as buffer" },
-              { "*", "<Cmd>Ranger<CR>",            "cwd as project" },
+              { "*", ":tabnew<CR><Cmd>Ranger<CR>", "cwd as project" },
             },
             "+file browser"
           },

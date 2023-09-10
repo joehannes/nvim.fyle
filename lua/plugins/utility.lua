@@ -135,7 +135,7 @@ return {
           -- They can also be specified in a tree-like format.
           j = {
             -- Here `jk` will escape insert mode.
-            k = "<cmd>stopinsert<cr>",
+            k = "<cmd>stopinsert<cr><cmd>w!<cr>",
             -- You can have as many layers as you want!
             -- h = {
             -- 	g = "<cmd>stopinsert<cr>",

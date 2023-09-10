@@ -1259,7 +1259,6 @@ function M.setup(my_aucmds)
   require("heirline").setup({
     statusline = StatusLines,
     winbar = WinBars,
-    -- tabline = TabLine,
   })
 
   if my_aucmds == true then
@@ -1267,5 +1266,8 @@ function M.setup(my_aucmds)
     M.aucmds()
   end
 end
+
+M.StatusLines = StatusLines
+M.WinBars = WinBars
 
 return M

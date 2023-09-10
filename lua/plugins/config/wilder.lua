@@ -5,26 +5,48 @@ local wilder = require('wilder')
 function M.setup()
   local popupmenu_renderer = wilder.popupmenu_renderer(
     wilder.popupmenu_border_theme({
+      pumblend = 20,
       mode = "popup",
-      pre_hook = function(ctx)
-        vim.opt_local.winbar = nil
-      end,
       border = 'rounded',
       empty_message = wilder.popupmenu_empty_message_with_spinner(),
-      highlighter = { wilder.pcre2_highlighter(), wilder.basic_highlighter() },
+      highlighter = wilder.basic_highlighter,
       left = {
         ' ',
         wilder.popupmenu_devicons(),
         wilder.popupmenu_buffer_flags({
           flags = ' a + ',
-          icons = { ['+'] = '', a = '', h = '' }
-        })
+          icons = { ['+'] = '', a = '', h = '' },
+        }),
       },
       right = {
         ' ',
-        wilder.popupmenu_scrollbar()
-      }
+        wilder.popupmenu_scrollbar(),
+      },
     })
+  )
+
+  local popupmenu_renderer = wilder.popupmenu_renderer(
+  -- wilder.popupmenu_border_theme({
+  --   mode = "popup",
+  --   pre_hook = function(ctx)
+  --     vim.opt_local.winbar = nil
+  --   end,
+  --   border = 'rounded',
+  --   empty_message = wilder.popupmenu_empty_message_with_spinner(),
+  --   highlighter = wilder.basic_highlighter(), --{ wilder.pcre2_highlighter(), wilder.basic_highlighter() },
+  --   left = {
+  --     ' ',
+  --     wilder.popupmenu_devicons(),
+  --     wilder.popupmenu_buffer_flags({
+  --       flags = ' a + ',
+  --       icons = { ['+'] = '', a = '', h = '' }
+  --     })
+  --   },
+  --   right = {
+  --     ' ',
+  --     wilder.popupmenu_scrollbar()
+  --   }
+  -- })
   )
   local palette_renderer = wilder.popupmenu_renderer(
     wilder.popupmenu_palette_theme({
@@ -33,11 +55,12 @@ function M.setup()
       pre_hook = function(ctx)
         vim.opt_local.winbar = nil
       end,
-      border = 'rounded',
-      max_height = '75%', -- max height of the palette
-      min_height = '75%', -- set to the same as 'max_height' for a fixed height window
+      border = 'double',
+      max_height = '75%',      -- max height of the palette
+      min_height = '25%',      -- set to the same as 'max_height' for a fixed height window
       prompt_position = 'top', -- 'top' or 'bottom' to set the location of the prompt
-      reverse = 0, -- set to 1 to reverse the order of the list, use in combination with 'prompt_position'
+      reverse = 0,             -- set to 1 to reverse the order of the list, use in combination with 'prompt_position'
+      pumblend = 50,
     })
   )
   local wildmenu_renderer = wilder.wildmenu_renderer({

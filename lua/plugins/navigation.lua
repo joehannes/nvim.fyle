@@ -70,6 +70,7 @@ return {
   },
   {
     "phaazon/hop.nvim",
+    branch = "v2",
     as = "hop",
     config = function()
       -- you can configure Hop the way you like here; see :h hop-config

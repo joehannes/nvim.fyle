@@ -24,10 +24,10 @@ return {
       })
     end,
   },
-  -- {
-  --   'declancm/maximize.nvim',
-  --   config = function() require('maximize').setup({ default_keymaps = false }) end
-  -- },
+  {
+    'declancm/maximize.nvim',
+    config = function() require('maximize').setup({ default_keymaps = false }) end
+  },
   {
     "anuvyklack/windows.nvim",
     dependencies = {
