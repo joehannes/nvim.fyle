@@ -412,10 +412,10 @@ local M = {
       {
         "k",
         {
-          -- { "*", "<Cmd>call Dasht(dasht#cursor_search_terms(), '!')<CR>" },
-          { "*", "<Cmd>Dash<CR>",     "dash" },
-          -- { ".", "<Cmd>call Dasht(dasht#cursor_search_terms())<CR>" },
-          { ".", "<Cmd>DashWord<CR>", "<cword> dash" },
+          { "*", "<Cmd>call Dasht(dasht#cursor_search_terms(), '!')<CR>" },
+          -- { "*", "<Cmd>Dash<CR>",     "dash" },
+          { ".", "<Cmd>call Dasht(dasht#cursor_search_terms())<CR>" },
+          -- { ".", "<Cmd>DashWord<CR>", "<cword> dash" },
         },
         "+dash docs"
       },

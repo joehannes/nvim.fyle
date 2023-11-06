@@ -6,11 +6,13 @@ function M.setup()
   require("nvim-lightbulb").update_lightbulb({
     sign = {
       enabled = true,
+      text = "☼", -- "💡",
       priority = 20,
     },
     float = {
       enabled = false,
       -- Text to show in the popup float
+      text = "☼", -- "💡",
       -- text = "💡",
       -- Available keys for window options:
       -- - height     of floating window
@@ -29,9 +31,9 @@ function M.setup()
       win_opts = {},
     },
     virtual_text = {
-      enabled = false,
+      enabled = true,
       -- Text to show at virtual text
-      -- text = "💡",
+      text = "☼", -- "💡",
     },
   })
 end

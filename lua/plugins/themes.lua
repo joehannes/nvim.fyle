@@ -119,6 +119,10 @@ return {
     end,
   },
   {
+    "yorik1984/newpaper.nvim",
+    config = true,
+  },
+  {
     "ofirgall/ofirkai.nvim",
     config = function()
       require('ofirkai').setup {}

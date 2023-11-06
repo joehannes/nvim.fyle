@@ -3,9 +3,9 @@ local M = {}
 function M.onAfterBoot(opts)
   my.ui.updateHighlights()
   my.ui.tint()
-  vim.cmd([[
-    WindowsEnableAutowidth
-  ]])
+  -- vim.cmd([[
+  --   WindowsEnableAutowidth
+  -- ]])
 end
 
 function M.onColorscheme()

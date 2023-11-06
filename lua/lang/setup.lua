@@ -151,6 +151,7 @@ function setup.clojure()
     on_attach = on_attach.clojure,
     settings = {
       format = { enable = true },
+      filetypes = { "clojure", "clojurescript", "clojuredart", "edn" },
     }
   }
 

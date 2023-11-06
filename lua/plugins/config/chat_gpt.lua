@@ -1,8 +1,9 @@
 local M = {}
+local home = vim.fn.expand("$HOME")
 
 function M.setup()
   require("chatgpt").setup({
-    -- optional configuration
+    api_key_cmd = "cat " .. home .. "/.local/git/joehannes-os/safe/chatgpt.txt"
   })
 end
 

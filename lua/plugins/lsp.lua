@@ -17,15 +17,15 @@ return {
     "creativenull/efmls-configs-nvim",
     dependencies = { "neovim/nvim-lspconfig" },
   },
-  {
-    "joehannes-nvim/lsp_lines.nvim",
-    config = function()
-      require("lsp_lines").setup()
-      vim.diagnostic.config({
-        virtual_text = false,
-      })
-    end,
-  },
+  -- {
+  --   "joehannes-nvim/lsp_lines.nvim",
+  --   config = function()
+  --     require("lsp_lines").setup()
+  --     vim.diagnostic.config({
+  --       virtual_text = false,
+  --     })
+  --   end,
+  -- },
   {
     "lukas-reineke/lsp-format.nvim",
     config = function()

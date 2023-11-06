@@ -100,6 +100,12 @@ local M = {
         callback = function()
           vim.cmd("setfiletype markdown")
         end,
+      },
+      {
+        pattern = "*.cljd,*.cljs",
+        callback = function()
+          vim.cmd("setfiletype clojure")
+        end,
       }
     }
   },

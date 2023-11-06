@@ -33,7 +33,22 @@ local function setup_colors()
     git_change = my.color.my.yellow
   }
 end
-
+local ArrowLeftLeft = {
+  hl = function(self) return { fg = my.color.my.magenta, bg = vimode_color() } end,
+  provider = ""
+}
+local ArrowRightLeft = {
+  hl = function(self) return { bg = my.color.my.magenta, fg = vimode_color(), force = true } end,
+  ArrowLeftLeft,
+}
+local ArrowRightRight = {
+  hl = { fg = my.color.my.magenta, bg = "vimode" },
+  provider = ""
+}
+local ArrowLeftRight = {
+  hl = function(self) return { bg = my.color.my.magenta, fg = vimode_color(), force = true } end,
+  ArrowRightRight,
+}
 local SlantRightRight = {
   hl = { fg = "magenta", bg = "vimode" },
   provider = ""
@@ -157,7 +172,7 @@ local FileName = {
     name = "heirline_filename_ranger_current",
     callback = function()
       vim.cmd([[
-        WindowsMaximize
+        " WindowsMaximize
         RangerCurrentFile
       ]])
     end
@@ -280,6 +295,48 @@ local LSPActive = {
       end, 100)
     end,
   },
+}
+
+local Dropbar = {
+  condition = function(self)
+    self.data = vim.tbl_get(dropbar.bars or {}, vim.api.nvim_get_current_buf(), vim.api.nvim_get_current_win())
+    return self.data
+  end,
+  static = { dropbar_on_click_string = 'v:lua.dropbar.on_click_callbacks.buf%s.win%s.fn%s' },
+  init = function(self)
+    local components = self.data.components
+    local children = {}
+    for i, c in ipairs(components) do
+      local child = {
+        {
+          provider = c.icon,
+          hl = c.icon_hl
+        },
+        {
+          hl = c.name_hl,
+          provider = c.name,
+        },
+        on_click = {
+          callback = self.dropbar_on_click_string:format(self.data.buf, self.data.win, i),
+          name = "heirline_dropbar",
+        },
+      }
+      if i < #components then
+        local sep = self.data.separator
+        table.insert(child, {
+          provider = sep.icon,
+          hl = sep.icon_hl,
+          on_click = {
+            callback = self.dropbar_on_click_string:format(self.data.buf, self.data.win, i + 1)
+          }
+        })
+      end
+      table.insert(children, child)
+    end
+    self.child = self:new(children, 1)
+  end,
+  provider = function(self) return self.child:eval() end,
+  hl = { fg = my.color.my.dark, bg = my.color.my.magenta, force = true },
 }
 
 local Navic = {
@@ -420,7 +477,7 @@ local BufferDiagnostics = {
   },
   {
     provider = function(self)
-      return self.hints > 0 and ((self.hint_icon or "") .. self.hints)
+      return self.hints > 0 and ((self.hint_icon or "☉") .. self.hints)
     end,
     hl = { fg = my.color.util.darken(my.color.my.green, 33) },
   },
@@ -470,7 +527,7 @@ local Diagnostics = {
   },
   {
     provider = function(self)
-      return self.hints > 0 and ((self.hint_icon or "") .. self.hints)
+      return self.hints > 0 and ((self.hint_icon or "☉") .. self.hints)
     end,
     hl = { fg = my.color.util.darken(my.color.my.green, 33) },
   },
@@ -539,8 +596,8 @@ local Snippets = {
     return vim.tbl_contains({ "s", "i" }, vim.fn.mode())
   end,
   provider = function()
-    local forward = (vim.fn["UltiSnips#CanJumpForwards"]() == 1) and "" or ""
-    local backward = (vim.fn["UltiSnips#CanJumpBackwards"]() == 1) and " " or ""
+    local forward = (vim.fn["UltiSnips#CanJumpForwards"]() == 1) and "" or ""
+    local backward = (vim.fn["UltiSnips#CanJumpBackwards"]() == 1) and "" or ""
     return backward .. forward
   end,
   hl = { fg = "red", bold = true },
@@ -680,86 +737,80 @@ local Spell = {
 local Align = { provider = "%=" }
 
 local DefaultStatusline = {
-  {
-    ViMode,
-    SlantRightRight,
-  },
+  ViMode,
+  ArrowRightRight,
   Space,
   Spell,
-  Space,
   {
     hl = { bg = "magenta" },
-    SlantLeftRight,
+    {
+      hl = function(self) return { bg = my.color.my.magenta, fg = vimode_color(), force = true } end,
+      ArrowRightRight,
+    },
+    Space,
     WorkDir,
-    SlantRightRight,
+    ArrowRightRight,
   },
   Space,
   {
     hl = { bg = "magenta" },
-    SlantLeftRight,
+    ArrowLeftRight,
     Git,
-    SlantRightRight,
+    ArrowRightRight,
   },
-  Space,
-  { provider = "%<" },
-  -- {
-  --   hl = { bg = "magenta" },
-  --   SlantLeftRight,
-  --   FileNameBlock,
-  --   Space,
-  --   SlantRightRight,
-  -- },
   Space,
   {
+    hl = { bg = my.color.my.red, bold = true },
     condition = conditions.has_diagnostics,
-    SlantLeftRight,
-    { hl = { bg = "magenta", force = true },                   Space,          Diagnostics, Space },
-    { hl = { bg = "vimode", force = true },                    SlantRightRight },
-    { hl = { fg = "current_fg", bg = "vimode", force = true }, Space }
+    {
+      hl = function(self) return { fg = my.color.my.red, bg = vimode_color(), force = true } end,
+      ArrowLeftLeft,
+      update = "ModeChanged"
+    },
+    Space,
+    Diagnostics,
+    Space,
+    {
+      hl = function(self) return { fg = my.color.my.red, bg = vimode_color(), force = true } end,
+      ArrowRightRight,
+      update = "ModeChanged"
+    },
+    update = "ModeChanged"
   },
-  -- {
-  --   hl = { bg = "magenta", bold = true },
-  --   SlantLeftRight,
-  --   Space,
-  --   { hl = { fg = "dark", bold = true, force = true }, Navic },
-  --   Space,
-  --   SlantRightRight,
-  -- },
-  Space,
   Align,
   -- DAPMessages,
-  SlantLeftLeft,
+  ArrowLeftLeft,
   {
     hl = { bg = "magenta", force = true },
     Space,
     LSPActive,
     Space,
   },
-  SlantRightLeft,
+  ArrowRightLeft,
   -- UltTest,
   Space,
   {
     hl = { bg = "magenta" },
-    SlantLeftLeft,
+    ArrowLeftLeft,
     Space,
     FileType,
     Space,
-    SlantRightLeft,
+    ArrowRightLeft,
   },
   Space,
   {
     hl = { bg = "magenta" },
-    SlantLeftLeft,
+    ArrowLeftLeft,
     Space,
     FileEncoding,
     FileLastModified,
     Space,
-    SlantRightLeft,
+    ArrowRightLeft,
   },
   Space,
   {
     hl = { bg = "magenta" },
-    SlantLeftLeft,
+    ArrowLeftLeft,
     Space,
     Ruler,
   },
@@ -823,15 +874,15 @@ local TerminalStatusline = {
 local StatusLines = {
   hl = function()
     if conditions.is_active() then
-      return "StatusLine"
+      return { bg = vimode_color() }      -- "StatusLine"
     else
-      return "StatusLineNC"
+      return { bg = my.color.my.magenta } -- "StatusLineNC"
     end
   end,
   static = {
     mode_color = function(self)
       local mode = conditions.is_active() and vim.fn.mode() or "n"
-      local current_mode_color = my.color.my.vimode[mode]
+      local current_mode_color = vimode_color()
 
       vim.api.nvim_set_hl(0, "StatusLine", { bg = current_mode_color })
       return current_mode_color
@@ -963,7 +1014,7 @@ local TablineCloseButton = {
   end,
   { provider = " " },
   {
-    provider = "",
+    provider = "",
     hl = { fg = "gray" },
     on_click = {
       callback = function(_, minwid)
@@ -1108,23 +1159,19 @@ local TabLine = {
 }
 
 local WinBar = {
-  hl = function()
-    if conditions.is_active() then
-      return "StatusLine"
-    else
-      return "WinBarNC"
-    end
-  end,
-  {
-    hl = { fg = my.color.my.dark, bg = my.color.my.magenta, force = true },
-    Space,
-    FileNameBlock,
-    Space,
-  },
-  {
-    hl = { fg = "magenta" },
-    provider = ""
-  },
+  -- hl = function()
+  --   if conditions.is_active() then
+  --     return "StatusLine"
+  --   else
+  --     return "WinBarNC"
+  --   end
+  -- end,
+  -- {
+  --   hl = { fg = my.color.my.dark, bg = my.color.my.magenta, force = true },
+  --   Space,
+  --   FileNameBlock,
+  --   Space,
+  -- },
   {
     -- flexible = 1,
     condition = function()
@@ -1142,37 +1189,60 @@ local WinBar = {
       return false
     end,
     hl = function()
-      if conditions.is_active() and vim.fn.mode() ~= "n" then
-        return { fg = "dark", force = true }
-      end
+      -- if conditions.is_active() and vim.fn.mode() ~= "n" then
+      --   return { fg = my.color.my.dark, bg = my.color.my.magenta, force = true }
+      -- end
 
-      return { fg = "magenta", bold = true, force = true }
+      return { fg = my.color.my.dark, bg = my.color.my.magenta } --, bold = true, force = true }
     end,
     Space,
-    Navic,
-    Space,
     {
-      provider = "",
+      condition = function(self) return require("nvim-navic").is_available(vim.api.nvim_get_current_buf()) end,
+      Dropbar
     },
+    {
+      condition = function(self) return not require("nvim-navic").is_available(vim.api.nvim_get_current_buf()) end,
+      FileNameBlock
+    },
+    Space,
+    -- {
+    --   provider = "",
+    -- },
+  },
+  {
+    hl = function(self) return { fg = my.color.my.magenta, bg = vimode_color(), force = true } end,
+    provider = ""
   },
   Align,
   {
     condition = conditions.has_diagnostics,
     hl = function(self)
       if (not conditions.is_active()) then
-        return { fg = "light", bg = "vimode", force = true }
+        return { fg = my.color.my.light, bg = my.color.my.red }
       end
 
-      return { bg = "vimode", force = true }
+      return { bg = my.color.my.red, bold = true }
     end,
+    {
+      hl = function(self) return { fg = my.color.my.red, bg = vimode_color(), force = true } end,
+      provider = function(self) return "" end,
+      update = { "ModeChanged" }
+    },
     Space,
     BufferDiagnostics,
     Space,
+    {
+      hl = { fg = my.color.my.red, bg = "vimode", force = true },
+      provider = function(self) return "" end,
+      update = { "ModeChanged" }
+    },
     update = { "CursorMoved", "ModeChanged" }
   },
+  Space,
   {
-    hl = { fg = my.color.my.magenta },
-    provider = ""
+    hl = { fg = my.color.my.magenta, bg = "vimode", force = true },
+    provider = "",
+    update = { "ModeChanged" }
   },
   {
     hl = { fg = my.color.my.dark, bg = my.color.my.magenta },
@@ -1254,8 +1324,8 @@ function M.setup(my_aucmds)
   vim.api.nvim_set_hl(0, "TabLine", { bg = my.color.my.magenta })
   vim.api.nvim_set_hl(0, "TabLineSel", { bg = my.color.my.magenta })
   vim.api.nvim_set_hl(0, "TabLineFill", { bg = my.color.my.magenta })
-  vim.api.nvim_set_hl(0, "StatusLine", { bg = my.color.my.vimode[vim.fn.mode()] })
-  vim.api.nvim_set_hl(0, "WinBar", { bg = my.color.my.vimode[vim.fn.mode()] })
+  vim.api.nvim_set_hl(0, "StatusLine", { bg = vimode_color() })
+  vim.api.nvim_set_hl(0, "WinBar", { bg = vimode_color() })
   require("heirline").setup({
     statusline = StatusLines,
     winbar = WinBars,

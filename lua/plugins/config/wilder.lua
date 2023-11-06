@@ -1,6 +1,7 @@
 ---@diagnostic disable:undefined-global
 local M = {}
 local wilder = require('wilder')
+wilder.set_option('use_python_remote_plugin', 0)
 
 function M.setup()
   local popupmenu_renderer = wilder.popupmenu_renderer(
@@ -9,7 +10,7 @@ function M.setup()
       mode = "popup",
       border = 'rounded',
       empty_message = wilder.popupmenu_empty_message_with_spinner(),
-      highlighter = wilder.basic_highlighter,
+      highlighter = wilder.basic_highlighter(),
       left = {
         ' ',
         wilder.popupmenu_devicons(),
@@ -25,29 +26,6 @@ function M.setup()
     })
   )
 
-  local popupmenu_renderer = wilder.popupmenu_renderer(
-  -- wilder.popupmenu_border_theme({
-  --   mode = "popup",
-  --   pre_hook = function(ctx)
-  --     vim.opt_local.winbar = nil
-  --   end,
-  --   border = 'rounded',
-  --   empty_message = wilder.popupmenu_empty_message_with_spinner(),
-  --   highlighter = wilder.basic_highlighter(), --{ wilder.pcre2_highlighter(), wilder.basic_highlighter() },
-  --   left = {
-  --     ' ',
-  --     wilder.popupmenu_devicons(),
-  --     wilder.popupmenu_buffer_flags({
-  --       flags = ' a + ',
-  --       icons = { ['+'] = '', a = '', h = '' }
-  --     })
-  --   },
-  --   right = {
-  --     ' ',
-  --     wilder.popupmenu_scrollbar()
-  --   }
-  -- })
-  )
   local palette_renderer = wilder.popupmenu_renderer(
     wilder.popupmenu_palette_theme({
       -- 'single', 'double', 'rounded' or 'solid'
@@ -80,7 +58,7 @@ function M.setup()
 
   wilder.set_option('renderer', wilder.renderer_mux({
     [':'] = palette_renderer,
-    ['/'] = wildmenu_renderer,
+    ['/'] = popupmenu_renderer,
     substitute = wildmenu_renderer,
   }))
 end

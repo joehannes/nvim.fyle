@@ -8,6 +8,7 @@ local my_servers = {
   json = "jsonls",
   css = "cssls",
   cssmodules = "cssmodules_ls",
+  -- dart = "dartls",
   lua = "sumneko_lua",
   efm = "efm",
   html = "html",
@@ -22,12 +23,12 @@ local my_servers = {
 --Some Diagnostic Icons
 vim.fn.sign_define("LspDiagnosticsSignError", { text = "✘", numhl = "LspDiagnosticsDefaultError" })
 vim.fn.sign_define("LspDiagnosticsSignWarning", { text = "", numhl = "LspDiagnosticsDefaultWarning" })
-vim.fn.sign_define("LspDiagnosticsSignInformation", { text = "", numhl = "LspDiagnosticsDefaultInformation" })
-vim.fn.sign_define("LspDiagnosticsSignHint", { text = "", numhl = "LspDiagnosticsDefaultHint" })
+vim.fn.sign_define("LspDiagnosticsSignInformation", { text = "", numhl = "LspDiagnosticsDefaultInformation" })
+vim.fn.sign_define("LspDiagnosticsSignHint", { text = "", numhl = "LspDiagnosticsDefaultHint" })
 vim.fn.sign_define("DiagnosticSignError", { text = "✘", numhl = "LspDiagnosticsDefaultError" })
 vim.fn.sign_define("DiagnosticSignWarn", { text = "", numhl = "LspDiagnosticsDefaultWarning" })
-vim.fn.sign_define("DiagnosticSignInfo", { text = "", numhl = "LspDiagnosticsDefaultInformation" })
-vim.fn.sign_define("DiagnosticSignHint", { text = "", numhl = "LspDiagnosticsDefaultHint" })
+vim.fn.sign_define("DiagnosticSignInfo", { text = "", numhl = "LspDiagnosticsDefaultInformation" })
+vim.fn.sign_define("DiagnosticSignHint", { text = "", numhl = "LspDiagnosticsDefaultHint" })
 
 for server, name in pairs(my_servers) do
   if server == "json"
@@ -37,6 +38,7 @@ for server, name in pairs(my_servers) do
       or server == "python"
       or server == "clojure"
       or server == "efm"
+  -- dart is automatically setup by the flutter plugin
   -- or server == "diagnosticls"
   -- or server == "eslint"
   then
