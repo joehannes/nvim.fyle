@@ -225,8 +225,8 @@ local M = {
       {
         "b",
         {
-          { "q", ":bp|bd #<CR>",            "quit current buffer" },
-          { "p", "<cmd>BufferLinePick<CR>", "pick buffer in tabline" },
+          { "q", ":bp|bd #<CR>",                           "quit current buffer" },
+          { "p", "<cmd>lua my.ui.tablinePickBuffer()<CR>", "pick buffer in tabline" },
           {
             "d",
             {
@@ -422,7 +422,7 @@ local M = {
       { "l", {
         { ">",    "<Cmd>lua require'trouble'.next({skip_groups = true, jump = true})<CR>",     "trouble next item" },
         { "<",    "<Cmd>lua require'trouble'.previous({skip_groups = true, jump = true})<CR>", "trouble prev item" },
-        { "?",    "<Cmd>lua require'hoverrsplit'.split()<CR>",                                 "docs view toggle" },
+        { "?",    "<Cmd>lua require'hoversplit'.split()<CR>",                                  "docs view toggle" },
         { "<CR>", "<Cmd>Trouble<CR>",                                                          "trouble open" },
         { "$", {
           { "$", "<Cmd>lua my.ui.toggleSidebar(vim.api.nvim_command('TroubleToggle telescope'))<CR>",

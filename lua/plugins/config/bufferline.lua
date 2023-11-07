@@ -178,11 +178,11 @@ function M.setup()
   local opts = {
     highlights = highlights,
     options = {
-      numbers = "none",                    -- "none" | "ordinal" | "buffer_id" | "both",
-      close_command = "bp | bd! %d",       -- can be a string | function, see "Mouse actions"
-      right_mouse_command = "sbuffer %d",  -- can be a string | function, see "Mouse actions"
-      left_mouse_command = "buffer %d",    -- can be a string | function, see "Mouse actions"
-      middle_mouse_command = "sbuffer %d", -- can be a string | function, see "Mouse actions"
+      numbers = "none",                      -- "none" | "ordinal" | "buffer_id" | "both",
+      close_command = "bp | silent! bd! %d", -- can be a string | function, see "Mouse actions"
+      right_mouse_command = "sbuffer %d",    -- can be a string | function, see "Mouse actions"
+      left_mouse_command = "buffer %d",      -- can be a string | function, see "Mouse actions"
+      middle_mouse_command = "sbuffer %d",   -- can be a string | function, see "Mouse actions"
       -- NOTE: this plugin is designed with this icon in mind,
       -- and so changing this is NOT recommended, this is intended
       -- as an escape hatch for people who cannot bear it for whatever reason
@@ -203,7 +203,7 @@ function M.setup()
       name_formatter = function(buf) -- buf contains a "name", "path" and "bufnr"
         -- remove extension from text-files for example
         -- if buf.name:match("%.txt") then
-        return vim.fn.fnamemodify(buf.name, ":r")
+        return vim.fn.fnamemodify(buf.name, ":t")
         -- end
       end,
       max_name_length = 21,
@@ -223,11 +223,13 @@ function M.setup()
       -- NOTE: this will be called a lot so don't do any heavy processing here
       custom_filter = function(buf_number)
         -- filter out filetypes you don't want to see
-        -- if vim.bo[buf_number].filetype ~= "<i-dont-want-to-see-this>" then
+        -- if vim.bo[buf_number].filetype ~= "OUTLINE" or
+        --     vim.bo[buf_number].filetype ~= "hoversplit" then
         --   return true
         -- end
         -- filter out by buffer name
-        -- if vim.fn.bufname(buf_number) ~= "<buffer-name-I-dont-want>" then
+        -- if vim.fn.bufname(buf_number) ~= "OUTLINE" or
+        --     vim.fn.bufname(buf_number) ~= "hoversplit" then
         --   return true
         -- end
         -- filter out based on arbitrary rules

@@ -929,7 +929,7 @@ local TablineFileName = {
     -- self.filename will be defined later, just keep looking at the example!
     local filename = self.filename
     filename = filename == "" and "[No Name]" or vim.fn.fnamemodify(filename, ":t")
-    return filename
+    return " " .. filename .. " "
   end,
   hl = function(self)
     return { bold = self.is_active, italic = self.is_active or self.is_visible }
@@ -1071,7 +1071,7 @@ local TablineBufferBlock = utils.surround(
   end, {
     TablineFileNameBlock,
     TablinePicker,
-    TablineCloseButton
+    TablineCloseButton,
   })
 
 -- and here we go
@@ -1089,8 +1089,19 @@ local Tabpage = {
 }
 
 local TabpageClose = {
-  provider = "%999X  %X",
+  condition = function(self)
+    return vim.tbl_count(vim.api.nvim_list_tabpages()) > 1
+  end,
+  provider = "  ",
+  -- provider = "%999X  %X",
   hl = "TabLine",
+  on_click = {
+    callback = function()
+      vim.api.nvim_win_close(0, true)
+      vim.cmd.redrawtabline()
+    end,
+    name = "heirline_tabline_close_tab_callback",
+  },
 }
 
 local TabPages = {
@@ -1140,7 +1151,13 @@ local BufferLine = utils.make_buflist(
   -- right trunctation, also optional (defaults to ...... yep, ">")
   function(self)
     return vim.tbl_filter(function(bufnr)
-      return vim.api.nvim_buf_get_name(bufnr):find(vim.fn.getcwd(), 0, true)
+      return not not vim.api.nvim_buf_get_name(bufnr):find(vim.fn.getcwd(), 0, true) and
+          not conditions.buffer_matches({
+            buftype = { ".*git.*", "terminal", "nofile", "prompt", "help", "quickfix" },
+            filetype = { "wilder", "packer", "neo-tree", "which-key", "Diffview.*", "NeogitStatus", ".*git.*", "^git.*",
+              "fugitive" },
+          }, bufnr) and
+          vim.api.nvim_buf_is_loaded(bufnr)
     end, vim.api.nvim_list_bufs())
   end
 -- by the way, open a lot of buffers and try clicking them ;)
@@ -1325,6 +1342,7 @@ function M.setup(my_aucmds)
   require("heirline").setup({
     statusline = StatusLines,
     winbar = WinBars,
+    tabline = TabLine
   })
 
   if my_aucmds == true then
