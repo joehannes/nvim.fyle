@@ -34,5 +34,4 @@ What's missing/on my wishlist:
 * Testing setup
 * Default layout configurations (maybe with folke/edge)
 * Default custom workflow modes (maybe with hydra?)
-* custom clickable winbars
-* some bugs in tabline UI
+* custom clickable winbars (like for quickfix, trouble, docsview, terminals ...)
