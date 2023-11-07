@@ -6,6 +6,8 @@ Original article from alpha2phi on his config: [Medium article](https://alpha2ph
 In order to get started with the new lua way I dared to copy and adapt this very decent config,
 which honestly I couldn't have done on my own.
 
+![image](https://github.com/joehannes-nvim/nvim.cfg.lua/assets/63741107/8914de4f-bb94-4a07-a677-d3b252e306aa)
+
 By now 
 
 ... November 2023
@@ -22,7 +24,10 @@ What's in there:
 * preview plugins and shortcuts and jump/bookmark mnemonics for an optimised workflow
 * many a plugin that makes this and that nicer
 * custom personal colorscheme and a lot of other colorschemes (eg.: collection of themer color-themes)
-...
+* automatic git-branch based session management
+* git diffviews and git time travelling & co.
+* neogit for git operations
+* cfg for git merge
 
 What's missing/on my wishlist:
 * Debugging setup
