@@ -10,14 +10,27 @@ return {
     end
   },
   {
-    "amrbashir/nvim-docs-view",
+    "roobert/hoversplit.nvim",
     config = function()
-      require("docs-view").setup {
-        position = "bottom",
-        height = 17,
-      }
-    end
+      require("hoversplit").setup({
+        -- key_bindings = {
+        --   split_remain_focused = "<leader>hs",
+        --   vsplit_remain_focused = "<leader>hv",
+        --   split = "<leader>hS",
+        --   vsplit = "<leader>hV",
+        -- },
+      })
+    end,
   },
+  -- {
+  --   "amrbashir/nvim-docs-view",
+  --   config = function()
+  --     require("docs-view").setup {
+  --       position = "bottom",
+  --       height = 17,
+  --     }
+  --   end
+  -- },
   {
     'nvim-telescope/telescope-fzf-native.nvim',
     build =

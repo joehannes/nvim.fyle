@@ -171,10 +171,7 @@ local FileName = {
   on_click = {
     name = "heirline_filename_ranger_current",
     callback = function()
-      vim.cmd([[
-        " WindowsMaximize
-        RangerCurrentFile
-      ]])
+      require('ranger-nvim').open(true)
     end
   }
 }
@@ -670,8 +667,7 @@ local WorkDir = {
   hl = { fg = "dark", bold = true },
   on_click = {
     callback = function()
-      require('maximize').toggle()
-      vim.cmd('Ranger')
+      require 'ranger-nvim'.open(false)
     end,
     name = "heirline_workdir",
   },

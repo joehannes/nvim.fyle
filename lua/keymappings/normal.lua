@@ -422,7 +422,7 @@ local M = {
       { "l", {
         { ">",    "<Cmd>lua require'trouble'.next({skip_groups = true, jump = true})<CR>",     "trouble next item" },
         { "<",    "<Cmd>lua require'trouble'.previous({skip_groups = true, jump = true})<CR>", "trouble prev item" },
-        { "?",    "<Cmd>DocsViewToggle<CR>",                                                   "docs view toggle" },
+        { "?",    "<Cmd>lua require'hoverrsplit'.split()<CR>",                                 "docs view toggle" },
         { "<CR>", "<Cmd>Trouble<CR>",                                                          "trouble open" },
         { "$", {
           { "$", "<Cmd>lua my.ui.toggleSidebar(vim.api.nvim_command('TroubleToggle telescope'))<CR>",
@@ -507,7 +507,7 @@ local M = {
       {
         "t",
         {
-          { "?", "<Cmd>DocsViewToggle<CR>",             "docs view" },
+          { "?", "<Cmd>lua require'hoversplit'.split()<CR>", "docs view" },
           {
             "b",
             {
@@ -516,15 +516,15 @@ local M = {
             },
             "+buffer"
           },
-          { "c", "<Cmd>lua my.fn.toggle_bg_mode()<CR>", "bg lightness" },
-          { "C", "<Cmd>TSContextToggle<CR>",            "virtual context" },
+          { "c", "<Cmd>lua my.fn.toggle_bg_mode()<CR>",      "bg lightness" },
+          { "C", "<Cmd>TSContextToggle<CR>",                 "virtual context" },
           -- { "D", ":lua require('dapui').toggle()" },
-          { "e", "<Plug>(ultest-summary-toggle)",       "ultest summary" },
+          { "e", "<Plug>(ultest-summary-toggle)",            "ultest summary" },
           {
             "f",
             {
-              { ".", "<Cmd>RangerCurrentFile<CR>", "cwd as buffer" },
-              { "*", ":tabnew<CR><Cmd>Ranger<CR>", "cwd as project" },
+              { ".", "<Cmd>lua require('ranger-nvim').open(true)<CR>",  "cwd as buffer" },
+              { "*", "<Cmd>lua require('ranger-nvim').open(false)<CR>", "cwd as project" },
             },
             "+file browser"
           },

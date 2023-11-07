@@ -181,7 +181,13 @@ return {
   --     })
   --   end,
   -- },
-  { "lokaltog/neoranger" },
+  -- { "lokaltog/neoranger" },
+  {
+    "kelly-lin/ranger.nvim",
+    config = function()
+      require("ranger-nvim").setup({ replace_netrw = true })
+    end,
+  },
   {
     "lukas-reineke/indent-blankline.nvim",
     main = "ibl",
