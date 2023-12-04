@@ -10,13 +10,13 @@ local M = {
   { "<Del>", {
     { "<Del>", '<Cmd>lua require("notify").dismiss()<cr>', "notifications" },
   }, "+dismiss" },
-  { "<CR><CR>", "<Cmd>WindowsMaximize<CR>", "toggle max win" },
+  { "<CR><CR>", "<Cmd>WindowsMaximizeHorizontally<CR>", "toggle max win" },
   -- { "<A-h>", [[<cmd>lua require("tmux").resize_left()<cr>]] },
   -- { "<A-l>", [[<cmd>lua require("tmux").resize_right()<cr>]] },
   -- { "<A-j>", [[<cmd>lua require("tmux").resize_down()<cr>]] },
   -- { "<A-k>", [[<cmd>lua require("tmux").resize_top()<cr>]] },
-  { "<CR>p",    '<cmd>normal! "0p<CR>',     "last y-yanked" },
-  { "<CR>P",    '<cmd>normal! "0P<CR>',     "last y-yanked" },
+  { "<CR>p",    '<cmd>normal! "0p<CR>',                 "last y-yanked" },
+  { "<CR>P",    '<cmd>normal! "0P<CR>',                 "last y-yanked" },
   {
     "[",
     {
@@ -225,8 +225,8 @@ local M = {
       {
         "b",
         {
-          { "q", ":bp|bd #<CR>",                           "quit current buffer" },
-          { "p", "<cmd>lua my.ui.tablinePickBuffer()<CR>", "pick buffer in tabline" },
+          { "q", ":bp|bd #<CR>",            "quit current buffer" },
+          { "p", "<cmd>BufferLinePick<CR>", "pick buffer in tabline" },
           {
             "d",
             {
@@ -234,6 +234,9 @@ local M = {
               { ".", "<cmd>lua require('close_buffers').delete({type = 'this'})<CR>",     "delete current buffer" },
             },
             "+delete buffers"
+          },
+          {
+            "s", "<cmd>BufferLineSortByDirectory<CR><cmd>BufferLineSortByExtension<CR>", "sort buffers"
           },
           {
             "w",
@@ -291,7 +294,12 @@ local M = {
             },
           },
           { "'", "<Cmd>Telescope marks<CR>",       "marks" },
-          { "b", "<Cmd>Telescope buffers<CR>",     "buffer files" },
+          { "b",
+            {
+              { ".", "<Cmd>Telescope buffers<CR>",       "scoped buffer files" },
+              { "*", "<Cmd>Telescope scope buffers<CR>", "scoped buffer files" },
+            }
+          },
           { "c", "<Cmd>Telescope colorscheme<CR>", "colorschemes" },
           { "f", "<Cmd>Telescope find_files<CR>",  "open files" },
           {
@@ -511,7 +519,7 @@ local M = {
           {
             "b",
             {
-              { "m", "<Cmd>WindowsMaximize<CR>", "maximize" },
+              { "m", "<Cmd>WindowsMaximizeHorizontally<CR>", "maximize" },
               -- { "o", "<Cmd>lua require('aerial').focus()<CR>" },
             },
             "+buffer"
@@ -561,6 +569,11 @@ local M = {
             { "o",    "<Cmd>OverseerOpen<CR>",   "open task Runner" },
             { "q",    "<Cmd>OverseerClose<CR>",  "close task Runner" },
           }, "+task runner" },
+          { "x", {
+            { "<CR>", "<Cmd>CompilerOpen<CR>",                      "open task Runner" },
+            { "r",    "<Cmd>CompilerStop<CR><Cmd>CompilerRedo<CR>", "rerun task" },
+            { "t",    "<Cmd>CompilerToggleResults<CR>",             "toggle results" },
+          }, "+compiler" },
           { ".", "<Cmd>SnipRun<CR>",   "run snippet" },
           { "d", "<Cmd>SnipClose<CR>", "close snippet" },
         },
