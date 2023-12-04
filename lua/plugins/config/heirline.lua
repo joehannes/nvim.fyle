@@ -414,7 +414,7 @@ local Navic = {
       if #data > 1 and i < #data then
         table.insert(child, {
           provider = " > ",
-          hl = { fg = 'bright_fg' },
+          -- hl = { fg = 'bright_fg' },
         })
       end
       table.insert(children, child)
@@ -1063,10 +1063,10 @@ local TablineBufferBlock = utils.surround(
         50
       )
     else
-      return my.color.util[vim.opt.background:get() == "light" and "darken" or "lighten"](my.color.util.desaturate(my
-        .color
-        .int_to_hex(utils.get_highlight("TabLine")
-          .bg), 73), 73)
+      return my.color.util[vim.opt.background:get() == "light" and "darken" or "lighten"](my.color.util.desaturate(
+        my.color.my.vimode[vim.fn.mode() or "n"]
+        , 73)
+      , 73)
     end
   end, {
     TablineFileNameBlock,
@@ -1167,6 +1167,9 @@ local TabLine = {
   TabLineOffset,
   BufferLine,
   TabPages,
+  init = function(self)
+    self.bufferline = BufferLine
+  end,
   hl = { bg = my.color.my.magenta },
   update = { "DirChanged", "BufLeave", "BufEnter", "ModeChanged", "BufModifiedSet", "TabEnter", "OptionSet", "WinNew" }
 }
@@ -1211,16 +1214,15 @@ local WinBar = {
     Space,
     {
       condition = function(self) return require("nvim-navic").is_available(vim.api.nvim_get_current_buf()) end,
-      Dropbar
-    },
-    {
-      condition = function(self) return not require("nvim-navic").is_available(vim.api.nvim_get_current_buf()) end,
       FileNameBlock
     },
     Space,
-    -- {
-    --   provider = "",
-    -- },
+    {
+      hl = { fg = my.color.my.aqua, bold = true },
+      provider = "",
+    },
+    Space,
+    Navic
   },
   {
     hl = function(self) return { fg = my.color.my.magenta, bg = vimode_color(), force = true } end,
@@ -1342,7 +1344,7 @@ function M.setup(my_aucmds)
   require("heirline").setup({
     statusline = StatusLines,
     winbar = WinBars,
-    tabline = TabLine
+    -- tabline = TabLine
   })
 
   if my_aucmds == true then

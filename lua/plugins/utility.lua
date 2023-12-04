@@ -61,6 +61,7 @@ return {
       -- "rmagatti/auto-session",
       -- "rmagatti/session-lens",
       "Azeirah/nvim-redux",
+      "tiagovla/scope.nvim",
     },
     config = function()
       local config = require("plugins/config/telescope")

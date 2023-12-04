@@ -1,6 +1,6 @@
 local M = {
   fn = {},
-  int_to_hex = function(color) return ("#" .. string.format("%06x", Bg_color)) end,
+  int_to_hex = function(color) return ("#" .. string.format("%06x", color)) end,
   hex_to_rgb = function(...) return require("lush.vivid.rgb.convert").hex_to_rgb(...) end,
   rgb_to_hex = function(...) return require("lush.vivid.rgb.convert").rgb_to_hex(...) end,
   hsl = function(color) return require("lush").hsl(color) end,

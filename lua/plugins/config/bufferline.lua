@@ -6,27 +6,25 @@ local M = {}
 function M.setup()
   local highlights = function()
     local function vimodeColor()
-      return my.color.my.vimode[vim.fn.mode()]
+      return my.color.my.yellow
     end
 
     local function secondaryVimodeColor()
-      return my.color.fn.background_blend(vimodeColor(), 70)
+      return my.color.fn.background_blend(vimodeColor(), 73)
     end
 
     local function tertiaryVimodeColor()
-      return my.color.fn.background_blend(vimodeColor(), 21)
+      return my.color.fn.background_blend(vimodeColor(), 50)
     end
 
     return {
-      background = { bg = tertiaryVimodeColor() },
-      -- tab = { bg = vimodeColor() },
-      -- tab_selected = { fg = vimodeColor(), bg = groups.selectionBG() },
+      tab = { bg = tertiaryVimodeColor() },
       tab_close = { fg = my.color.my.dark, bg = vimodeColor(), bold = true },
       -- info = { fg = vimodeColor(), bg = groups.selectionBG() },
       fill = { bg = my.color.my.magenta },
-      buffer = { fg = my.color.my.light, bg = secondaryVimodeColor() },
-      buffer_visible = { fg = my.color.my.light, bg = secondaryVimodeColor() },
-      buffer_selected = { fg = my.color.my.light, bg = vimodeColor(), bold = true },
+      buffer = { fg = my.color.my.dark, bg = tertiaryVimodeColor(), force = true },
+      buffer_visible = { fg = my.color.my.purple, bg = secondaryVimodeColor(), force = true },
+      buffer_selected = { fg = my.color.my.magenta, bg = vimodeColor(), bold = true, force = true },
       tab_selected = { fg = my.color.my.light, bg = vimodeColor(), bold = true },
       diagnostic = {
         fg = my.color.my.red,
@@ -145,14 +143,14 @@ function M.setup()
       -- info_diagnostic_selected = { fg = my.color.my.green, bg = my.color.my.aqua, gui = "bold,italic" },
       -- warning_diagnostic_selected = { fg = my.color.my.orange, bg = my.color.my.aqua, gui = "bold,italic" },
       -- error_diagnostic_selected = { fg = my.color.my.red, bg = my.color.my.aqua, gui = "bold,italic" },
-      close_button = { fg = my.color.my[vim.fn.mode()], bg = tertiaryVimodeColor() },
+      close_button = { fg = my.color.my[vim.opt.background:get()], bg = tertiaryVimodeColor() },
       -- close_button_visible = {
       -- 	fg = vimodeColor(),
       -- 	bg = ucolors.blendColors(groups.selectionBG(), groups.mainBG(), 0.8),
       -- 	bold = true,
       -- },
-      close_button_visible = { fg = my.color.my[vim.fn.mode()], bg = secondaryVimodeColor(), bold = true },
-      close_button_selected = { fg = my.color.my[vim.fn.mode()], bg = vimodeColor(), bold = true },
+      close_button_visible = { fg = my.color.my.magenta, bg = secondaryVimodeColor() },
+      close_button_selected = { fg = my.color.my.magenta, bg = vimodeColor(), bold = true },
       modified = { fg = my.color.my.red, bg = tertiaryVimodeColor() },
       modified_visible = { fg = my.color.my.red, bg = secondaryVimodeColor() },
       modified_selected = { fg = my.color.my.red, bg = vimodeColor() },
@@ -170,8 +168,8 @@ function M.setup()
         -- 	bg = ucolors.blendColors(groups.selectionBG(), groups.mainBG(), 0.8),
       },
       -- indicator_selected = { fg = vimodeColor(), bg = my.color.my.aqua },
-      -- pick_selected = { fg = vimodeColor(), bg = my.color.my.aqua },
-      -- background = { fg = "#FFFFFF", bg = groups.mainBG() },
+      pick_selected = { fg = vimodeColor(), bg = my.color.my[vim.opt.background:get()] },
+      background = { bg = tertiaryVimodeColor(), fg = my.color.my.magenta, force = true },
     }
   end
 
@@ -243,7 +241,7 @@ function M.setup()
         end
       end,
       --offsets = {{filetype = "NvimTree", text = "File Explorer" | function , text_align = "left" | "center" | "right"}},
-      show_buffer_icons = true,       --true | false, -- disable filetype icons for buffers
+      show_buffer_icons = false,      --true | false, -- disable filetype icons for buffers
       show_buffer_close_icons = true, --true | false,
       show_close_icon = true,         --true | false,
       show_tab_indicators = true,     --true | false,
@@ -309,70 +307,70 @@ function M.setup()
       --   },
       --   items = {
       --     {
-      --       name = "tests", -- Mandatory
+      --       name = "tests",                                      -- Mandatory
       --       highlight = { italic = true, sp = my.color.my.red }, -- Optional
-      --       priority = 9, -- determines where it will appear relative to other groups (Optional)
+      --       priority = 9,                                        -- determines where it will appear relative to other groups (Optional)
       --       -- icon = "", -- Optional
-      --       matcher = function(buf) -- Mandatory
-      --         return buf.filename:match('%_test')
-      --             or buf.filename:match('%_spec')
-      --             or vim.fn.fnamemodify(buf.path, ":.:h"):match("test")
+      --       matcher = function(buf)                              -- Mandatory
+      --         -- return buf.filename:match('%_test')
+      --         --     or buf.filename:match('%_spec')
+      --         return vim.fn.fnamemodify(buf.path, ":.:h"):match("test")
       --             or vim.fn.fnamemodify(buf.path, ":.:h"):match("spec")
       --       end,
       --     }, {
-      --       name = "plugins", -- Mandatory
-      --       highlight = { italic = true, sp = my.color.my.green }, -- Optional
-      --       priority = 10, -- determines where it will appear relative to other groups (Optional)
-      --       -- icon = "", -- Optional
-      --       matcher = function(buf) -- Mandatory
-      --         return vim.fn.fnamemodify(buf.path, ":.:h"):match('lua.plugins')
-      --       end,
-      --     }, {
-      --       name = "lsp", -- Mandatory
-      --       highlight = { italic = true, sp = my.color.my.green }, -- Optional
-      --       auto_close = true,
-      --       priority = 11, -- determines where it will appear relative to other groups (Optional)
-      --       -- icon = "א", -- Optional
-      --       matcher = function(buf) -- Mandatory
-      --         return vim.fn.fnamemodify(buf.path, ":.:h"):match('lua.lang')
-      --       end,
-      --     }, {
-      --       name = "mappings", -- Mandatory
-      --       highlight = { italic = true, sp = my.color.my.green }, -- Optional
-      --       auto_close = true,
-      --       priority = 12, -- determines where it will appear relative to other groups (Optional)
-      --       -- icon = "⚔", -- Optional
-      --       matcher = function(buf) -- Mandatory
-      --         return vim.fn.fnamemodify(buf.path, ":.:h"):match('lua.keymapping')
-      --       end,
-      --     }, {
-      --       name = "colors", -- Mandatory
-      --       highlight = { italic = true, sp = my.color.my.green }, -- Optional
-      --       auto_close = true,
-      --       priority = 13, -- determines where it will appear relative to other groups (Optional)
-      --       -- icon = "🚥", -- Optional
-      --       matcher = function(buf) -- Mandatory
-      --         return vim.fn.fnamemodify(buf.path, ":.:h"):match('lua.colorscheme')
-      --       end,
-      --     }, {
-      --       name = "cfg", -- Mandatory
-      --       highlight = { italic = true, sp = my.color.my.aqua }, -- Optional
-      --       auto_close = true, -- whether or not close this group if it doesn't contain the current buffer
-      --       -- icon = "", -- Optional
-      --       priority = 2,
-      --       matcher = function(buf) -- Mandatory
-      --         return vim.fn.fnamemodify(buf.path, ":.") == buf.filename
-      --             or vim.fn.fnamemodify(buf.path, ":.:h"):match("config.+")
-      --             or vim.fn.fnamemodify(buf.path, ":.:h"):match("cfg.+")
-      --       end,
-      --       -- separator = { -- Optional
-      --       -- 	style = require("bufferline.groups").separator.tab,
-      --       -- },
-      --     },
+      --     name = "plugins",                                      -- Mandatory
+      --     highlight = { italic = true, sp = my.color.my.green }, -- Optional
+      --     priority = 10,                                         -- determines where it will appear relative to other groups (Optional)
+      --     -- icon = "", -- Optional
+      --     matcher = function(buf)                                -- Mandatory
+      --       return vim.fn.fnamemodify(buf.path, ":.:h"):match('lua.plugins')
+      --     end,
+      --   }, {
+      --     name = "lsp",                                          -- Mandatory
+      --     highlight = { italic = true, sp = my.color.my.green }, -- Optional
+      --     auto_close = true,
+      --     priority = 11,                                         -- determines where it will appear relative to other groups (Optional)
+      --     -- icon = "א", -- Optional
+      --     matcher = function(buf)                                -- Mandatory
+      --       return vim.fn.fnamemodify(buf.path, ":.:h"):match('lua.lang')
+      --     end,
+      --   }, {
+      --     name = "mappings",                                     -- Mandatory
+      --     highlight = { italic = true, sp = my.color.my.green }, -- Optional
+      --     auto_close = true,
+      --     priority = 12,                                         -- determines where it will appear relative to other groups (Optional)
+      --     -- icon = "⚔", -- Optional
+      --     matcher = function(buf)                                -- Mandatory
+      --       return vim.fn.fnamemodify(buf.path, ":.:h"):match('lua.keymapping')
+      --     end,
+      --   }, {
+      --     name = "colors",                                       -- Mandatory
+      --     highlight = { italic = true, sp = my.color.my.green }, -- Optional
+      --     auto_close = true,
+      --     priority = 13,                                         -- determines where it will appear relative to other groups (Optional)
+      --     -- icon = "🚥", -- Optional
+      --     matcher = function(buf)                                -- Mandatory
+      --       return vim.fn.fnamemodify(buf.path, ":.:h"):match('lua.colorscheme')
+      --     end,
+      --   }, {
+      --     name = "cfg",                                         -- Mandatory
+      --     highlight = { italic = true, sp = my.color.my.aqua }, -- Optional
+      --     auto_close = true,                                    -- whether or not close this group if it doesn't contain the current buffer
+      --     -- icon = "", -- Optional
+      --     priority = 2,
+      --     matcher = function(buf) -- Mandatory
+      --       return vim.fn.fnamemodify(buf.path, ":.") == buf.filename
+      --           or vim.fn.fnamemodify(buf.path, ":.:h"):match("config.+")
+      --           or vim.fn.fnamemodify(buf.path, ":.:h"):match("cfg.+")
+      --     end,
+      --     -- separator = { -- Optional
+      --     -- 	style = require("bufferline.groups").separator.tab,
+      --     -- },
+      --   },
       --     {
-      --       name = "block", -- Mandatory
+      --       name = "block",                                       -- Mandatory
       --       highlight = { italic = true, sp = my.color.my.aqua }, -- Optional
-      --       auto_close = false, -- whether or not close this group if it doesn't contain the current buffer
+      --       auto_close = false,                                   -- whether or not close this group if it doesn't contain the current buffer
       --       -- icon = "", -- Optional
       --       priority = 3,
       --       matcher = function(buf) -- Mandatory
@@ -384,9 +382,9 @@ function M.setup()
       --       -- },
       --     },
       --     {
-      --       name = "view", -- Mandatory
+      --       name = "view",                                        -- Mandatory
       --       highlight = { italic = true, sp = my.color.my.aqua }, -- Optional
-      --       auto_close = false, -- whether or not close this group if it doesn't contain the current buffer
+      --       auto_close = false,                                   -- whether or not close this group if it doesn't contain the current buffer
       --       -- icon = "恵", -- Optional
       --       priority = 4,
       --       matcher = function(buf) -- Mandatory
@@ -398,9 +396,9 @@ function M.setup()
       --       -- },
       --     },
       --     {
-      --       name = "store", -- Mandatory
+      --       name = "store",                                       -- Mandatory
       --       highlight = { italic = true, sp = my.color.my.aqua }, -- Optional
-      --       auto_close = true, -- whether or not close this group if it doesn't contain the current buffer
+      --       auto_close = true,                                    -- whether or not close this group if it doesn't contain the current buffer
       --       -- icon = "", -- Optional
       --       priority = 5,
       --       matcher = function(buf) -- Mandatory
@@ -411,9 +409,9 @@ function M.setup()
       --       -- },
       --     },
       --     {
-      --       name = "tool", -- Mandatory
+      --       name = "tool",                                        -- Mandatory
       --       highlight = { italic = true, sp = my.color.my.aqua }, -- Optional
-      --       auto_close = true, -- whether or not close this group if it doesn't contain the current buffer
+      --       auto_close = true,                                    -- whether or not close this group if it doesn't contain the current buffer
       --       -- icon = "", -- Optional
       --       priority = 6,
       --       matcher = function(buf) -- Mandatory
