@@ -7,7 +7,7 @@ function M.setup()
     enable_installer = true,
     styles = {
       comment = {},
-      ["function"] = { style = "italic" },
+      ["function"] = { style = "bold,italic" },
       functionBuiltIn = { style = "italic,bold" },
       operator = { style = "bold" },
       variable = { style = "italic" },
