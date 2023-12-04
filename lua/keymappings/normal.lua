@@ -321,12 +321,20 @@ local M = {
             },
             "+git"
           },
-          { "G", "<Cmd>Telescope live_grep<CR>",                             "grep" },
-          { "h", "<Cmd>Telescope frecency<CR>",                              "frecency" },
-          { "i", "<Cmd>Telescope media_files<CR>",                           "media files" },
-          { "j", "<Cmd>Telescope jumplist<CR>",                              "jumplist" },
-          { "k", "<Cmd>Telescope help_tags<CR>",                             "help tags" },
-          { "n", "<Cmd>Telescope node_modules list<CR>",                     "node modules" },
+          { "G", "<Cmd>Telescope live_grep<CR>",   "grep" },
+          { "h", "<Cmd>Telescope frecency<CR>",    "frecency" },
+          { "i", "<Cmd>Telescope media_files<CR>", "media files" },
+          { "j", "<Cmd>Telescope jumplist<CR>",    "jumplist" },
+          { "k", "<Cmd>Telescope help_tags<CR>",   "help tags" },
+          {
+            "n",
+            {
+              { "*", "<Cmd>Telekasten find_notes<CR>",   "find notes" },
+              { ".", "<Cmd>Telekasten search_notes<CR>", "search notes" },
+            },
+            "+Telekasten"
+          },
+          { "N", "<Cmd>Telescope node_modules list<CR>",                     "node modules" },
           { "p", ":lua require'telescope'.extensions.project.project{}<CR>", "switch project" },
           { "r", "<Cmd>Telescope lsp_references<CR>",                        "lsp references" },
           {
@@ -536,9 +544,10 @@ local M = {
             },
             "+file browser"
           },
-          { "F", "<Cmd>Twilight<CR>",       "focus scope" },
-          { "m", "<Plug>(Marks-toggle)",    "mark" },
-          { "o", "<Cmd>SymbolsOutline<CR>", "outline" },
+          { "F", "<Cmd>Twilight<CR>",         "focus scope" },
+          { "m", "<Plug>(Marks-toggle)",      "mark" },
+          { "n", "<Cmd>Telekasten panel<CR>", "mark" },
+          { "o", "<Cmd>SymbolsOutline<CR>",   "outline" },
           { "t",
             [[<Cmd>lua my.ui.openTerminal(vim.v.count1)<CR>]],
             "terminal" },
