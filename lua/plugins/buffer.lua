@@ -1,5 +1,11 @@
 return {
   {
+    "tiagovla/scope.nvim",
+    config = function()
+      require("scope").setup()
+    end
+  },
+  {
     "kwkarlwang/bufresize.nvim",
     config = function()
       local opts = { noremap = true, silent = true }
@@ -24,25 +30,31 @@ return {
       })
     end,
   },
-  {
-    'declancm/maximize.nvim',
-    config = function() require('maximize').setup({ default_keymaps = false }) end
-  },
   -- {
-  --   "anuvyklack/windows.nvim",
-  --   dependencies = {
-  --     "anuvyklack/middleclass",
-  --     "anuvyklack/animation.nvim"
-  --   },
-  --   config = function()
-  --     vim.o.winwidth = 12
-  --     vim.o.winminwidth = 1
-  --     vim.o.winheight = 20
-  --     vim.o.winminheight = 1
-  --     vim.o.equalalways = false
-  --     require('windows').setup()
-  --   end
+  --   'declancm/maximize.nvim',
+  --   config = function() require('maximize').setup({ default_keymaps = false }) end
   -- },
+  {
+    "anuvyklack/windows.nvim",
+    dependencies = {
+      "anuvyklack/middleclass",
+      "anuvyklack/animation.nvim"
+    },
+    config = function()
+      vim.o.winwidth = 12
+      vim.o.winminwidth = 12
+      vim.o.winheight = 20
+      vim.o.winminheight = 1
+      vim.o.equalalways = false
+      require('windows').setup({
+        ignore = {
+          -- bufname = { "NvimTree", "neo-tree", "undotree", "gundo", "Outline", "flutterToolsOutline", "Trouble", "DiffviewFiles" },
+          buftype = { "quickfix" },
+          filetype = { "NvimTree", "neo-tree", "undotree", "gundo", "Outline", "flutterToolsOutline", "Trouble", "DiffviewFiles" }
+        }
+      })
+    end
+  },
   {
     "danilamihailov/beacon.nvim",
     config = function()

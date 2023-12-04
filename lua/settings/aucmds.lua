@@ -18,6 +18,7 @@ local M = {
         pattern = "PersistedLoadPre",
         callback = function()
           -- heirline_setup(false)
+          vim.cmd("ScopeLoadState")
         end
       },
       {
@@ -41,6 +42,14 @@ local M = {
           -- heirline_setup(true)
         end
       },
+      {
+        pattern = "PersistedSavePre",
+        callback = function()
+          vim.schedule(function()
+            vim.cmd("ScopeSaveState")
+          end)
+        end
+      }
     },
   },
   MyHighlightAugroup = {
@@ -132,6 +141,21 @@ local M = {
           startinsert
         ]])
       end,
+    }
+  },
+  MyDiagnosticsAugroup = {
+    [{ "CursorHold" }] = {
+      pattern = "*",
+      callback = function()
+        -- vim.diagnostic.open_float()
+        require "utils.ui".lineDiagnostics()
+      end
+    },
+    [{ "CursorHoldI" }] = {
+      pattern = "*",
+      callback = function()
+        vim.lsp.buf.signature_help()
+      end
     }
   },
   MyListsAugroup = {

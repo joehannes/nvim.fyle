@@ -46,41 +46,67 @@ function M.qftf(info)
 end
 
 function M.tint()
+  local function vimodeColor()
+    return my.color.my.vimode[vim.fn.mode()]
+  end
+
+  local function secondaryVimodeColor()
+    return my.color.fn.background_blend(vimodeColor(), 70)
+  end
+
+  local function tertiaryVimodeColor()
+    return my.color.fn.background_blend(vimodeColor(), 21)
+  end
+
   local ok, tint = pcall(require, "tint")
-  -- local bufferline = require("plugins.config.bufferline")
+  local ok_bufferline, bufferline = pcall(require, "bufferline")
+  local bufferline = require("plugins.config.bufferline")
   local lines = require("heirline")
   local heirline = require("plugins.config.heirline")
 
   if (ok) then
     tint.refresh()
     heirline.update()
-    -- bufferline.setup()
     heirline.setup(false)
+    vim.api.nvim_set_hl(0, "Normal",
+      { bg = my.color.util[vim.opt.background:get() .. "en"](my.color.my.vimode[vim.fn.mode()], 88) })
     tint.refresh()
+  end
+
+  if (ok_bufferline) then
+    vim.schedule(function()
+      bufferline.setup()
+      vim.cmd.redrawtabline()
+    end)
   end
 end
 
 function M.updateHighlights()
   local mode_color = my.color.my.vimode[vim.fn.mode()]
 
+  local function secondaryVimodeColor()
+    return my.color.fn.background_blend(mode_color, 70)
+  end
+
+  local function tertiaryVimodeColor()
+    return my.color.fn.background_blend(mode_color, 21)
+  end
+
   for defColor, gitSignsHl in pairs({ [my.color.my.green] = "GitSignsAdd", [my.color.my.orange] = "GitSignsChange",
     [my.color.my.red] = "GitSignsDelete" }) do
     my.color.fn.highlight_blend_bg(gitSignsHl, 90, defColor)
     my.color.fn.highlight_blend_bg(gitSignsHl .. "Nr", 73, defColor)
     my.color.fn.highlight_blend_bg(gitSignsHl .. "Ln", 21, defColor)
-    my.color.fn.highlight_blend_bg("CursorLine", 50, mode_color)
-    my.color.fn.highlight_blend_bg("CursorColumn", 50, mode_color)
-    my.color.fn.highlight_blend_bg("Visual", 21, mode_color)
-    my.color.fn.highlight_blend_bg("TSCurrentScope", 9, mode_color)
-    my.color.fn.highlight_blend_bg("TreesitterContext", 37, mode_color)
-    vim.api.nvim_set_hl(0, "TreesitterContextBottom",
-      { underline = true, underdouble = true, fg = my.color.my.magenta, sp = my.color.my.magenta })
-    vim.api.nvim_set_hl(0, "ScrollbarHandle", { bg = mode_color })
   end
 
-  -- if pcall(require, "heirline") then
-  --   require("plugins.config.heirline").update()
-  -- end
+  my.color.fn.highlight_blend_bg("CursorLine", 50, mode_color)
+  my.color.fn.highlight_blend_bg("CursorColumn", 50, mode_color)
+  my.color.fn.highlight_blend_bg("Visual", 37, my.color.my.yellow)
+  my.color.fn.highlight_blend_bg("TSCurrentScope", 3, mode_color)
+  my.color.fn.highlight_blend_bg("TreesitterContext", 21, mode_color)
+  vim.api.nvim_set_hl(0, "TreesitterContextBottom",
+    { underline = true, underdouble = true, fg = my.color.my.magenta, sp = my.color.my.magenta })
+  vim.api.nvim_set_hl(0, "ScrollbarHandle", { bg = mode_color })
 end
 
 function M.tablinePickBuffer()
@@ -182,6 +208,26 @@ end
 function M.openTerminal(nr)
   nr = nr or vim.v.count1 or 1
   vim.cmd(nr .. "ToggleTerm direction='float'")
+end
+
+function M.lineDiagnostics()
+  for _, winid in pairs(vim.api.nvim_tabpage_list_wins(0)) do
+    if vim.api.nvim_win_get_config(winid).zindex then
+      return
+    end
+  end
+  -- THIS IS FOR BUILTIN LSP
+  vim.diagnostic.open_float(0, {
+    scope = "cursor",
+    focusable = false,
+    close_events = {
+      "CursorMoved",
+      "CursorMovedI",
+      "BufHidden",
+      "InsertCharPre",
+      "WinLeave",
+    },
+  })
 end
 
 return M

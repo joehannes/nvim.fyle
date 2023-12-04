@@ -237,6 +237,7 @@ function config.setup()
   telescope.load_extension("undo")
   telescope.load_extension("ag")
   telescope.load_extension("persisted")
+  telescope.load_extension("scope")
 end
 
 return config

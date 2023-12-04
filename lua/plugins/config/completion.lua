@@ -33,7 +33,7 @@ function M.setup()
         vim_item.kind = require "lspkind".symbolic(vim_item.kind, { mode = "symbol" })
         vim_item.menu = source_mapping[entry.source.name]
         if entry.source.name == "cmp_tabnine" then
-          local detail = (entry.completion_item.data or {}).detail
+          local detail = (entry.completion_item.labelDetails or {}).detail
           vim_item.kind = ""
           if detail and detail:find('.*%%.*') then
             vim_item.kind = vim_item.kind .. ' ' .. detail
@@ -152,7 +152,7 @@ function M.setup()
       { name = "treesitter" },
       -- { name = "vsnip" },
       { name = "path" },
-      { name = "npm", keyworld_length = 3 },
+      { name = "npm",                    keyworld_length = 3 },
       { name = "nvim_lua" },
       { name = "nvim_lsp_signature_help" },
       -- { name = "buffer" },
@@ -204,7 +204,7 @@ function M.setup()
     completion = { autocomplete = {} },
     sources = cmp.config.sources({
       { name = "nvim_lsp_document_symbol" },
-      { name = "buffer", option = { keyword_pattern = [=[[^[:blank:]].*]=] } },
+      { name = "buffer",                  option = { keyword_pattern = [=[[^[:blank:]].*]=] } },
     }),
   })
 end

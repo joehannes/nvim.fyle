@@ -78,7 +78,7 @@ return {
           vim.api.nvim_set_option('background', 'light')
         end,
       })
-      auto_dark_mode.init()
+      vim.schedule(auto_dark_mode.init)
     end
   },
   {
@@ -222,6 +222,41 @@ return {
           \   }
           \ }
       ]])
+    end
+  },
+  {
+    'maxmx03/fluoromachine.nvim',
+    config = function()
+      local fm = require 'fluoromachine'
+
+      fm.setup {
+        glow = true,
+        brightness = 0.2,
+        theme = 'retrowave',
+        transparent = false,
+        overrides = {
+          ['@type'] = { italic = true, bold = false },
+          ['@function'] = { italic = true, bold = true },
+          ['@comment'] = { italic = true },
+          ['@keyword'] = { italic = false, bold = true },
+          ['@constant'] = { italic = false, bold = true },
+          ['@variable'] = { italic = true },
+          ['@field'] = { italic = true },
+          ['@parameter'] = { italic = true },
+        },
+        colors = function(_, d)
+          return {
+            bg = my.color.my[vim.opt.background:get()],
+            alt_bg = d(my.color.my.vimode[vim.fn.mode()], 75),
+            cyan = my.color.my.aqua,
+            red = my.color.my.red,
+            yellow = my.color.my.yellow,
+            orange = my.color.my.orange,
+            pink = my.color.my.magenta,
+            purple = my.color.my.purple,
+          }
+        end,
+      }
     end
   }
 }
