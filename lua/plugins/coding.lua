@@ -52,7 +52,13 @@ return {
     dependencies = "nvim-lua/plenary.nvim",
     config = function() require("todo-comments").setup() end,
   },
-  { "JoosepAlviste/nvim-ts-context-commentstring" },
+  {
+    "JoosepAlviste/nvim-ts-context-commentstring",
+    config = function()
+      vim.g.skip_ts_context_commentstring_module = true
+      require("ts_context_commentstring").setup({})
+    end
+  },
   { "haringsrob/nvim_context_vt" },
   { "machakann/vim-sandwich" },
   -- { "andymass/vim-matchup" },

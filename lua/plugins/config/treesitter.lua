@@ -42,9 +42,9 @@ function M.ts_setup()
     },
     autopairs = { enable = true },
     autotag = { enable = true },
-    context_commentstring = {
-      enable = true,
-    },
+    -- context_commentstring = {
+    --   enable = true,
+    -- },
     textobjects = {
       move = {
         enable = true,
@@ -151,7 +151,7 @@ function M.ts_refactor_setup()
         -- Set to false if you have an `updatetime` of ~100.
         clear_on_cursor_move = true,
       },
-      highlight_current_scope = { enable = true },
+      highlight_current_scope = { enable = false },
       navigation = {
         enable = true,
         keymaps = {
