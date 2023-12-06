@@ -46,8 +46,13 @@ function M.map(mode, lhs, rhs, opts, reverse_repeat)
   end
 
   local function compile_cmd()
-    local defaults = { mode = mode, lhs = lhs, rhs = rhs, opts = default_opts,
-      desc = opts.desc or nil }
+    local defaults = {
+      mode = mode,
+      lhs = lhs,
+      rhs = rhs,
+      opts = default_opts,
+      desc = opts.desc or nil
+    }
     local reverse_rhs = reverse_repeat or "<Nop>"
     local my_cmd = rhs
 
@@ -71,6 +76,7 @@ function M.map(mode, lhs, rhs, opts, reverse_repeat)
 end
 
 function M.apply_keymaps(mode, keymaps, lhs)
+  wk = require("which-key")
   lhs = lhs or ""
 
   for k, v in ipairs(keymaps) do
@@ -78,7 +84,8 @@ function M.apply_keymaps(mode, keymaps, lhs)
       return
     elseif type(v) == "table" then
       if #keymaps > 2 and type(keymaps[1]) == "string" and type(keymaps[2]) == "table" and type(keymaps[3]) == "string" then
-        vim.keymap.set(mode, lhs, "<Nop>", { silent = true, remap = true, noremap = false, desc = keymaps[3] })
+        wk.register({ [lhs or keymaps[1]] = { name = keymaps[3] } })
+        -- vim.keymap.set(mode, lhs, "<Nop>", { silent = true, remap = true, desc = keymaps[3] })
       end
       M.apply_keymaps(mode, v, lhs)
     elseif type(v) == "string" and k == 1 then
