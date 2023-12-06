@@ -9,12 +9,11 @@ local M = {
   { "<Esc><Esc>", "<Cmd>nohl<CR>",              "remove highlights" },
   { ";", {
     { "D", {
-      { ".", "<Cmd>TrailBlazerDeleteTrailMarkStack<CR>",    "delete current stack" },
-      { "*", "<Cmd>TrailBlazerDeleteAllTrailMarkStacks<CR>", "delete current stack" }
+      { ".", "<Cmd>TrailBlazerDeleteTrailMarkStack<CR>",     "delete current stack" },
+      { "*", "<Cmd>TrailBlazerDeleteAllTrailMarkStacks<CR>", "delete current stack" },
     }, "+stack deletion" },
     { "a", "<Cmd>TrailBlazerAddTrailMarkStack<CR>",            "add new stack" },
     { "h", "<Cmd>TrailBlazerTrackBack<CR>",                    "track back" },
-    {
     { "j", "<Cmd>TrailBlazerPeekMoveNextDown<CR>",             "move to next" },
     { "l", "<Cmd>TrailBlazerMoveToNearest<CR>",                "move to nearest" },
     { "p", "<Cmd>TrailBlazerPasteAtLastTrailMark<CR>",         "paste at last mark" },
@@ -23,7 +22,7 @@ local M = {
     { "T", "<Cmd>TrailBlazerToggleTrailMarkList<CR>",          "toggle list" },
     { ">", "<Cmd>TrailBlazerSwitchNextTrailMarkStack<CR>",     "toggle list" },
     { "<", "<Cmd>TrailBlazerSwitchPreviousTrailMarkStack<CR>", "toggle list" },
-    { "s", "<Cmd>TrailBlazerSetTrailMarkStackSortMode<CR>",    "toggle list" }
+    { "s", "<Cmd>TrailBlazerSetTrailMarkStackSortMode<CR>",    "toggle list" },
   }, "+jumpmarks/trailblazer" },
   { "<Del>", {
     { "<Del>", '<Cmd>lua require("notify").dismiss()<cr>', "notifications" },
